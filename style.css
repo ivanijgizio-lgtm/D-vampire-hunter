@@ -97,3 +97,24 @@ button:disabled { opacity: 0.5; pointer-events: none; filter: grayscale(0.5); }
     white-space: pre-line;
     box-shadow: 0 8px 20px black;
 }
+#upgradeModal {
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e140c;
+    border: 3px solid #d4af37;
+    padding: 20px;
+    color: #f9eec1;
+    z-index: 200;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 0 30px black;
+}
+#upgradeModal h3 { margin-bottom: 15px; }
+#upgradeList button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    text-align: left;
+}
