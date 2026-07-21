@@ -3,38 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кровь и Вера · Война Теней 1520</title>
+    <title>Кровь и Вера · Осады Европы 1520</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div style="position: relative;">
-    <div class="game-container">
+    <div class="container">
         <canvas id="gameCanvas" width="1000" height="700"></canvas>
         <div class="panel">
-            <div>🌅 ХОД: <span id="turnDisplay">1</span> <span id="dayNightIcon">☀️ ДЕНЬ</span></div>
-            <div>🎯 Действия: <span id="playerAP">2</span>/2</div>
-            <div class="resources">
-                <span class="blood">🩸 <span id="bloodAmount">3</span></span>
-                <span class="faith">✝️ <span id="faithAmount">5</span></span>
-            </div>
-            <div>🏴 Захвачено: <span id="capturePercent">6%</span></div>
-            <div>
-                <button id="feastBtn" title="Кровавый пир (5 крови, +20 силы)">🍷 ПИР</button>
-                <button id="servantBtn" title="Призвать слуг (5 крови)">🧛 СЛУГИ</button>
-                <button id="churchBtn" title="Церковь Ночи (12 крови)">🕍 ЦЕРКОВЬ</button>
-                <button id="upgradesBtn" title="Исследования вампиров">🧬 УЛУЧШЕНИЯ</button>
-                <button id="musicBtn">🎵</button>
-                <button id="endTurnBtn">⏩ КОНЕЦ ХОДА</button>
-            </div>
+            <span>🌅 ХОД: <span id="turnDisplay">1</span> <span id="dayNightIcon">☀️ ДЕНЬ</span></span>
+            <span>🎯 Действия: <span id="playerAP">2</span>/2</span>
+            <span class="resources"><span class="blood">🩸 <span id="bloodAmount">5</span></span> <span class="faith">✝️ <span id="faithAmount">5</span></span></span>
+            <span>🏴 <span id="capturePercent">6%</span></span>
+            <button id="buildBtn" title="Постройки (кладбище, завод гробов)">🏗️ СТРОИТЬ</button>
+            <button id="recruitBtn" title="Нанять верховного вампира (15 крови)">🧛 НАНЯТЬ</button>
+            <button id="siegeBtn" title="Штурмовать осаждённую провинцию">⚔️ ШТУРМ</button>
+            <button id="musicBtn">🎵</button>
+            <button id="endTurnBtn">⏩ ХОД</button>
         </div>
-        <div class="log" id="logPanel">📜 Дракула пробуждается в Трансильвании...</div>
+        <div class="log" id="logPanel">📜 Дракула ведёт легионы тьмы...</div>
     </div>
     <div id="tooltip"></div>
-    <!-- Окно улучшений (скрыто) -->
-    <div id="upgradeModal" style="display:none; position:absolute; top:200px; left:50%; transform:translateX(-50%); background:#1e140c; border:3px solid #d4af37; padding:20px; color:#f9eec1; z-index:200; width:300px; text-align:center; box-shadow:0 0 30px black;">
-        <h3>🧬 Улучшения вампира</h3>
-        <div id="upgradeList"></div>
-        <button id="closeUpgradesBtn" style="margin-top:10px;">ЗАКРЫТЬ</button>
+    <div id="buildModal" class="modal">
+        <h3>🏗️ Постройки</h3>
+        <div id="buildList"></div>
+        <button id="closeBuildBtn">ЗАКРЫТЬ</button>
     </div>
 </div>
 <script src="script.js"></script>
