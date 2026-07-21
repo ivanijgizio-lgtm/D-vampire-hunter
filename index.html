@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Кровь и Вера: Война Теней • 1520 год</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div style="position: relative;">
+    <div class="game-container">
+        <canvas id="gameCanvas" width="1000" height="700" aria-label="Карта Европы 1520 года. Вампиры против Инквизиции"></canvas>
+        <div class="info-panel">
+            <div class="turn-info">
+                <span>🌅 ХОД: <span id="turnDisplay">1</span></span>
+                <span id="dayNightIcon">☀️ ДЕНЬ</span>
+            </div>
+            <div class="resources">
+                <span class="blood">🩸 КРОВЬ: <span id="bloodAmount">3</span></span>
+                <span class="faith">✝️ ВЕРА: <span id="faithAmount">5</span></span>
+            </div>
+            <div>
+                <span>🏴 ЗАХВАЧЕНО: <span id="capturePercent">6%</span></span>
+            </div>
+            <div>
+                <button id="spawnGhoulBtn" title="Призвать вурдалака (10 крови)">🧟 ВУРДАЛАК</button>
+                <button id="nextTurnBtn">⏩ ПРОПУСТИТЬ ХОД</button>
+            </div>
+        </div>
+        <div class="log-panel" id="logPanel">
+            📜 Дракула пробуждается в Трансильвании... Инквизиция собирает силы.
+        </div>
+    </div>
+    <div id="tooltip"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
