@@ -101,7 +101,6 @@
     return attRoll > defRoll;
   }
 
-  // Проверка возможности действия игрока
   function canAct() { return game.currentPlayer === 'player' && game.playerAP > 0 && !game.gameOver; }
 
   function spendPlayerAP() {
@@ -189,7 +188,7 @@
     setTimeout(() => aiPerformAction(MAX_AP), 600);
   }
 
-  // ---------- ИИ (использует AP) ----------
+  // ---------- ИИ (теперь атакует и нейтралов) ----------
   function aiPerformAction(apLeft) {
     if (game.gameOver) return;
     if (apLeft <= 0) {
@@ -199,7 +198,6 @@
       game.turn++;
       game.night = game.turn % 2 === 0;
       if (game.crusade > 0) game.crusade--;
-      // Сбор ресурсов
       game.blood += game.provinces.filter(p => p.owner === 'player').length +
                     game.provinces.filter(p => p.owner === 'player' && p.darkChurch).length * 2;
       game.faith += game.provinces.filter(p => p.owner === 'ai').length * 2;
@@ -207,19 +205,19 @@
       return;
     }
 
-    // Попытка атаки
     let actionTaken = false;
+
+    // 1. Атака вражеских (игрок) провинций
     for (let army of game.aiArmies) {
-      const neighbors = getProv(army.loc).neighbors.filter(id => getProv(id).owner === 'player');
-      if (neighbors.length > 0) {
-        // Выбор цели с наименьшей защитой
-        let bestTarget = neighbors[0];
+      const neighbors = getProv(army.loc).neighbors;
+      const enemyNeighbors = neighbors.filter(id => getProv(id).owner === 'player');
+      if (enemyNeighbors.length > 0) {
+        let bestTarget = enemyNeighbors[0];
         let minDef = Infinity;
-        neighbors.forEach(id => {
+        enemyNeighbors.forEach(id => {
           let def = 20;
           if (game.playerArmy.loc === id) def = game.playerArmy.power;
-          const s = game.servants.filter(s => s.loc === id);
-          s.forEach(serv => def += serv.power);
+          game.servants.filter(s => s.loc === id).forEach(serv => def += serv.power);
           if (def < minDef) { minDef = def; bestTarget = id; }
         });
         const tp = getProv(bestTarget);
@@ -244,6 +242,29 @@
       }
     }
 
+    // 2. Атака нейтральных провинций (новое!)
+    if (!actionTaken) {
+      for (let army of game.aiArmies) {
+        const neutralNeighbors = getProv(army.loc).neighbors.filter(id => getProv(id).owner === 'neutral');
+        if (neutralNeighbors.length > 0) {
+          const target = neutralNeighbors[Math.floor(Math.random() * neutralNeighbors.length)];
+          const tp = getProv(target);
+          const defPower = 25; // гарнизон нейтралов
+          if (fight(army.power, defPower, target, false)) {
+            tp.owner = 'ai'; tp.holy = true; tp.dark = false;
+            army.loc = target;
+            army.power = Math.min(army.power + 5, 200);
+            addLog(`🛡️ ИИ покорил нейтральную ${tp.name}!`);
+          } else {
+            addLog(`⚔️ ИИ не смог взять нейтральную ${tp.name}.`);
+          }
+          actionTaken = true;
+          break;
+        }
+      }
+    }
+
+    // 3. Строительство собора
     if (!actionTaken && game.faith >= 10) {
       const candidates = game.provinces.filter(p => p.owner === 'ai' && !p.cathedral && p.holy);
       if (candidates.length > 0) {
@@ -254,6 +275,7 @@
       }
     }
 
+    // 4. Инквизиция
     if (!actionTaken && game.faith >= 8 && game.provinces.some(p => p.owner === 'player' && p.holy)) {
       game.faith -= 8;
       game.playerArmy.power = Math.max(10, game.playerArmy.power - 15);
@@ -262,6 +284,7 @@
       actionTaken = true;
     }
 
+    // 5. Крестовый поход
     if (!actionTaken && game.faith >= 15 && game.crusade <= 0) {
       game.faith -= 15;
       game.crusade = 3;
@@ -269,13 +292,14 @@
       actionTaken = true;
     }
 
+    // 6. Перемещение к ближайшей вражеской или нейтральной провинции
     if (!actionTaken) {
-      // Перемещение в сторону врага
       for (let army of game.aiArmies) {
-        const darkProvs = game.provinces.filter(p => p.owner === 'player');
-        if (darkProvs.length > 0) {
-          const targetDark = darkProvs[0];
-          const path = getProv(army.loc).neighbors.find(n => isAdjacent(n, targetDark.id) && getProv(n).owner !== 'ai');
+        const targets = game.provinces.filter(p => p.owner === 'player' || p.owner === 'neutral');
+        if (targets.length > 0) {
+          // Выбираем случайную цель и ищем путь через соседа
+          const target = targets[Math.floor(Math.random() * targets.length)];
+          const path = getProv(army.loc).neighbors.find(n => isAdjacent(n, target.id) && getProv(n).owner !== 'ai');
           if (path) {
             army.loc = path;
             addLog(`🚩 Армия ИИ двинулась к ${getProv(path).name}.`);
@@ -286,7 +310,7 @@
       }
     }
 
-    if (!actionTaken) apLeft = 0; // ничего не сделали – заканчиваем
+    if (!actionTaken) apLeft = 0;
     else apLeft--;
 
     setTimeout(() => aiPerformAction(apLeft), 500);
