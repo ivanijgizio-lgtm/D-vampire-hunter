@@ -2,26 +2,26 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // ---------- ПОЛИГОНЫ ПРОВИНЦИЙ ----------
+    // ---------- ПОЛИГОНЫ ПРОВИНЦИЙ (с типом местности) ----------
     const provincesPoly = [
-        { id: 0, name: 'Англия', neighbors: [1,4], points: [[85,55],[175,60],[195,115],[155,165],[75,155],[50,105]] },
-        { id: 1, name: 'Швеция', neighbors: [0,2,5], points: [[205,25],[335,40],[355,115],[285,150],[215,125],[185,75]] },
-        { id: 2, name: 'Польша', neighbors: [1,3,5,6], points: [[365,50],[495,65],[525,135],[455,170],[375,145],[345,95]] },
-        { id: 3, name: 'Пруссия', neighbors: [2,6,7], points: [[535,75],[675,85],[695,145],[615,165],[545,135],[515,95]] },
-        { id: 4, name: 'Франция', neighbors: [0,5,9,10], points: [[55,185],[165,190],[205,265],[155,325],[65,305],[25,235]] },
-        { id: 5, name: 'Саксония', neighbors: [1,2,4,6,10], points: [[215,165],[315,175],[335,255],[265,305],[195,285],[175,215]] },
-        { id: 6, name: 'Богемия', neighbors: [2,3,5,7,11], points: [[355,175],[465,185],[475,265],[415,305],[345,275],[325,215]] },
-        { id: 7, name: 'Венгрия', neighbors: [3,6,8,11,12,13], points: [[525,195],[675,215],[705,285],[625,325],[535,295],[505,235]] },
-        { id: 8, name: 'Молдавия', neighbors: [7,13,14], points: [[715,215],[825,235],[845,305],[775,335],[705,295]] },
-        { id: 9, name: 'Кастилия', neighbors: [4,10,15], points: [[25,325],[105,335],[135,415],[95,465],[35,455],[5,385]] },
-        { id: 10, name: 'Швабия', neighbors: [4,5,9,11,15,16], points: [[155,335],[235,345],[255,415],[205,475],[135,465],[115,395]] },
-        { id: 11, name: 'Бавария', neighbors: [6,7,10,12], points: [[355,315],[425,325],[445,395],[375,435],[315,405],[305,355]] },
-        { id: 12, name: 'Австрия', neighbors: [7,11,13,15], points: [[465,335],[555,345],[575,415],[495,455],[425,425],[415,375]] },
-        { id: 13, name: 'Трансильвания', neighbors: [7,8,12,14,17], points: [[625,355],[755,375],[775,455],[685,495],[585,465],[575,395]] },
-        { id: 14, name: 'Валахия', neighbors: [8,13,17], points: [[785,375],[885,395],[905,465],[825,495],[745,455]] },
-        { id: 15, name: 'Папская обл.', neighbors: [9,10,12,16], points: [[95,485],[175,495],[185,555],[135,595],[75,585],[55,535]] },
-        { id: 16, name: 'Неаполь', neighbors: [10,15,17], points: [[195,495],[285,505],[295,575],[225,605],[155,585],[145,535]] },
-        { id: 17, name: 'Османская имп.', neighbors: [13,14,16], points: [[315,505],[545,525],[575,615],[445,645],[295,615],[275,555]] }
+        { id: 0, name: 'Англия', terrain: 'plains', neighbors: [1,4], points: [[85,55],[175,60],[195,115],[155,165],[75,155],[50,105]] },
+        { id: 1, name: 'Швеция', terrain: 'forest', neighbors: [0,2,5], points: [[205,25],[335,40],[355,115],[285,150],[215,125],[185,75]] },
+        { id: 2, name: 'Польша', terrain: 'plains', neighbors: [1,3,5,6], points: [[365,50],[495,65],[525,135],[455,170],[375,145],[345,95]] },
+        { id: 3, name: 'Пруссия', terrain: 'forest', neighbors: [2,6,7], points: [[535,75],[675,85],[695,145],[615,165],[545,135],[515,95]] },
+        { id: 4, name: 'Франция', terrain: 'plains', neighbors: [0,5,9,10], points: [[55,185],[165,190],[205,265],[155,325],[65,305],[25,235]] },
+        { id: 5, name: 'Саксония', terrain: 'hills', neighbors: [1,2,4,6,10], points: [[215,165],[315,175],[335,255],[265,305],[195,285],[175,215]] },
+        { id: 6, name: 'Богемия', terrain: 'hills', neighbors: [2,3,5,7,11], points: [[355,175],[465,185],[475,265],[415,305],[345,275],[325,215]] },
+        { id: 7, name: 'Венгрия', terrain: 'plains', neighbors: [3,6,8,11,12,13], points: [[525,195],[675,215],[705,285],[625,325],[535,295],[505,235]] },
+        { id: 8, name: 'Молдавия', terrain: 'plains', neighbors: [7,13,14], points: [[715,215],[825,235],[845,305],[775,335],[705,295]] },
+        { id: 9, name: 'Кастилия', terrain: 'hills', neighbors: [4,10,15], points: [[25,325],[105,335],[135,415],[95,465],[35,455],[5,385]] },
+        { id: 10, name: 'Швабия', terrain: 'forest', neighbors: [4,5,9,11,15,16], points: [[155,335],[235,345],[255,415],[205,475],[135,465],[115,395]] },
+        { id: 11, name: 'Бавария', terrain: 'mountains', neighbors: [6,7,10,12], points: [[355,315],[425,325],[445,395],[375,435],[315,405],[305,355]] },
+        { id: 12, name: 'Австрия', terrain: 'mountains', neighbors: [7,11,13,15], points: [[465,335],[555,345],[575,415],[495,455],[425,425],[415,375]] },
+        { id: 13, name: 'Трансильвания', terrain: 'mountains', neighbors: [7,8,12,14,17], points: [[625,355],[755,375],[775,455],[685,495],[585,465],[575,395]] },
+        { id: 14, name: 'Валахия', terrain: 'plains', neighbors: [8,13,17], points: [[785,375],[885,395],[905,465],[825,495],[745,455]] },
+        { id: 15, name: 'Папская обл.', terrain: 'hills', neighbors: [9,10,12,16], points: [[95,485],[175,495],[185,555],[135,595],[75,585],[55,535]] },
+        { id: 16, name: 'Неаполь', terrain: 'plains', neighbors: [10,15,17], points: [[195,495],[285,505],[295,575],[225,605],[155,585],[145,535]] },
+        { id: 17, name: 'Османская имп.', terrain: 'plains', neighbors: [13,14,16], points: [[315,505],[545,525],[575,615],[445,645],[295,615],[275,555]] }
     ];
 
     function getCentroid(poly) {
@@ -35,6 +35,14 @@
     const AI_START = [12, 15, 4];
     const MAX_AP = 2;
 
+    // ---------- УЛУЧШЕНИЯ ВАМПИРА ----------
+    const UPGRADES = {
+        attack1: { name: 'Клыки ночи (+10% атака)', cost: 8, effect: { attackBonus: 0.1 }, maxLevel: 1 },
+        defense1: { name: 'Кожа тени (+10% защита)', cost: 8, effect: { defenseBonus: 0.1 }, maxLevel: 1 },
+        ap1: { name: 'Быстрые ноги (+1 очко действий)', cost: 15, effect: { apBonus: 1 }, maxLevel: 1 }
+    };
+
+    // ---------- СОСТОЯНИЕ ИГРЫ ----------
     let game = {
         turn: 1,
         night: false,
@@ -49,10 +57,7 @@
             { id: 2, loc: 4, power: START_POWER }
         ],
         provinces: provincesPoly.map(p => ({
-            id: p.id,
-            name: p.name,
-            neighbors: p.neighbors,
-            points: p.points,
+            ...p,
             centroid: getCentroid(p.points),
             owner: 'neutral',
             dark: false,
@@ -64,9 +69,12 @@
         winner: null,
         log: ['Дракула пробуждается в Трансильвании...'],
         playerAP: MAX_AP,
-        currentPlayer: 'player'
+        currentPlayer: 'player',
+        upgrades: {}, // приобретённые улучшения
+        events: []
     };
 
+    // Инициализация
     game.provinces[PLAYER_START].owner = 'player';
     game.provinces[PLAYER_START].dark = true;
     AI_START.forEach(id => {
@@ -75,6 +83,7 @@
     });
     game.provinces[15].cathedral = true;
 
+    // ---------- УТИЛИТЫ ----------
     function addLog(msg) {
         game.log.unshift(msg);
         if (game.log.length > 5) game.log.pop();
@@ -83,16 +92,45 @@
     function getProv(id) { return game.provinces.find(p => p.id === id); }
     function isAdjacent(a, b) { return getProv(a)?.neighbors.includes(b); }
 
+    // Модификатор местности
+    function terrainMod(prov, defender) {
+        if (!prov) return 1.0;
+        switch (prov.terrain) {
+            case 'mountains': return defender ? 1.4 : 0.9;
+            case 'forest': return defender ? 1.2 : 0.95;
+            default: return 1.0;
+        }
+    }
+
+    // Бой с учётом улучшений и местности
     function fight(att, def, provId, attIsPlayer) {
         const prov = getProv(provId);
         let am = 1.0, dm = 1.0;
+        // Бонусы тьмы/света
         if (prov.dark) attIsPlayer ? am *= 10 : dm *= 10;
         if (prov.holy) attIsPlayer ? am *= 0.5 : dm *= 0.5;
         if (prov.cathedral && !attIsPlayer) dm *= 1.5;
         if (prov.darkChurch && attIsPlayer) dm *= 1.4;
+        // Время суток
         if (game.night && attIsPlayer) am *= 1.5;
         if (!game.night && attIsPlayer && prov.holy) am *= 0.7;
+        // Крестовый поход
         if (game.crusade > 0 && !attIsPlayer) am *= 2.0;
+        // Местность
+        const defTerrain = terrainMod(prov, true);
+        const attTerrain = terrainMod(prov, false);
+        dm *= defTerrain;
+        am *= attTerrain;
+        // Улучшения игрока (только для атакующего игрока)
+        if (attIsPlayer) {
+            if (game.upgrades.attack1) am *= (1 + game.upgrades.attack1.effect.attackBonus);
+            if (game.upgrades.defense1) dm *= (1 - game.upgrades.defense1.effect.defenseBonus); // враг слабее
+        }
+        // Критический удар (5% шанс для атакующего игрока)
+        if (attIsPlayer && Math.random() < 0.05) {
+            addLog('💥 Критический удар!');
+            return true;
+        }
         return (att * am * (0.8 + Math.random() * 0.4)) > (def * dm * (0.8 + Math.random() * 0.4));
     }
 
@@ -103,10 +141,11 @@
         if (game.playerAP === 0) endPlayerTurn();
     }
 
+    // ---------- ДЕЙСТВИЯ ИГРОКА ----------
     function movePlayer(targetId) {
         if (!canAct()) return;
         if (!isAdjacent(game.playerArmy.loc, targetId) && game.playerArmy.loc !== targetId) {
-            addLog('⛔ Не граничит с вашей провинцией!');
+            addLog('⛔ Не граничит!');
             return;
         }
         const tProv = getProv(targetId);
@@ -173,67 +212,88 @@
         setTimeout(() => aiPerformAction(MAX_AP), 600);
     }
 
+    // ---------- СЛУЧАЙНЫЕ СОБЫТИЯ ----------
+    function triggerRandomEvent() {
+        const r = Math.random();
+        if (r < 0.2) {
+            const prov = game.provinces[Math.floor(Math.random() * game.provinces.length)];
+            if (prov.owner === 'neutral') {
+                addLog(`🔥 Восстание в ${prov.name}!`);
+                prov.owner = 'player';
+                prov.dark = true;
+                game.blood += 3;
+            } else if (prov.owner === 'player' && Math.random() < 0.5) {
+                game.playerArmy.power -= 5;
+                addLog(`👻 Чума в ${prov.name}, -5 силы.`);
+            }
+        } else if (r < 0.4) {
+            game.blood += 2;
+            game.faith += 2;
+            addLog('💎 Найдены ресурсы! +2 крови, +2 веры.');
+        }
+    }
+
+    // ---------- ИИ (усовершенствованный) ----------
     function aiPerformAction(apLeft) {
         if (game.gameOver) return;
         if (apLeft <= 0) {
             game.currentPlayer = 'player';
-            game.playerAP = MAX_AP;
+            game.playerAP = MAX_AP + (game.upgrades.ap1 ? 1 : 0);
             game.turn++;
             game.night = game.turn % 2 === 0;
             if (game.crusade > 0) game.crusade--;
             game.blood += game.provinces.filter(p => p.owner === 'player').length +
                 game.provinces.filter(p => p.owner === 'player' && p.darkChurch).length * 2;
             game.faith += game.provinces.filter(p => p.owner === 'ai').length * 2;
+            triggerRandomEvent();
             updateUI(); draw(); checkVictory();
             return;
         }
 
         let acted = false;
 
+        // Приоритеты ИИ
         for (let army of game.aiArmies) {
-            const neutrals = getProv(army.loc).neighbors.filter(id => getProv(id).owner === 'neutral');
-            if (neutrals.length > 0) {
-                const target = neutrals[Math.floor(Math.random() * neutrals.length)];
+            const neighbors = getProv(army.loc).neighbors;
+            // Атака нейтралов
+            const neutrals = neighbors.filter(id => getProv(id).owner === 'neutral');
+            if (neutrals.length) {
+                const target = neutrals[0];
                 if (fight(army.power, 28, target, false)) {
-                    const tp = getProv(target);
-                    tp.owner = 'ai'; tp.holy = true; tp.dark = false;
+                    getProv(target).owner = 'ai'; getProv(target).holy = true; getProv(target).dark = false;
                     army.loc = target;
                     army.power = Math.min(army.power + 8, 200);
-                    addLog(`🛡️ ИИ покорил нейтральную ${tp.name}!`);
-                } else {
-                    addLog(`⚔️ ИИ не смог взять ${getProv(target).name}.`);
+                    addLog(`🛡️ ИИ покорил ${getProv(target).name}`);
                 }
                 acted = true; break;
             }
-        }
-
-        if (!acted) {
-            for (let army of game.aiArmies) {
-                const enemies = getProv(army.loc).neighbors.filter(id => getProv(id).owner === 'player');
-                if (enemies.length > 0) {
-                    let best = enemies[0], minDef = Infinity;
-                    enemies.forEach(id => {
-                        let def = 20;
-                        if (game.playerArmy.loc === id) def = game.playerArmy.power;
-                        game.servants.filter(s => s.loc === id).forEach(s => def += s.power);
-                        if (def < minDef) { minDef = def; best = id; }
-                    });
+            // Атака игрока, только если сила > 1.5x защиты
+            const enemies = neighbors.filter(id => getProv(id).owner === 'player');
+            if (enemies.length) {
+                let bestTarget = enemies[0];
+                let bestRatio = 0;
+                enemies.forEach(id => {
                     let defPow = 20;
-                    if (game.playerArmy.loc === best) defPow = game.playerArmy.power;
-                    game.servants.filter(s => s.loc === best).forEach(s => defPow += s.power);
-                    if (fight(army.power, defPow, best, false)) {
-                        const tp = getProv(best);
+                    if (game.playerArmy.loc === id) defPow = game.playerArmy.power;
+                    game.servants.filter(s => s.loc === id).forEach(s => defPow += s.power);
+                    const ratio = army.power / (defPow * terrainMod(getProv(id), true));
+                    if (ratio > bestRatio) { bestRatio = ratio; bestTarget = id; }
+                });
+                if (bestRatio > 1.5) {
+                    let defPow = 20;
+                    if (game.playerArmy.loc === bestTarget) defPow = game.playerArmy.power;
+                    game.servants.filter(s => s.loc === bestTarget).forEach(s => defPow += s.power);
+                    if (fight(army.power, defPow, bestTarget, false)) {
+                        const tp = getProv(bestTarget);
                         tp.owner = 'ai'; tp.dark = false; tp.holy = true; tp.darkChurch = false;
-                        army.loc = best;
+                        army.loc = bestTarget;
                         army.power = Math.min(army.power + 10, 200);
                         addLog(`🛡️ ИИ захватил ${tp.name}!`);
-                        if (game.playerArmy.loc === best) {
+                        if (game.playerArmy.loc === bestTarget) {
                             game.playerArmy.power = Math.max(10, game.playerArmy.power - 30);
                             game.playerArmy.loc = PLAYER_START;
                         }
-                        game.servants = game.servants.filter(s => s.loc !== best);
-                    } else {
-                        addLog(`⚔️ ИИ атаковал ${getProv(best).name}, но безуспешно.`);
+                        game.servants = game.servants.filter(s => s.loc !== bestTarget);
                     }
                     acted = true; break;
                 }
@@ -295,6 +355,7 @@
         if (game.gameOver) updateUI();
     }
 
+    // ---------- РИСОВАНИЕ (с отображением типа местности) ----------
     function drawMap() {
         ctx.fillStyle = '#dac29c';
         ctx.fillRect(0, 0, 1000, 700);
@@ -302,10 +363,8 @@
             ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.05})`;
             ctx.fillRect(Math.random() * 1000, Math.random() * 700, 2, 2);
         }
-        ctx.fillStyle = '#5c4033';
-        ctx.beginPath(); ctx.arc(50, 50, 25, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#d4af37'; ctx.font = 'bold 16px "Courier New"';
-        ctx.fillText('N', 43, 55);
+        ctx.fillStyle = '#5c4033'; ctx.beginPath(); ctx.arc(50, 50, 25, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#d4af37'; ctx.font = 'bold 16px "Courier New"'; ctx.fillText('N', 43, 55);
     }
 
     function drawProvince(prov) {
@@ -314,13 +373,19 @@
         ctx.moveTo(pts[0][0], pts[0][1]);
         for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
         ctx.closePath();
-        ctx.fillStyle = prov.dark ? '#4a0e1c' : (prov.holy ? '#2e4a6b' : '#5e5b52');
+        let baseColor = '#5e5b52';
+        if (prov.owner === 'player') baseColor = '#4a0e1c';
+        else if (prov.owner === 'ai') baseColor = '#2e4a6b';
+        ctx.fillStyle = baseColor;
         ctx.fill();
         ctx.strokeStyle = '#2f2416'; ctx.lineWidth = 3; ctx.stroke();
-        ctx.font = 'bold 10px "Courier New"';
-        ctx.fillStyle = '#fdf5e6';
+        // Значок местности
+        ctx.font = '16px "Courier New"';
+        if (prov.terrain === 'mountains') { ctx.fillStyle = '#888'; ctx.fillText('⛰️', prov.centroid.x-15, prov.centroid.y-20); }
+        else if (prov.terrain === 'forest') { ctx.fillStyle = '#0a0'; ctx.fillText('🌲', prov.centroid.x-15, prov.centroid.y-20); }
+        ctx.font = 'bold 10px "Courier New"'; ctx.fillStyle = 'white';
         ctx.shadowColor = '#000'; ctx.shadowBlur = 4;
-        ctx.fillText(prov.name, prov.centroid.x - 25, prov.centroid.y - 8);
+        ctx.fillText(prov.name, prov.centroid.x-25, prov.centroid.y-8);
         ctx.shadowBlur = 0;
         const cx = prov.centroid.x, cy = prov.centroid.y;
         if (prov.cathedral) {
@@ -365,6 +430,7 @@
         if (game.night) { ctx.fillStyle = 'rgba(10,10,30,0.3)'; ctx.fillRect(0,0,1000,700); }
     }
 
+    // ---------- UI ----------
     function updateUI() {
         document.getElementById('turnDisplay').textContent = game.turn;
         document.getElementById('dayNightIcon').innerHTML = game.night ? '🌙 НОЧЬ' : '☀️ ДЕНЬ';
@@ -378,8 +444,37 @@
         document.getElementById('servantBtn').disabled = !isPlayerTurn || game.playerAP <= 0 || game.blood < 5;
         document.getElementById('churchBtn').disabled = !isPlayerTurn || game.playerAP <= 0 || game.blood < 12 || !getProv(game.playerArmy.loc)?.dark || getProv(game.playerArmy.loc)?.darkChurch;
         document.getElementById('endTurnBtn').disabled = !isPlayerTurn;
+        // Обновление списка улучшений в модальном окне
+        const upgradeList = document.getElementById('upgradeList');
+        upgradeList.innerHTML = '';
+        for (let key in UPGRADES) {
+            const upg = UPGRADES[key];
+            const bought = game.upgrades[key] ? true : false;
+            const btn = document.createElement('button');
+            btn.textContent = `${upg.name} ${bought ? '✅' : `(${upg.cost} крови)`}`;
+            btn.disabled = bought || game.blood < upg.cost || !isPlayerTurn;
+            btn.addEventListener('click', () => {
+                if (!bought && game.blood >= upg.cost && isPlayerTurn) {
+                    game.blood -= upg.cost;
+                    game.upgrades[key] = { effect: upg.effect };
+                    updateUI();
+                    addLog(`🧬 Куплено улучшение: ${upg.name}`);
+                }
+            });
+            upgradeList.appendChild(btn);
+        }
     }
 
+    // Модальное окно улучшений
+    document.getElementById('upgradesBtn').addEventListener('click', () => {
+        document.getElementById('upgradeModal').style.display = 'block';
+        updateUI();
+    });
+    document.getElementById('closeUpgradesBtn').addEventListener('click', () => {
+        document.getElementById('upgradeModal').style.display = 'none';
+    });
+
+    // Тултип и клики
     const tooltip = document.getElementById('tooltip');
     canvas.addEventListener('mousemove', e => {
         const rect = canvas.getBoundingClientRect();
@@ -394,7 +489,7 @@
         }
         if (found) {
             const owner = found.owner === 'player' ? 'Вампиры' : (found.owner === 'ai' ? 'Инквизиция' : 'Нейтралы');
-            tooltip.innerHTML = `${found.name}<br>👑 ${owner}<br>🌑 Тьма: ${found.dark?'Да':'Нет'}<br>✝️ Святость: ${found.holy?'Да':'Нет'}<br>⛪ Собор: ${found.cathedral?'Да':'Нет'}<br>🕍 Ц.Ночи: ${found.darkChurch?'Да':'Нет'}`;
+            tooltip.innerHTML = `${found.name} (${found.terrain})<br>👑 ${owner}<br>🌑 Тьма: ${found.dark?'Да':'Нет'}<br>✝️ Святость: ${found.holy?'Да':'Нет'}<br>⛪ Собор: ${found.cathedral?'Да':'Нет'}<br>🕍 Ц.Ночи: ${found.darkChurch?'Да':'Нет'}`;
             tooltip.style.display = 'block';
             tooltip.style.left = e.clientX + 15 + 'px';
             tooltip.style.top = e.clientY - 40 + 'px';
@@ -420,12 +515,10 @@
     document.getElementById('churchBtn').addEventListener('click', buildDarkChurch);
     document.getElementById('endTurnBtn').addEventListener('click', endPlayerTurn);
 
+    // ---------- АУДИО ----------
     let audioCtx = null, musicOn = false, audioInitialized = false;
     function initAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            audioInitialized = true;
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
     }
     function playMelody(arr) {
@@ -441,19 +534,13 @@
         });
     }
     document.addEventListener('click', function firstClickInit() {
-        if (!audioInitialized) {
-            initAudio();
-            musicOn = true;
-            document.getElementById('musicBtn').textContent = '🎵';
-        }
+        if (!audioInitialized) { initAudio(); musicOn = true; document.getElementById('musicBtn').textContent = '🎵'; }
     }, { once: true });
-
     document.getElementById('musicBtn').addEventListener('click', () => {
         if (!audioInitialized) initAudio();
         musicOn = !musicOn;
         document.getElementById('musicBtn').textContent = musicOn ? '🎵' : '🔇';
     });
-
     setInterval(() => {
         if (musicOn && audioCtx && !game.gameOver) {
             playMelody(game.night ? [[220,0.2],[277,0.2],[329,0.3]] : [[523,0.15],[587,0.15],[659,0.2]]);
