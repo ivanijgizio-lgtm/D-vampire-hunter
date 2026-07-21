@@ -9,20 +9,21 @@
 <body>
 <div style="position: relative;">
     <div class="game-container">
-        <canvas id="gameCanvas" width="1000" height="700" aria-label="Карта Европы 1520 года"></canvas>
+        <canvas id="gameCanvas" width="1000" height="700"></canvas>
         <div class="panel">
             <div>🌅 ХОД: <span id="turnDisplay">1</span> <span id="dayNightIcon">☀️ ДЕНЬ</span></div>
+            <div>🎯 Действия: <span id="playerAP">2</span>/2</div>
             <div class="resources">
-                <span class="blood">🩸 КРОВЬ: <span id="bloodAmount">3</span></span>
-                <span class="faith">✝️ ВЕРА: <span id="faithAmount">5</span></span>
+                <span class="blood">🩸 <span id="bloodAmount">3</span></span>
+                <span class="faith">✝️ <span id="faithAmount">5</span></span>
             </div>
-            <div>🏴 ЗАХВАЧЕНО: <span id="capturePercent">6%</span></div>
+            <div>🏴 Захвачено: <span id="capturePercent">6%</span></div>
             <div>
-                <button id="feastBtn" title="Кровавый пир (+20 силы Дракуле, 5 крови, на тёмной земле)">🍷 ПИР</button>
-                <button id="spawnServantBtn" title="Призвать слуг вампира (5 крови)">🧛 СЛУГИ</button>
-                <button id="buildChurchBtn" title="Церковь Ночи (12 крови, на тёмной земле)">🕍 ЦЕРКОВЬ</button>
-                <button id="musicToggleBtn">🎵 МУЗЫКА</button>
-                <button id="nextTurnBtn">⏩ ХОД</button>
+                <button id="feastBtn" title="Кровавый пир (5 крови, +20 силы)">🍷 ПИР</button>
+                <button id="servantBtn" title="Призвать слуг (5 крови)">🧛 СЛУГИ</button>
+                <button id="churchBtn" title="Церковь Ночи (12 крови)">🕍 ЦЕРКОВЬ</button>
+                <button id="musicBtn">🎵</button>
+                <button id="endTurnBtn">⏩ КОНЕЦ ХОДА</button>
             </div>
         </div>
         <div class="log" id="logPanel">📜 Дракула пробуждается в Трансильвании...</div>
