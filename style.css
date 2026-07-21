@@ -9,13 +9,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Courier New', 'Times New Roman', monospace;
+    font-family: 'Courier New', monospace;
     padding: 20px;
 }
 .game-container {
     background: #1e1a17;
     border: 6px solid #4a3724;
-    box-shadow: 0 0 0 4px #2a1f14, 0 10px 30px rgba(0,0,0,0.8);
+    box-shadow: 0 10px 30px black;
     border-radius: 12px;
     padding: 15px;
     display: flex;
@@ -28,29 +28,28 @@ canvas {
     border-radius: 6px;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
-    background: #cbb89e;
-    width: 100%;
-    height: auto;
-    max-width: 1000px;
+    background: #dac29c;
+    width: 1000px;
+    height: 700px;
     cursor: crosshair;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 20px black;
 }
-.info-panel {
-    width: 100%;
-    max-width: 1000px;
+.panel {
+    width: 1000px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 12px;
-    padding: 8px 15px;
+    padding: 10px 15px;
     background: #251e18;
     border: 3px solid #4a3724;
     border-radius: 30px;
     color: #f0d9a8;
     font-weight: bold;
     font-size: 1.1rem;
-    letter-spacing: 1px;
     box-shadow: 0 4px 0 #0f0a05;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 .resources {
     display: flex;
@@ -64,57 +63,41 @@ canvas {
     color: #ffd966;
     text-shadow: 0 0 8px #b8860b;
 }
-.turn-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
 button {
     background: #3e2e1f;
     border: 3px solid #5e4a34;
     color: #ffdead;
-    padding: 8px 18px;
+    padding: 8px 14px;
     font-family: 'Courier New', monospace;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 0.9rem;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.1s ease;
+    box-shadow: 0 3px 0 #1f140a;
+    transition: 0.1s;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 3px 0 #1f140a;
-    margin: 0 5px;
 }
 button:hover {
     background: #5a4430;
     border-color: #b9935a;
-    color: #fff5e0;
     box-shadow: 0 3px 0 #3d2b1a, 0 0 12px #f0b050;
-}
-button:active {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 #1f140a;
 }
 button:disabled {
     opacity: 0.5;
     pointer-events: none;
     filter: grayscale(0.5);
 }
-.log-panel {
-    width: 100%;
-    max-width: 1000px;
+.log {
+    width: 1000px;
     margin-top: 10px;
     background: #12100c;
     border: 2px solid #5e4a34;
     border-radius: 20px;
     padding: 8px 15px;
     color: #c9b185;
-    min-height: 40px;
     font-size: 0.85rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
+    min-height: 40px;
     box-shadow: inset 0 2px 8px black;
 }
 #tooltip {
@@ -124,12 +107,10 @@ button:disabled {
     color: #f9eec1;
     padding: 10px 16px;
     font-family: 'Courier New', monospace;
-    font-size: 14px;
     border-radius: 8px;
     pointer-events: none;
-    box-shadow: 0 8px 20px black;
-    z-index: 100;
     display: none;
+    z-index: 100;
     white-space: pre-line;
-    line-height: 1.5;
+    box-shadow: 0 8px 20px black;
 }
