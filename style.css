@@ -1,8 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
     background: #0a0a0f;
     min-height: 100vh;
@@ -46,28 +42,19 @@ canvas {
     border-radius: 30px;
     color: #f0d9a8;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
     box-shadow: 0 4px 0 #0f0a05;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
 }
-.resources {
-    display: flex;
-    gap: 25px;
-}
-.blood {
-    color: #e03a3a;
-    text-shadow: 0 0 8px #8b0000;
-}
-.faith {
-    color: #ffd966;
-    text-shadow: 0 0 8px #b8860b;
-}
+.resources { display: flex; gap: 20px; }
+.blood { color: #e03a3a; text-shadow: 0 0 8px #8b0000; }
+.faith { color: #ffd966; text-shadow: 0 0 8px #b8860b; }
 button {
     background: #3e2e1f;
     border: 3px solid #5e4a34;
     color: #ffdead;
-    padding: 8px 14px;
+    padding: 6px 12px;
     font-family: 'Courier New', monospace;
     font-weight: bold;
     font-size: 0.9rem;
@@ -83,11 +70,7 @@ button:hover {
     border-color: #b9935a;
     box-shadow: 0 3px 0 #3d2b1a, 0 0 12px #f0b050;
 }
-button:disabled {
-    opacity: 0.5;
-    pointer-events: none;
-    filter: grayscale(0.5);
-}
+button:disabled { opacity: 0.5; pointer-events: none; filter: grayscale(0.5); }
 .log {
     width: 1000px;
     margin-top: 10px;
