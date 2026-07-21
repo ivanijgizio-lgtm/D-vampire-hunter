@@ -28,11 +28,27 @@
     const PLAYER_START_ID = 13;
     const AI_START_IDS = [12, 15, 4];
 
-    // 🔊 МУЗЫКАЛЬНЫЕ ПЕРЕМЕННЫЕ
+    // 🔊 МУЗЫКА
     let audioCtx = null;
-    let musicOn = true;           // по умолчанию музыка играет
+    let musicOn = true;
     let musicInterval = null;
-    let currentMusicTheme = 'day'; // 'day' или 'night' или 'victory'
+
+    const DAY_MELODY = [
+        [523.25, 0.15], [587.33, 0.15], [659.25, 0.2], [523.25, 0.15],
+        [659.25, 0.15], [698.46, 0.15], [783.99, 0.3],
+        [783.99, 0.15], [659.25, 0.15], [587.33, 0.2], [523.25, 0.3]
+    ];
+
+    const NIGHT_MELODY = [
+        [220, 0.2], [277.18, 0.2], [329.63, 0.25], [220, 0.2],
+        [277.18, 0.2], [329.63, 0.2], [369.99, 0.35],
+        [329.63, 0.15], [277.18, 0.15], [246.94, 0.2], [220, 0.4]
+    ];
+
+    const VICTORY_MELODY = [
+        [523.25, 0.1], [659.25, 0.1], [783.99, 0.1], [1046.5, 0.3],
+        [783.99, 0.1], [1046.5, 0.3]
+    ];
 
     // ---------- СОСТОЯНИЕ ИГРЫ ----------
     let gameState = {
@@ -70,30 +86,12 @@
     });
     gameState.provinces[15].hasCathedral = true;
 
-    // ---------- МУЗЫКАЛЬНЫЙ СИНТЕЗ (8-BIT) ----------
+    // ---------- МУЗЫКАЛЬНЫЕ ФУНКЦИИ ----------
     function initAudio() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
-
-    // Простая мелодия: массив [частота, длительность_в_секундах]
-    const DAY_MELODY = [
-        [523.25, 0.15], [587.33, 0.15], [659.25, 0.2], [523.25, 0.15],  // C E G C
-        [659.25, 0.15], [698.46, 0.15], [783.99, 0.3],                 // G A B
-        [783.99, 0.15], [659.25, 0.15], [587.33, 0.2], [523.25, 0.3]  // B G E C
-    ];
-
-    const NIGHT_MELODY = [
-        [220, 0.2], [277.18, 0.2], [329.63, 0.25], [220, 0.2],        // A C E A (минор)
-        [277.18, 0.2], [329.63, 0.2], [369.99, 0.35],                  // C E F#
-        [329.63, 0.15], [277.18, 0.15], [246.94, 0.2], [220, 0.4]     // E C B A
-    ];
-
-    const VICTORY_MELODY = [
-        [523.25, 0.1], [659.25, 0.1], [783.99, 0.1], [1046.5, 0.3],
-        [783.99, 0.1], [1046.5, 0.3]
-    ];
 
     function playMelody(melody) {
         if (!audioCtx || !musicOn) return;
@@ -102,7 +100,7 @@
         melody.forEach(([freq, dur]) => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'square'; // классический 8-битный звук
+            osc.type = 'square';
             osc.frequency.setValueAtTime(freq, now + timeOffset);
             gain.gain.setValueAtTime(0.08, now + timeOffset);
             gain.gain.exponentialRampToValueAtTime(0.001, now + timeOffset + dur - 0.01);
@@ -117,12 +115,8 @@
     function startMusicLoop() {
         if (musicInterval) clearInterval(musicInterval);
         if (!musicOn || gameState.gameOver) return;
-
-        const theme = gameState.isNight ? 'night' : 'day';
-        currentMusicTheme = theme;
-        const melody = theme === 'night' ? NIGHT_MELODY : DAY_MELODY;
+        const melody = gameState.isNight ? NIGHT_MELODY : DAY_MELODY;
         const loopDuration = melody.reduce((sum, [, dur]) => sum + dur, 0) * 1000 + 200;
-
         const playOnce = () => {
             if (!musicOn || gameState.gameOver) {
                 clearInterval(musicInterval);
@@ -132,7 +126,6 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
             playMelody(melody);
         };
-
         playOnce();
         musicInterval = setInterval(playOnce, loopDuration);
     }
@@ -147,14 +140,10 @@
     function toggleMusic() {
         musicOn = !musicOn;
         document.getElementById('musicToggleBtn').textContent = musicOn ? '🎵 МУЗЫКА' : '🔇 БЕЗ ЗВУКА';
-        if (musicOn) {
-            startMusicLoop();
-        } else {
-            stopMusic();
-        }
+        if (musicOn) startMusicLoop();
+        else stopMusic();
     }
 
-    // Проверка победы и финальная музыка
     function playVictoryMusic() {
         stopMusic();
         if (musicOn) {
@@ -190,7 +179,7 @@
         document.getElementById('spawnGhoulBtn').disabled = gameState.playerBlood < 10 || gameState.gameOver;
     }
 
-    // ---------- МОДИФИКАТОРЫ БОЯ ----------
+    // ---------- БОЕВЫЕ МОДИФИКАТОРЫ ----------
     function getCombatModifiers(attackerIsPlayer, defenderIsPlayer, provinceId) {
         const prov = getProvinceById(provinceId);
         let attackMod = 1.0;
@@ -237,6 +226,7 @@
         if (targetProv.owner === 'player') {
             gameState.playerArmy.location = targetId;
             addLog(`🦇 Дракула переместился в ${targetProv.name}`);
+            drawAll();
             return true;
         }
         let defenderPower = 0;
@@ -265,10 +255,12 @@
                 gameState.winner = 'ai';
                 addLog('💀 Дракула повержен! Инквизиция торжествует.');
                 stopMusic();
-                if (musicOn) playVictoryMusic();
+                playVictoryMusic();
             }
         }
         checkPlayerVictory();
+        drawAll();
+        updateUI();
         return true;
     }
 
@@ -318,7 +310,7 @@
                             gameState.winner = 'ai';
                             addLog('💀 Дракула пал в бою!');
                             stopMusic();
-                            if (musicOn) playVictoryMusic();
+                            playVictoryMusic();
                         }
                     }
                 }
@@ -354,7 +346,7 @@
             gameState.winner = 'player';
             addLog('🦇 Дракула покорил Европу! Папа бежит в Новый Свет.');
             stopMusic();
-            if (musicOn) playVictoryMusic();
+            playVictoryMusic();
         }
     }
 
@@ -365,10 +357,7 @@
         gameState.isNight = gameState.turn % 2 === 0;
         updateUI();
         drawAll();
-        // Обновляем музыкальную тему при смене дня/ночи
-        if (musicOn && !gameState.gameOver) {
-            startMusicLoop();
-        }
+        if (musicOn && !gameState.gameOver) startMusicLoop();
         if (gameState.gameOver) {
             document.getElementById('nextTurnBtn').disabled = true;
         }
@@ -388,8 +377,158 @@
     }
 
     // ---------- РИСОВАНИЕ (8-BIT PIXEL ART) ----------
-    // ... (все функции drawPixelBackground, drawProvince, drawPixelCastle и т.д. остаются без изменений)
-    // Для краткости опускаю их здесь, но в реальном файле они должны быть полностью.
+    function drawPixelBackground() {
+        ctx.fillStyle = '#dac29c';
+        ctx.fillRect(0, 0, 1000, 700);
+        for (let i = 0; i < 600; i++) {
+            const x = Math.floor(Math.random() * 1000);
+            const y = Math.floor(Math.random() * 700);
+            ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.08})`;
+            ctx.fillRect(x, y, 2, 2);
+        }
+        ctx.strokeStyle = '#8b7355';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 20; i++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random() * 1000, Math.random() * 700);
+            ctx.lineTo(Math.random() * 1000, Math.random() * 700);
+            ctx.stroke();
+        }
+    }
+
+    function drawProvince(prov) {
+        const { x, y, w, h } = prov;
+        ctx.save();
+        ctx.shadowColor = '#00000040';
+        ctx.shadowBlur = 6;
+        if (prov.owner === 'player') {
+            ctx.fillStyle = '#4a0e1c';
+            ctx.fillRect(x, y, w, h);
+            ctx.fillStyle = 'rgba(180, 30, 30, 0.3)';
+            for (let i = 0; i < 8; i++) {
+                const dx = Math.floor(Math.random() * w);
+                const dy = Math.floor(Math.random() * h);
+                ctx.fillRect(x + dx, y + dy, 6, 6);
+            }
+        } else if (prov.owner === 'ai') {
+            ctx.fillStyle = '#2e4a6b';
+            ctx.fillRect(x, y, w, h);
+            if (prov.isHoly) {
+                ctx.fillStyle = 'rgba(255, 215, 0, 0.25)';
+                for (let i = 0; i < 6; i++) {
+                    const dx = Math.floor(Math.random() * w);
+                    const dy = Math.floor(Math.random() * h);
+                    ctx.fillRect(x + dx, y + dy, 5, 5);
+                }
+            }
+        } else {
+            ctx.fillStyle = '#5e5b52';
+            ctx.fillRect(x, y, w, h);
+        }
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#2f2416';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+        ctx.font = 'bold 11px "Courier New"';
+        ctx.fillStyle = '#fdf5e6';
+        ctx.shadowColor = '#000';
+        ctx.shadowBlur = 4;
+        ctx.fillText(prov.name, x + 8, y + h - 8);
+        ctx.shadowBlur = 0;
+        if (prov.hasCathedral) {
+            drawPixelCathedral(x + w/2 - 8, y + h/2 - 12);
+        } else if (prov.owner === 'player') {
+            drawPixelCastle(x + w/2 - 8, y + h/2 - 10);
+        } else if (prov.owner === 'ai') {
+            drawPixelCathedral(x + w/2 - 8, y + h/2 - 12);
+        } else {
+            drawPixelVillage(x + w/2 - 6, y + h/2 - 8);
+        }
+        ctx.restore();
+    }
+
+    function drawPixelCastle(cx, cy) {
+        ctx.fillStyle = '#3a3a3a';
+        ctx.fillRect(cx, cy+8, 16, 10);
+        ctx.fillRect(cx-2, cy+4, 20, 6);
+        ctx.fillStyle = '#8b0000';
+        ctx.fillRect(cx+4, cy+2, 8, 4);
+        ctx.fillStyle = '#1e1e1e';
+        ctx.fillRect(cx+6, cy-2, 4, 6);
+    }
+
+    function drawPixelCathedral(cx, cy) {
+        ctx.fillStyle = '#f5e6d3';
+        ctx.fillRect(cx+2, cy+8, 12, 10);
+        ctx.fillStyle = '#d4af37';
+        ctx.fillRect(cx+6, cy, 4, 12);
+        ctx.fillRect(cx, cy+4, 16, 4);
+    }
+
+    function drawPixelVillage(cx, cy) {
+        ctx.fillStyle = '#8b7355';
+        ctx.fillRect(cx+2, cy+6, 8, 8);
+        ctx.fillStyle = '#5c4033';
+        ctx.fillRect(cx, cy+2, 12, 6);
+    }
+
+    function drawDraculaSprite(x, y) {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(x, y, 10, 14);
+        ctx.fillStyle = '#8b0000';
+        ctx.fillRect(x-2, y+2, 4, 10);
+        ctx.fillStyle = '#d4af37';
+        ctx.fillRect(x+3, y-2, 4, 4);
+    }
+
+    function drawInquisitorSprite(x, y) {
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fillRect(x, y, 10, 14);
+        ctx.fillStyle = '#1e3a8a';
+        ctx.fillRect(x+6, y+2, 4, 10);
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(x+2, y-3, 2, 6);
+        ctx.fillRect(x+5, y-1, 2, 4);
+    }
+
+    function drawGhoulSprite(x, y) {
+        ctx.fillStyle = '#2f4f2f';
+        ctx.fillRect(x, y, 8, 10);
+        ctx.fillStyle = '#556b2f';
+        ctx.fillRect(x-1, y-2, 10, 4);
+        ctx.fillStyle = '#8b0000';
+        ctx.fillRect(x+2, y+2, 3, 3);
+    }
+
+    function drawUnits() {
+        const playerLoc = getProvinceById(gameState.playerArmy.location);
+        if (playerLoc) {
+            const px = playerLoc.x + playerLoc.w/2 - 10;
+            const py = playerLoc.y + playerLoc.h/2 - 15;
+            drawDraculaSprite(px, py);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 10px "Courier New"';
+            ctx.fillText(gameState.playerArmy.power, px + 14, py + 10);
+        }
+        gameState.aiArmies.forEach(army => {
+            const loc = getProvinceById(army.location);
+            if (loc) {
+                const ax = loc.x + loc.w/2 + 5;
+                const ay = loc.y + loc.h/2 - 18;
+                drawInquisitorSprite(ax, ay);
+                ctx.fillText(army.power, ax + 14, ay + 10);
+            }
+        });
+        gameState.ghoulArmies.forEach(g => {
+            const loc = getProvinceById(g.location);
+            if (loc) {
+                const gx = loc.x + 15;
+                const gy = loc.y + loc.h - 25;
+                drawGhoulSprite(gx, gy);
+                ctx.fillText(g.power, gx + 12, gy + 8);
+            }
+        });
+    }
 
     function drawAll() {
         drawPixelBackground();
@@ -403,8 +542,51 @@
 
     // ---------- ИНТЕРФЕЙС И СОБЫТИЯ ----------
     const tooltip = document.getElementById('tooltip');
-    canvas.addEventListener('mousemove', (e) => { /* ... без изменений ... */ });
-    canvas.addEventListener('click', (e) => { /* ... без изменений ... */ });
+    canvas.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
+        let found = null;
+        for (let p of gameState.provinces) {
+            if (mouseX >= p.x && mouseX <= p.x + p.w && mouseY >= p.y && mouseY <= p.y + p.h) {
+                found = p;
+                break;
+            }
+        }
+        if (found) {
+            const ownerStr = found.owner === 'player' ? 'Вампиры' : (found.owner === 'ai' ? 'Инквизиция' : 'Нейтралы');
+            tooltip.innerHTML = [
+                `🏰 ${found.name}`,
+                `👑 Владелец: ${ownerStr}`,
+                `🌑 Тьма: ${found.isDark ? 'Да' : 'Нет'}`,
+                `✝️ Святость: ${found.isHoly ? 'Да' : 'Нет'}`,
+                `⛪ Собор: ${found.hasCathedral ? 'Да' : 'Нет'}`
+            ].join('<br>');
+            tooltip.style.display = 'block';
+            tooltip.style.left = (e.clientX + 20) + 'px';
+            tooltip.style.top = (e.clientY - 30) + 'px';
+        } else {
+            tooltip.style.display = 'none';
+        }
+    });
+
+    canvas.addEventListener('click', (e) => {
+        if (gameState.gameOver) return;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
+        for (let p of gameState.provinces) {
+            if (mouseX >= p.x && mouseX <= p.x + p.w && mouseY >= p.y && mouseY <= p.y + p.h) {
+                movePlayerToProvince(p.id);
+                break;
+            }
+        }
+    });
+
     document.getElementById('nextTurnBtn').addEventListener('click', nextTurn);
     document.getElementById('spawnGhoulBtn').addEventListener('click', spawnGhoul);
     document.getElementById('musicToggleBtn').addEventListener('click', toggleMusic);
@@ -412,7 +594,6 @@
     // ---------- СТАРТ ИГРЫ ----------
     updateUI();
     drawAll();
-    // Запуск музыки при загрузке
     window.addEventListener('load', () => {
         if (musicOn) startMusicLoop();
     });
