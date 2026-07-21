@@ -22,6 +22,7 @@
                 <button id="feastBtn" title="Кровавый пир (5 крови, +20 силы)">🍷 ПИР</button>
                 <button id="servantBtn" title="Призвать слуг (5 крови)">🧛 СЛУГИ</button>
                 <button id="churchBtn" title="Церковь Ночи (12 крови)">🕍 ЦЕРКОВЬ</button>
+                <button id="upgradesBtn" title="Исследования вампиров">🧬 УЛУЧШЕНИЯ</button>
                 <button id="musicBtn">🎵</button>
                 <button id="endTurnBtn">⏩ КОНЕЦ ХОДА</button>
             </div>
@@ -29,6 +30,12 @@
         <div class="log" id="logPanel">📜 Дракула пробуждается в Трансильвании...</div>
     </div>
     <div id="tooltip"></div>
+    <!-- Окно улучшений (скрыто) -->
+    <div id="upgradeModal" style="display:none; position:absolute; top:200px; left:50%; transform:translateX(-50%); background:#1e140c; border:3px solid #d4af37; padding:20px; color:#f9eec1; z-index:200; width:300px; text-align:center; box-shadow:0 0 30px black;">
+        <h3>🧬 Улучшения вампира</h3>
+        <div id="upgradeList"></div>
+        <button id="closeUpgradesBtn" style="margin-top:10px;">ЗАКРЫТЬ</button>
+    </div>
 </div>
 <script src="script.js"></script>
 </body>
