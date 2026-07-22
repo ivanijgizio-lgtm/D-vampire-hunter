@@ -11,7 +11,6 @@
     <div id="game-container">
         <div id="bg-layer"></div>
         
-        <!-- Основная область -->
         <div id="main-area">
             <div id="top-bar">
                 <div class="stat">⚔️ ХОД: <span id="turn-counter">1</span></div>
@@ -69,53 +68,31 @@
         </div>
     </div>
 
-    <!-- Туманные подсказки (Tooltip) -->
     <div id="tooltip"></div>
 
-    <!-- Модальное окно Битвы (Визуальное) -->
-    <div id="battle-modal" class="modal">
+    <!-- Модальное окно выбора: ОСАДИТЬ или АТАКОВАТЬ -->
+    <div id="action-modal" class="modal">
         <div class="modal-content">
-            <h2 id="battle-title">⚔️ СРАЖЕНИЕ!</h2>
-            <div class="battle-field">
-                <div class="battle-side attacker">
-                    <h3 id="attacker-name">Атакующий</h3>
-                    <div class="hp-bar-container"><div id="attacker-hp" class="hp-bar-fill"></div></div>
-                    <p id="attacker-stats">Войск: 0</p>
-                </div>
-                <div class="battle-vs">VS</div>
-                <div class="battle-side defender">
-                    <h3 id="defender-name">Защитник</h3>
-                    <div class="hp-bar-container"><div id="defender-hp" class="hp-bar-fill"></div></div>
-                    <p id="defender-stats">Гарнизон: 0</p>
-                </div>
+            <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
+            <p id="action-desc">Ваша армия вошла в провинцию. Что делать?</p>
+            <div id="action-options">
+                <button id="btn-siege" class="action-btn" style="border-color: #d4af37;">🚩 ОСАДИТЬ (1 AP)</button>
+                <button id="btn-assault-now" class="action-btn main-action">⚔️ АТАКОВАТЬ (1 AP)</button>
             </div>
-            <div id="battle-result"></div>
-            <button id="battle-resolve-btn" class="action-btn main-action">🔪 ЗАВЯЗАТЬ БИТВУ!</button>
         </div>
     </div>
 
-    <!-- Модальное окно выбора судьбы -->
+    <!-- Модальное окно выбора судьбы провинции (3 кнопки) -->
     <div id="surrender-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ПРОВИНЦИЯ ЗАХВАЧЕНА!</h2>
-            <p>Население побеждено. Ваше решение?</p>
+            <p>Население побеждено. Какова ваша воля?</p>
             <div id="surrender-options">
                 <button id="btn-exterminate" class="action-btn main-action" style="background:#8b0000;">💀 ИСТРЕБИТЬ</button>
-                <button id="btn-convert" class="action-btn" style="background:#2d2d2d;">🧛 ОБРАТИТЬ</button>
+                <button id="btn-enslave" class="action-btn" style="background:#333; border-color:#555;">⛓️ ПОРАБОТИТЬ</button>
+                <button id="btn-convert" class="action-btn" style="background:#2d2d2d; border-color:#8b0000;">🧛 ОБРАТИТЬ</button>
             </div>
             <p id="surrender-result" style="margin-top:10px; font-size:14px; color:#aaa;"></p>
-        </div>
-    </div>
-
-    <!-- Модальное окно Случайного события -->
-    <div id="event-modal" class="modal">
-        <div class="modal-content">
-            <h2 id="event-title">📜 СОБЫТИЕ</h2>
-            <p id="event-desc">Описание события...</p>
-            <div id="event-options">
-                <button id="event-opt-1" class="action-btn">Принять</button>
-                <button id="event-opt-2" class="action-btn">Отказаться</button>
-            </div>
         </div>
     </div>
 
