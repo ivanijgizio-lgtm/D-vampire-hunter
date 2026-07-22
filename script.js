@@ -1,14 +1,14 @@
 // ================= ЗАГРУЗКА АССЕТОВ =================
+// Ссылки на ваши файлы в папке assets
 const sprites = {
-    player: new Image(), // Вампир (Игрок)
-    ai: new Image(),     // Рыцарь Ватикана (ИИ)
-    rider: new Image(),  // Всадник
+    player: new Image(), // Вампир
+    ai: new Image(),     // Рыцарь Ватикана
+    rider: new Image(),  // Всадник (заглушка, сейчас используется knight.gif)
 };
 
-// Убедитесь, что файлы лежат в одной папке
-sprites.player.src = 'vampire.png';
-sprites.ai.src = 'knight.png';
-sprites.rider.src = 'rider.png';
+sprites.player.src = './assets/vampir.webp';
+sprites.ai.src = './assets/knight.gif';
+sprites.rider.src = './assets/knight.gif';
 
 // ================= ДАННЫЕ ИГРЫ =================
 let game = {
@@ -154,7 +154,7 @@ function cancelSiegeMTW() {
     updateUI();
 }
 
-// ================= ДЕЙСТВИЯ ИИ (ЭКСПАНСИЯ) =================
+// ================= ДЕЙСТВИЯ ИИ =================
 function aiTurn() {
     log('⛪ Ход Ватикана...', 'ai');
     game.ai.gold += game.provinces.filter(p => p.owner === 'ai').length * 2;
@@ -167,17 +167,16 @@ function aiTurn() {
         log('⛪ Ватикан построил Церковь в ' + aiArmyProv.name, 'ai');
     }
 
-    // 2. Найм рыцарей
-    if (game.ai.gold >= 5 && game.ai.blood >= 2) {
-        game.ai.gold -= 5; game.ai.blood -= 2;
+    // 2. Найм рыцарей (у ИИ нет расхода крови, только золото)
+    if (game.ai.gold >= 5) {
+        game.ai.gold -= 5;
         game.ai.elites += 2;
         log('⚔️ Ватикан нанял 2-х Рыцарей Света.', 'ai');
     }
 
-    // 3. Боевые действия (Агрессивное продвижение к игроку)
+    // 3. Боевые действия
     if (aiArmyProv) {
         const neighbors = aiArmyProv.neighbors;
-        // Ищем ближайшую провинцию игрока
         const targets = game.provinces.filter(p => neighbors.includes(p.id) && p.owner === 'player');
         
         if (targets.length > 0) {
@@ -188,13 +187,11 @@ function aiTurn() {
             } else {
                 log(`⚔️ Ватикан штурмует ${target.name}`, 'ai');
                 resolveCombat('ai', target);
-                if (target.owner === 'ai') target.siegeBy = null; // Снимаем осаду при захвате
+                if (target.owner === 'ai') target.siegeBy = null;
             }
         } else {
-            // Если врагов рядом нет, ИИ двигает армию к соседней провинции с врагом
             const frontierTarget = game.provinces.find(p => p.owner === 'player' && p.neighbors.some(id => game.provinces.find(prov => prov.id === id && prov.owner === 'ai')));
             if (frontierTarget) {
-                // Телепортируем армию в ближайшую соседнюю провинцию ИИ к врагу
                 const moveToId = frontierTarget.neighbors.find(id => game.provinces.find(p => p.id === id && p.owner === 'ai'));
                 if (moveToId) {
                     game.ai.army.location = moveToId;
@@ -207,7 +204,7 @@ function aiTurn() {
     updateUI();
 }
 
-// ================= КОНЕЦ ХОДА ИГРОКА =================
+// ================= КОНЕЦ ХОДА =================
 function endPlayerTurn() {
     if (game.gameOver) return;
     if (game.provinces.filter(p => p.owner === 'player').length === 0) return gameOver('ai');
@@ -236,13 +233,13 @@ function gameOver(winner) {
     log(`💀 ${msg}`, winner === 'player' ? 'player' : 'ai');
     document.querySelectorAll('.action-btn').forEach(btn => btn.disabled = true);
     document.getElementById('bg-layer').style.opacity = '0.8';
-    document.getElementById('bg-layer').style.backgroundImage = "url('bg_moon.jpg')";
+    document.getElementById('bg-layer').style.backgroundImage = "url('./assets/background.jpg')";
     updateUI();
 }
 
 function canAct() { return !game.gameOver && game.player.ap > 0; }
 
-// ================= ОТРИСОВКА КАРТЫ И ТУМАН ВОЙНЫ =================
+// ================= ОТРИСОВКА КАРТЫ =================
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -270,7 +267,7 @@ function drawMap() {
         ctx.closePath();
 
         if (game.fogOfWar && !isVisible) {
-            ctx.fillStyle = '#080302'; // Черный туман
+            ctx.fillStyle = '#080302';
             ctx.strokeStyle = '#080302';
             ctx.fill(); ctx.stroke();
             return;
@@ -289,7 +286,6 @@ function drawMap() {
         if (prov.buildings && prov.buildings.length > 0) stats += ` [${prov.buildings.join(', ')}]`;
         ctx.fillText(stats, prov.x, prov.y + 15);
 
-        // Осадные рамки
         if (prov.siegeBy === 'player') {
             ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 3; ctx.setLineDash([5, 5]);
             ctx.strokeRect(prov.x - 40, prov.y - 40, 80, 80); ctx.setLineDash([]); ctx.lineWidth = 1;
@@ -299,11 +295,12 @@ function drawMap() {
         }
     });
 
-    // Отрисовка армий (С защитой от "сломанных" спрайтов)
+    // Отрисовка армий
     const playerProv = game.provinces.find(p => p.id === game.player.army.location);
     const aiProv = game.provinces.find(p => p.id === game.ai.army.location);
     
     if (playerProv) {
+        // Защита от падения
         if (sprites.player.complete && sprites.player.naturalWidth > 0) {
             ctx.drawImage(sprites.player, playerProv.x - 20, playerProv.y - 40, 40, 60);
         } else {
@@ -313,6 +310,7 @@ function drawMap() {
     }
 
     if (aiProv) {
+        // Защита от падения
         if (sprites.ai.complete && sprites.ai.naturalWidth > 0) {
             ctx.drawImage(sprites.ai, aiProv.x - 20, aiProv.y - 40, 40, 60);
         } else {
