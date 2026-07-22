@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Готическая Стратегия: Война Теней</title>
+    <title>Война Теней: Крестовый поход против Вампиров</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Используем готический шрифт из Google Fonts для атмосферы -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="game-container">
-        <!-- Фоновый слой для готического замка -->
+        <!-- Фоновый слой -->
         <div id="bg-layer"></div>
+        
+        <canvas id="game-canvas" width="850" height="600"></canvas>
 
-        <!-- Игровой холст для карты и юнитов -->
-        <canvas id="game-canvas" width="800" height="600"></canvas>
-
-        <!-- Нижняя панель интерфейса -->
+        <!-- Интерфейс MTW -->
         <div id="ui-panel">
             <div id="status-bar">
                 <div class="stat"><span class="icon">⚔️</span> ХОД: <span id="turn-counter">1</span></div>
@@ -24,24 +22,34 @@
                 <div class="stat"><span class="icon">⚡</span> Действия: <span id="ap-counter">2/2</span></div>
                 <div class="stat"><span class="icon">🩸</span> Кровь: <span id="blood-counter">5</span></div>
                 <div class="stat"><span class="icon">💰</span> Золото: <span id="gold-counter">5</span></div>
-                <div class="stat"><span class="icon">🛡️</span> Элита: <span id="elite-counter">0</span></div>
+                <div class="stat"><span class="icon">🗡️</span> Элита: <span id="elite-counter">0</span></div>
+                <!-- Новый показатель: Вера (сопротивление врага) -->
+                <div class="stat"><span class="icon">⛪</span> Вера Ватикана: <span id="faith-counter">0</span></div>
             </div>
 
             <div id="action-buttons">
                 <button id="btn-raid" class="action-btn">⚔️ НАБЕГ</button>
-                <button id="btn-siege" class="action-btn" disabled>🏰 ОСАДА</button>
                 <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
-                <button id="btn-build" class="action-btn">🏗️ СТРОИТЬ</button>
-                <button id="btn-recruit" class="action-btn">🧛 НАНЯТЬ</button>
+                
+                <!-- Меню построек (как в MTW) -->
+                <div class="dropdown">
+                    <button class="action-btn">🏗️ СТРОИТЬ</button>
+                    <div class="dropdown-content">
+                        <button id="build-grave" class="sub-btn">🪦 Фабрика гробов</button>
+                        <button id="build-feast" class="sub-btn">🍷 Пировая зала</button>
+                        <button id="build-ritual" class="sub-btn">🎶 Концерт тьмы</button>
+                    </div>
+                </div>
+
+                <button id="btn-recruit" class="action-btn">🧛 НАНЯТЬ ЭЛИТУ</button>
                 <button id="btn-cancel-siege" class="action-btn">🚫 СНЯТЬ</button>
-                <button id="btn-end-turn" class="action-btn main-action">⏩ ХОД</button>
+                <button id="btn-end-turn" class="action-btn main-action">⏩ СЛЕД. ХОД</button>
             </div>
         </div>
 
-        <!-- Лог событий -->
         <div id="log-panel">
             <div id="log-container">
-                <div class="log-entry">Принёс война тень...</div>
+                <div class="log-entry system">Принёс война тень... Отвоюйте Трансильванию у Рыцарей Света!</div>
             </div>
         </div>
     </div>
