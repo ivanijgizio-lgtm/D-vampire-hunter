@@ -19,50 +19,60 @@
                 <div class="stat">⚡ Действия: <span id="ap-counter">2/2</span></div>
                 <div class="stat">🩸 Кровь: <span id="blood-counter">5</span></div>
                 <div class="stat">💰 Золото: <span id="gold-counter">5</span></div>
-                <div class="stat">🧛 Верхов. Вампиры: <span id="elite-counter">0</span></div>
-                <div class="stat">⛪ Вера Ватикана: <span id="faith-counter">0</span></div>
+                <div class="stat">🧛 Вампиры: <span id="elite-counter">0</span></div>
+                <div class="stat">⛪ Вера: <span id="faith-counter">0</span></div>
             </div>
 
             <div id="action-buttons">
-                <button id="btn-move" class="action-btn">🏰 ДВИГАТЬ АРМИЮ</button>
+                <button id="btn-move" class="action-btn">🏰 ДВИГАТЬ</button>
                 <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
                 
                 <div class="dropdown">
-                    <button class="action-btn">🏗️ СТРОИТЬ (10-30 ЗОЛОТА)</button>
+                    <button class="action-btn">🏗️ СТРОИТЬ</button>
                     <div class="dropdown-content">
                         <button id="build-grave" class="sub-btn">⚰️ Фабрика гробов (30🪙)</button>
                         <button id="build-feast" class="sub-btn">🍷 Пиршественный зал (20🪙)</button>
                         <button id="build-ritual" class="sub-btn">🕯️ Храм Тьмы (25🪙)</button>
-                        <button id="build-dungeon" class="sub-btn">⛓️ Тюрьма инквизиции (15🪙)</button>
+                        <button id="build-dungeon" class="sub-btn">⛓️ Тюрьма (15🪙)</button>
+                        <button id="build-castle" class="sub-btn">🏰 Замок (40🪙)</button>
                     </div>
                 </div>
 
-                <button id="btn-recruit" class="action-btn">🧛 ПРИЗВАТЬ ВОЙСКА (5🪙)</button>
-                <button id="btn-cancel-siege" class="action-btn">🚫 СНЯТЬ ОСАДУ</button>
+                <button id="btn-recruit" class="action-btn">🧛 ПРИЗВАТЬ (10🪙)</button>
+                
+                <div class="dropdown">
+                    <button class="action-btn garrison-btn">🛡️ ГАРНИЗОН</button>
+                    <div class="dropdown-content">
+                        <button id="btn-garrison-add" class="sub-btn">⬆️ ОСТАВИТЬ (10 бойцов)</button>
+                        <button id="btn-garrison-take" class="sub-btn">⬇️ ПРИЗВАТЬ (10 бойцов)</button>
+                    </div>
+                </div>
+
+                <button id="btn-cancel-siege" class="action-btn">🚫 СНЯТЬ</button>
                 <button id="btn-end-turn" class="action-btn main-action">⏩ СЛЕД. ХОД</button>
             </div>
         </div>
 
         <div id="log-panel">
             <div id="log-container">
-                <div class="log-entry system">Кровь и Вера! Начните завоевание Европы...</div>
+                <div class="log-entry system">Кровь и Вера! Завоюйте Европу...</div>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно для сражений -->
+    <!-- Модальное окно битвы -->
     <div id="battle-modal" class="modal">
         <div class="modal-content">
             <h2 id="battle-title">⚔️ СРАЖЕНИЕ!</h2>
             <div class="battle-field">
                 <div class="battle-side attacker">
                     <h3 id="attacker-name">Атакующий</h3>
-                    <p id="attacker-stats">Войск: 0</p>
+                    <p id="attacker-stats">Войск: 0 | Элит: 0</p>
                 </div>
                 <div class="battle-vs">VS</div>
                 <div class="battle-side defender">
                     <h3 id="defender-name">Защитник</h3>
-                    <p id="defender-stats">Войск: 0</p>
+                    <p id="defender-stats">Войск: 0 | Гарнизон: 0</p>
                 </div>
             </div>
             <div id="battle-result"></div>
