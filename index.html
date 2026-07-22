@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кровь и Вера · Осады Европы 1520</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кровь и Вера · Осады Европы 1520</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div style="position: relative;">
-    <div class="container">
-        <canvas id="gameCanvas" width="1000" height="700"></canvas>
-        <div class="panel">
-            <span>🌅 ХОД: <span id="turnDisplay">1</span> <span id="dayNightIcon">☀️ ДЕНЬ</span></span>
-            <span>🎯 Действия: <span id="playerAP">2</span>/2</span>
-            <span class="resources"><span class="blood">🩸 <span id="bloodAmount">5</span></span> <span class="faith">✝️ <span id="faithAmount">5</span></span></span>
-            <span>🏴 <span id="capturePercent">6%</span></span>
-            <button id="feastBtn" title="Кровавый пир (+20 силы, -5 крови)">🍷 ПИР</button>
-            <button id="raidBtn" title="Погром (+3 крови, -10 гарнизона)">🔥 ПОГРОМ</button>
-            <button id="buildBtn" title="Постройки">🏗️ СТРОИТЬ</button>
-            <button id="recruitBtn" title="Нанять верховного вампира (15 крови)">🧛 НАНЯТЬ</button>
-            <button id="siegeBtn" title="Штурм осаждённой провинции">⚔️ ШТУРМ</button>
-            <button id="cancelSiegeBtn" title="Снять осаду">🚫 СНЯТЬ</button>
-            <button id="musicBtn">🎵</button>
-            <button id="endTurnBtn">⏩ ХОД</button>
-        </div>
-        <div class="log" id="logPanel">📜 Дракула ведёт легионы тьмы...</div>
+  <div class="container">
+    <canvas id="gameCanvas" width="1000" height="700"></canvas>
+    <div class="panel">
+      <span>🌅 ХОД: <span id="turnDisplay">1</span> <span id="dayNightIcon">☀️ ДЕНЬ</span></span>
+      <span>🎯 Действия: <span id="playerAP">2</span>/2</span>
+      <span class="resources"><span class="blood">🩸 <span id="bloodAmount">5</span></span> <span class="faith">✝️ <span id="faithAmount">5</span></span></span>
+      <span>🏴 <span id="capturePercent">6%</span></span>
+      <button id="feastBtn" title="Кровавый пир (+20 силы, -5 крови)">🍷 ПИР</button>
+      <button id="raidBtn" title="Погром (+3 крови, -10 гарнизона)">🔥 ПОГРОМ</button>
+      <button id="buildBtn" title="Постройки">🏗️ СТРОИТЬ</button>
+      <button id="recruitBtn" title="Нанять верховного вампира (15 крови)">🧛 НАНЯТЬ</button>
+      <button id="siegeBtn" title="Штурм осаждённой провинции">⚔️ ШТУРМ</button>
+      <button id="cancelSiegeBtn" title="Снять осаду">🚫 СНЯТЬ</button>
+      <button id="musicBtn">🎵</button>
+      <button id="endTurnBtn">⏩ ХОД</button>
     </div>
-    <div id="tooltip"></div>
-    <div id="buildModal" class="modal">
-        <h3>🏗️ Постройки</h3>
-        <div id="buildList"></div>
-        <button id="closeBuildBtn">ЗАКРЫТЬ</button>
-    </div>
+    <div class="log" id="logPanel">📜 Дракула ведёт легионы тьмы...</div>
+  </div>
+  <div id="tooltip"></div>
+  <div id="buildModal" class="modal">
+    <h3>🏗️ Постройки</h3>
+    <div id="buildList"></div>
+    <button id="closeBuildBtn">ЗАКРЫТЬ</button>
+  </div>
 </div>
 <script src="script.js"></script>
 </body>
