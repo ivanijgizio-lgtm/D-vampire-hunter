@@ -17,7 +17,6 @@ body {
 }
 #bg-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 600px;
-    /* ВАША ССЫЛКА НА ФОН */
     background-image: url('./assets/background.jpg'); 
     background-size: cover; background-position: center;
     opacity: 0.25; z-index: 0; pointer-events: none;
@@ -70,3 +69,19 @@ body {
 .log-entry.player { color: var(--vampire-red); font-weight: bold; }
 .log-entry.ai { color: var(--vatican-gold); }
 .log-entry.system { color: #6688aa; }
+
+/* Стили для битвы (Модальное окно) */
+.modal {
+    display: none; position: fixed; z-index: 10; left: 0; top: 0;
+    width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);
+    justify-content: center; align-items: center;
+}
+.modal-content {
+    background-color: var(--ui-bg); border: 2px solid var(--gold);
+    border-radius: 10px; padding: 30px; width: 500px; text-align: center;
+    box-shadow: 0 0 50px rgba(139, 0, 0, 0.8);
+}
+.battle-field { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; }
+.battle-side { width: 40%; border: 1px solid var(--ui-border); padding: 10px; border-radius: 5px; }
+.battle-vs { font-size: 24px; font-weight: bold; color: var(--blood-red); }
+#battle-result { margin: 15px 0; font-size: 18px; color: var(--gold); font-weight: bold; }
