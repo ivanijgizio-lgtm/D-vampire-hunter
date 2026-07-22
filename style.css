@@ -1,87 +1,57 @@
 :root {
-    --bg-dark: #0a0605;
-    --ui-bg: #140d0a;
-    --ui-border: #663333;
-    --gold: #d4af37;
-    --blood-red: #8b0000;
-    --text-light: #e6d5c3;
-    --highlight: #5a1616;
-    --vampire-red: #5c0000;
-    --vatican-gold: #c9a84c;
+    --bg-dark: #0a0605; --ui-bg: #140d0a; --ui-border: #663333;
+    --gold: #d4af37; --blood-red: #8b0000; --text-light: #e6d5c3;
+    --highlight: #5a1616; --vampire-red: #5c0000; --vatican-gold: #c9a84c;
 }
-
 body {
-    margin: 0; padding: 0;
-    background-color: var(--bg-dark);
-    font-family: 'Cinzel', serif;
-    color: var(--text-light);
+    margin: 0; padding: 0; background-color: var(--bg-dark);
+    font-family: 'Cinzel', serif; color: var(--text-light);
     display: flex; justify-content: center; align-items: center;
     height: 100vh; overflow: hidden;
 }
-
 #game-container {
-    position: relative;
-    width: 870px; height: 820px;
-    background-color: var(--ui-bg);
-    border: 2px solid var(--ui-border);
-    box-shadow: 0 0 50px rgba(139, 0, 0, 0.7);
-    border-radius: 8px;
+    position: relative; width: 870px; height: 820px;
+    background-color: var(--ui-bg); border: 2px solid var(--ui-border);
+    box-shadow: 0 0 50px rgba(139, 0, 0, 0.7); border-radius: 8px;
     display: flex; flex-direction: column;
 }
-
 #bg-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 600px;
-    /* ФОНОВЫЙ ЗАМОК (ЗАМЕНИТЕ ПУТЬ) */
-    background-image: url('bg_castle.jpg'); 
+    background-image: url('bg_castle.jpg'); /* ФОНОВЫЙ ЗАМОК */
     background-size: cover; background-position: center;
     opacity: 0.25; z-index: 0; pointer-events: none;
 }
-
 #game-canvas {
-    position: relative; z-index: 1;
-    background-color: transparent;
-    margin: 10px auto; border: 2px solid var(--ui-border);
-    cursor: crosshair;
+    position: relative; z-index: 1; background-color: transparent;
+    margin: 10px auto; border: 2px solid var(--ui-border); cursor: crosshair;
 }
-
 #ui-panel {
-    z-index: 2;
-    background: rgba(10, 6, 5, 0.95);
-    padding: 10px; border-top: 2px solid var(--gold);
-    display: flex; flex-direction: column; gap: 10px;
+    z-index: 2; background: rgba(10, 6, 5, 0.95); padding: 10px;
+    border-top: 2px solid var(--gold); display: flex; flex-direction: column; gap: 10px;
 }
-
 #status-bar {
     display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px;
     border-bottom: 1px solid var(--ui-border); padding-bottom: 8px; justify-content: space-evenly;
 }
-
 .stat { display: flex; align-items: center; gap: 5px; }
-
 #action-buttons {
-    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-    position: relative;
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; position: relative;
 }
-
 .action-btn {
-    background: #2a1c18; border: 1px solid var(--ui-border);
-    color: var(--text-light); font-family: 'Cinzel', serif;
-    padding: 8px 16px; border-radius: 4px; cursor: pointer;
-    transition: all 0.2s; flex: 1; min-width: 80px;
+    background: #2a1c18; border: 1px solid var(--ui-border); color: var(--text-light);
+    font-family: 'Cinzel', serif; padding: 8px 16px; border-radius: 4px;
+    cursor: pointer; transition: all 0.2s; flex: 1; min-width: 80px;
 }
-
 .action-btn:hover:not(:disabled) {
     background: var(--highlight); border-color: var(--gold);
     box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
 }
 .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .main-action { background: var(--blood-red); border-color: var(--gold); font-weight: bold; }
-
-/* Dropdown меню построек как в MTW */
 .dropdown { position: relative; display: inline-block; flex: 1; min-width: 80px; }
 .sub-btn {
-    background: #1a100c; border: none; color: var(--text-light);
-    padding: 5px; width: 100%; text-align: left; cursor: pointer; border-bottom: 1px solid var(--ui-border);
+    background: #1a100c; border: none; color: var(--text-light); padding: 5px;
+    width: 100%; text-align: left; cursor: pointer; border-bottom: 1px solid var(--ui-border);
 }
 .sub-btn:hover { background: var(--highlight); }
 .dropdown-content {
@@ -90,11 +60,10 @@ body {
     z-index: 3; border: 1px solid var(--gold); bottom: 35px; left: 0;
 }
 .dropdown:hover .dropdown-content { display: block; }
-
 #log-panel {
     z-index: 2; height: 60px; background: rgba(0, 0, 0, 0.8);
-    border-top: 1px solid var(--ui-border); padding: 5px 10px;
-    font-size: 13px; overflow-y: scroll; color: #ab8b7a;
+    border-top: 1px solid var(--ui-border); padding: 5px 10px; font-size: 13px;
+    overflow-y: scroll; color: #ab8b7a;
 }
 .log-entry { border-bottom: 1px dotted #1a0f0c; padding: 2px 0; }
 .log-entry.player { color: var(--vampire-red); font-weight: bold; }
