@@ -10,7 +10,7 @@ body {
     height: 100vh; overflow: hidden;
 }
 #game-container {
-    position: relative; width: 870px; height: 820px;
+    position: relative; width: 870px; height: 840px;
     background-color: var(--ui-bg); border: 2px solid var(--ui-border);
     box-shadow: 0 0 50px rgba(139, 0, 0, 0.7); border-radius: 8px;
     display: flex; flex-direction: column;
@@ -35,12 +35,12 @@ body {
 }
 .stat { display: flex; align-items: center; gap: 5px; }
 #action-buttons {
-    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; position: relative;
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; position: relative;
 }
 .action-btn {
     background: #2a1c18; border: 1px solid var(--ui-border); color: var(--text-light);
-    font-family: 'Cinzel', serif; padding: 8px 16px; border-radius: 4px;
-    cursor: pointer; transition: all 0.2s; flex: 1; min-width: 80px;
+    font-family: 'Cinzel', serif; padding: 8px 12px; border-radius: 4px;
+    cursor: pointer; transition: all 0.2s; flex: 1; min-width: 70px; font-size: 13px;
 }
 .action-btn:hover:not(:disabled) {
     background: var(--highlight); border-color: var(--gold);
@@ -48,15 +48,16 @@ body {
 }
 .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .main-action { background: var(--blood-red); border-color: var(--gold); font-weight: bold; }
-.dropdown { position: relative; display: inline-block; flex: 1; min-width: 80px; }
+.garrison-btn { background: #1a2a1a; border-color: #2a4a2a; }
+.dropdown { position: relative; display: inline-block; flex: 1; min-width: 70px; }
 .sub-btn {
     background: #1a100c; border: none; color: var(--text-light); padding: 5px;
-    width: 100%; text-align: left; cursor: pointer; border-bottom: 1px solid var(--ui-border);
+    width: 100%; text-align: left; cursor: pointer; border-bottom: 1px solid var(--ui-border); font-size: 12px;
 }
 .sub-btn:hover { background: var(--highlight); }
 .dropdown-content {
     display: none; position: absolute; background-color: var(--ui-bg);
-    min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
+    min-width: 150px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
     z-index: 3; border: 1px solid var(--gold); bottom: 35px; left: 0;
 }
 .dropdown:hover .dropdown-content { display: block; }
@@ -70,7 +71,6 @@ body {
 .log-entry.ai { color: var(--vatican-gold); }
 .log-entry.system { color: #6688aa; }
 
-/* Стили для битвы (Модальное окно) */
 .modal {
     display: none; position: fixed; z-index: 10; left: 0; top: 0;
     width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);
