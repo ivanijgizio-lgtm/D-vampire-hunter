@@ -1,148 +1,102 @@
 :root {
-    --bg-dark: #120d0a;
-    --ui-bg: #1c1410;
-    --ui-border: #4a2c2a;
+    --bg-dark: #0a0605;
+    --ui-bg: #140d0a;
+    --ui-border: #663333;
     --gold: #d4af37;
     --blood-red: #8b0000;
     --text-light: #e6d5c3;
-    --highlight: #6b2a2a;
+    --highlight: #5a1616;
+    --vampire-red: #5c0000;
+    --vatican-gold: #c9a84c;
 }
 
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     background-color: var(--bg-dark);
     font-family: 'Cinzel', serif;
     color: var(--text-light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
+    height: 100vh; overflow: hidden;
 }
 
 #game-container {
     position: relative;
-    width: 820px;
-    height: 800px;
+    width: 870px; height: 820px;
     background-color: var(--ui-bg);
     border: 2px solid var(--ui-border);
-    box-shadow: 0 0 50px rgba(139, 0, 0, 0.6);
+    box-shadow: 0 0 50px rgba(139, 0, 0, 0.7);
     border-radius: 8px;
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
 }
 
 #bg-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 620px;
-    /* ВСТАВЬТЕ СЮДА ВАШЕ ФОТО ЗАМКА */
+    position: absolute; top: 0; left: 0; width: 100%; height: 600px;
+    /* ФОНОВЫЙ ЗАМОК (ЗАМЕНИТЕ ПУТЬ) */
     background-image: url('bg_castle.jpg'); 
-    background-size: cover;
-    background-position: center;
-    opacity: 0.3; /* Делаем фон темнее и атмосфернее */
-    z-index: 0;
-    pointer-events: none;
+    background-size: cover; background-position: center;
+    opacity: 0.25; z-index: 0; pointer-events: none;
 }
 
 #game-canvas {
-    position: relative;
-    z-index: 1;
-    background-color: transparent; /* Прозрачный холст, чтобы просвечивал фон замка */
-    margin: 10px auto;
-    border: 2px solid var(--ui-border);
-    cursor: pointer;
+    position: relative; z-index: 1;
+    background-color: transparent;
+    margin: 10px auto; border: 2px solid var(--ui-border);
+    cursor: crosshair;
 }
 
 #ui-panel {
     z-index: 2;
-    background: rgba(18, 13, 10, 0.95);
-    padding: 10px;
-    border-top: 2px solid var(--gold);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background: rgba(10, 6, 5, 0.95);
+    padding: 10px; border-top: 2px solid var(--gold);
+    display: flex; flex-direction: column; gap: 10px;
 }
 
 #status-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    font-size: 14px;
-    border-bottom: 1px solid var(--ui-border);
-    padding-bottom: 8px;
-    justify-content: space-around;
+    display: flex; flex-wrap: wrap; gap: 15px; font-size: 14px;
+    border-bottom: 1px solid var(--ui-border); padding-bottom: 8px; justify-content: space-evenly;
 }
 
-.stat {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+.stat { display: flex; align-items: center; gap: 5px; }
 
 #action-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    position: relative;
 }
 
 .action-btn {
-    background: #2a1c18;
-    border: 1px solid var(--ui-border);
-    color: var(--text-light);
-    font-family: 'Cinzel', serif;
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s;
-    flex: 1;
-    min-width: 60px;
+    background: #2a1c18; border: 1px solid var(--ui-border);
+    color: var(--text-light); font-family: 'Cinzel', serif;
+    padding: 8px 16px; border-radius: 4px; cursor: pointer;
+    transition: all 0.2s; flex: 1; min-width: 80px;
 }
 
 .action-btn:hover:not(:disabled) {
-    background: var(--highlight);
-    border-color: var(--gold);
-    color: white;
+    background: var(--highlight); border-color: var(--gold);
     box-shadow: 0 0 10px rgba(139, 0, 0, 0.6);
 }
+.action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.main-action { background: var(--blood-red); border-color: var(--gold); font-weight: bold; }
 
-.action-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+/* Dropdown меню построек как в MTW */
+.dropdown { position: relative; display: inline-block; flex: 1; min-width: 80px; }
+.sub-btn {
+    background: #1a100c; border: none; color: var(--text-light);
+    padding: 5px; width: 100%; text-align: left; cursor: pointer; border-bottom: 1px solid var(--ui-border);
 }
-
-.action-btn.main-action {
-    background: var(--blood-red);
-    border-color: var(--gold);
-    font-weight: bold;
+.sub-btn:hover { background: var(--highlight); }
+.dropdown-content {
+    display: none; position: absolute; background-color: var(--ui-bg);
+    min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8);
+    z-index: 3; border: 1px solid var(--gold); bottom: 35px; left: 0;
 }
+.dropdown:hover .dropdown-content { display: block; }
 
 #log-panel {
-    z-index: 2;
-    height: 60px;
-    background: rgba(0, 0, 0, 0.7);
-    border-top: 1px solid var(--ui-border);
-    padding: 5px 10px;
-    font-size: 13px;
-    overflow-y: scroll;
-    color: #ab8b7a;
+    z-index: 2; height: 60px; background: rgba(0, 0, 0, 0.8);
+    border-top: 1px solid var(--ui-border); padding: 5px 10px;
+    font-size: 13px; overflow-y: scroll; color: #ab8b7a;
 }
-
-#log-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.log-entry {
-    border-bottom: 1px dotted #2a1c18;
-    padding: 2px 0;
-}
-
-.log-entry.player { color: #c9a84c; }
-.log-entry.ai { color: #b03a2e; }
+.log-entry { border-bottom: 1px dotted #1a0f0c; padding: 2px 0; }
+.log-entry.player { color: var(--vampire-red); font-weight: bold; }
+.log-entry.ai { color: var(--vatican-gold); }
 .log-entry.system { color: #6688aa; }
