@@ -29,8 +29,9 @@
             <div id="ui-panel">
                 <div id="action-buttons">
                     <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
+                    
                     <div class="dropdown">
-                        <button class="action-btn">🏗️ СТРОИТЬ</button>
+                        <button class="action-btn dropdown-toggle">🏗️ СТРОИТЬ</button>
                         <div class="dropdown-content">
                             <button id="build-grave" class="sub-btn">⚰️ Фаб. гробов Lv1 (30🪙)</button>
                             <button id="build-grave-2" class="sub-btn">⚰️⬆️ Фаб. гробов Lv2 (50🪙)</button>
@@ -40,28 +41,30 @@
                             <button id="build-castle" class="sub-btn">🏰 Замок (40🪙)</button>
                         </div>
                     </div>
+
                     <div class="dropdown">
-                        <button class="action-btn">🧛 ПРИЗВАТЬ</button>
+                        <button class="action-btn dropdown-toggle">🧛 ПРИЗВАТЬ</button>
                         <div class="dropdown-content">
                             <button id="recruit-inf" class="sub-btn">🗡️ 5 Пехоты (10🪙)</button>
                             <button id="recruit-arch" class="sub-btn">🏹 5 Лучников (15🪙)</button>
                             <button id="recruit-cav" class="sub-btn">🐴 3 Кавалерии (20🪙)</button>
                         </div>
                     </div>
+
                     <div class="dropdown">
-                        <button class="action-btn garrison-btn">🛡️ ГАРНИЗОН</button>
+                        <button class="action-btn garrison-btn dropdown-toggle">🛡️ ГАРНИЗОН</button>
                         <div class="dropdown-content">
                             <button id="btn-garrison-add" class="sub-btn">⬆️ ОСТАВИТЬ (10 бойцов)</button>
                             <button id="btn-garrison-take" class="sub-btn">⬇️ ПРИЗВАТЬ (10 бойцов)</button>
                         </div>
                     </div>
+
                     <button id="btn-cancel-siege" class="action-btn">🚫 СНЯТЬ</button>
                     <button id="btn-end-turn" class="action-btn main-action">⏩ СЛЕД. ХОД</button>
                 </div>
             </div>
         </div>
 
-        <!-- Правая колонка -->
         <div id="log-sidebar">
             <h3>📜 ХРОНИКИ ТЬМЫ</h3>
             <div id="log-container"></div>
@@ -70,7 +73,7 @@
 
     <div id="tooltip"></div>
 
-    <!-- Модальное окно выбора: ОСАДИТЬ или АТАКОВАТЬ -->
+    <!-- Модальное окно выбора действия -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
@@ -82,7 +85,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно выбора судьбы провинции (3 кнопки) -->
+    <!-- Модальное окно выбора судьбы -->
     <div id="surrender-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ПРОВИНЦИЯ ЗАХВАЧЕНА!</h2>
