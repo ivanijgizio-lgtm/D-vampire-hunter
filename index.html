@@ -3,40 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Война Теней: Крестовый поход против Вампиров</title>
+    <title>Война Теней: Крестовый поход (1520)</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="game-container">
         <div id="bg-layer"></div>
-        <!-- Основная область: карта + интерфейс -->
+        
+        <!-- Основная область -->
         <div id="main-area">
-            <canvas id="game-canvas" width="650" height="600"></canvas>
-            <div id="ui-panel">
-                <div id="status-bar">
-                    <div class="stat">⚔️ ХОД: <span id="turn-counter">1</span></div>
-                    <div class="stat">☀️ ДЕНЬ: <span id="day-counter">1</span></div>
-                    <div class="stat">⚡ AP: <span id="ap-counter">2/2</span></div>
-                    <div class="stat">🩸 Кровь: <span id="blood-counter">5</span></div>
-                    <div class="stat">💰 Золото: <span id="gold-counter">5</span></div>
-                    <div class="stat">🧛 Элита: <span id="elite-counter">0</span></div>
-                    <div class="stat">⛪ Вера: <span id="faith-counter">0</span></div>
+            <div id="top-bar">
+                <div class="stat">⚔️ ХОД: <span id="turn-counter">1</span></div>
+                <div class="stat">☀️ ДЕНЬ: <span id="day-counter">1</span></div>
+                <div class="stat">⚡ Действия: <span id="ap-counter">2/2</span></div>
+                <div class="stat">🩸 Кровь: <span id="blood-counter">10</span></div>
+                <div class="stat">💰 Золото: <span id="gold-counter">100</span></div>
+                <div class="stat">🧛 Генералы: <span id="elite-counter">5</span></div>
+                <div id="faith-container">
+                    <span>⛪ ВЕРА ВАТИКАНА</span>
+                    <div id="faith-bar-bg"><div id="faith-bar-fill"></div></div>
+                    <span id="faith-text">0 / 100</span>
                 </div>
-
+            </div>
+            <canvas id="game-canvas" width="680" height="550"></canvas>
+            <div id="ui-panel">
                 <div id="action-buttons">
                     <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
                     <div class="dropdown">
                         <button class="action-btn">🏗️ СТРОИТЬ</button>
                         <div class="dropdown-content">
-                            <button id="build-grave" class="sub-btn">⚰️ Фабрика гробов (30🪙)</button>
-                            <button id="build-feast" class="sub-btn">🍷 Пиршественный зал (20🪙)</button>
+                            <button id="build-grave" class="sub-btn">⚰️ Фаб. гробов Lv1 (30🪙)</button>
+                            <button id="build-grave-2" class="sub-btn">⚰️⬆️ Фаб. гробов Lv2 (50🪙)</button>
+                            <button id="build-feast" class="sub-btn">🍷 Пир. зал Lv1 (20🪙)</button>
+                            <button id="build-feast-2" class="sub-btn">🍷⬆️ Пир. зал Lv2 (40🪙)</button>
                             <button id="build-ritual" class="sub-btn">🕯️ Храм Тьмы (25🪙)</button>
-                            <button id="build-dungeon" class="sub-btn">⛓️ Тюрьма (15🪙)</button>
                             <button id="build-castle" class="sub-btn">🏰 Замок (40🪙)</button>
                         </div>
                     </div>
-                    <button id="btn-recruit" class="action-btn">🧛 ПРИЗВАТЬ (10🪙)</button>
+                    <div class="dropdown">
+                        <button class="action-btn">🧛 ПРИЗВАТЬ</button>
+                        <div class="dropdown-content">
+                            <button id="recruit-inf" class="sub-btn">🗡️ 5 Пехоты (10🪙)</button>
+                            <button id="recruit-arch" class="sub-btn">🏹 5 Лучников (15🪙)</button>
+                            <button id="recruit-cav" class="sub-btn">🐴 3 Кавалерии (20🪙)</button>
+                        </div>
+                    </div>
                     <div class="dropdown">
                         <button class="action-btn garrison-btn">🛡️ ГАРНИЗОН</button>
                         <div class="dropdown-content">
@@ -50,46 +62,60 @@
             </div>
         </div>
 
-        <!-- Правая колонка: Хронология и диалоги с ИИ -->
+        <!-- Правая колонка -->
         <div id="log-sidebar">
             <h3>📜 ХРОНИКИ ТЬМЫ</h3>
             <div id="log-container"></div>
         </div>
     </div>
 
-    <!-- Подсказка при наведении (ТУТ БЫЛА ОШИБКА, ТЕПЕРЬ ЭТОТ БЛОК ЕСТЬ) -->
+    <!-- Туманные подсказки (Tooltip) -->
     <div id="tooltip"></div>
 
-    <!-- Боевое модальное окно -->
+    <!-- Модальное окно Битвы (Визуальное) -->
     <div id="battle-modal" class="modal">
         <div class="modal-content">
             <h2 id="battle-title">⚔️ СРАЖЕНИЕ!</h2>
             <div class="battle-field">
                 <div class="battle-side attacker">
                     <h3 id="attacker-name">Атакующий</h3>
+                    <div class="hp-bar-container"><div id="attacker-hp" class="hp-bar-fill"></div></div>
                     <p id="attacker-stats">Войск: 0</p>
                 </div>
                 <div class="battle-vs">VS</div>
                 <div class="battle-side defender">
                     <h3 id="defender-name">Защитник</h3>
+                    <div class="hp-bar-container"><div id="defender-hp" class="hp-bar-fill"></div></div>
                     <p id="defender-stats">Гарнизон: 0</p>
                 </div>
             </div>
             <div id="battle-result"></div>
-            <button id="battle-resolve-btn" class="action-btn main-action">🔪 НАЧАТЬ БИТВУ!</button>
+            <button id="battle-resolve-btn" class="action-btn main-action">🔪 ЗАВЯЗАТЬ БИТВУ!</button>
         </div>
     </div>
 
-    <!-- Модальное окно выбора судьбы захваченной провинции -->
+    <!-- Модальное окно выбора судьбы -->
     <div id="surrender-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ПРОВИНЦИЯ ЗАХВАЧЕНА!</h2>
-            <p>Население и гарнизон побеждены. Что делать с местными жителями?</p>
+            <p>Население побеждено. Ваше решение?</p>
             <div id="surrender-options">
                 <button id="btn-exterminate" class="action-btn main-action" style="background:#8b0000;">💀 ИСТРЕБИТЬ</button>
-                <button id="btn-convert" class="action-btn" style="background:#2d2d2d; border-color:#8b0000;">🧛 ОБРАТИТЬ</button>
+                <button id="btn-convert" class="action-btn" style="background:#2d2d2d;">🧛 ОБРАТИТЬ</button>
             </div>
             <p id="surrender-result" style="margin-top:10px; font-size:14px; color:#aaa;"></p>
+        </div>
+    </div>
+
+    <!-- Модальное окно Случайного события -->
+    <div id="event-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="event-title">📜 СОБЫТИЕ</h2>
+            <p id="event-desc">Описание события...</p>
+            <div id="event-options">
+                <button id="event-opt-1" class="action-btn">Принять</button>
+                <button id="event-opt-2" class="action-btn">Отказаться</button>
+            </div>
         </div>
     </div>
 
