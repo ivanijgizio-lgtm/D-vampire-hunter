@@ -5,33 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Война Теней: Крестовый поход против Вампиров</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="game-container">
-        <!-- Фоновый слой -->
         <div id="bg-layer"></div>
-        
         <canvas id="game-canvas" width="850" height="600"></canvas>
 
-        <!-- Интерфейс MTW -->
         <div id="ui-panel">
             <div id="status-bar">
-                <div class="stat"><span class="icon">⚔️</span> ХОД: <span id="turn-counter">1</span></div>
-                <div class="stat"><span class="icon">☀️</span> ДЕНЬ: <span id="day-counter">1</span></div>
-                <div class="stat"><span class="icon">⚡</span> Действия: <span id="ap-counter">2/2</span></div>
-                <div class="stat"><span class="icon">🩸</span> Кровь: <span id="blood-counter">5</span></div>
-                <div class="stat"><span class="icon">💰</span> Золото: <span id="gold-counter">5</span></div>
-                <div class="stat"><span class="icon">🗡️</span> Элита: <span id="elite-counter">0</span></div>
-                <!-- Новый показатель: Вера (сопротивление врага) -->
-                <div class="stat"><span class="icon">⛪</span> Вера Ватикана: <span id="faith-counter">0</span></div>
+                <div class="stat">⚔️ ХОД: <span id="turn-counter">1</span></div>
+                <div class="stat">☀️ ДЕНЬ: <span id="day-counter">1</span></div>
+                <div class="stat">⚡ Действия: <span id="ap-counter">2/2</span></div>
+                <div class="stat">🩸 Кровь: <span id="blood-counter">5</span></div>
+                <div class="stat">💰 Золото: <span id="gold-counter">5</span></div>
+                <div class="stat">🗡️ Элита: <span id="elite-counter">0</span></div>
+                <div class="stat">⛪ Вера Ватикана: <span id="faith-counter">0</span></div>
             </div>
 
             <div id="action-buttons">
                 <button id="btn-raid" class="action-btn">⚔️ НАБЕГ</button>
                 <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
                 
-                <!-- Меню построек (как в MTW) -->
                 <div class="dropdown">
                     <button class="action-btn">🏗️ СТРОИТЬ</button>
                     <div class="dropdown-content">
