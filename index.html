@@ -8,6 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- СТАРТОВОЕ МЕНЮ -->
+    <div id="start-menu" class="start-overlay">
+        <div class="start-content">
+            <h1>⚔️ ВОЙНА ТЕНЕЙ</h1>
+            <p>1520. Крестовый поход против вампиров.</p>
+            <div class="start-buttons">
+                <button id="btn-new-game" class="action-btn main-action">🦇 НОВАЯ ИГРА</button>
+                <button id="btn-load-game" class="action-btn">📜 ЗАГРУЗИТЬ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ ИГРОВОЙ ИНТЕРФЕЙС -->
     <div id="game-container">
         <div id="bg-layer"></div>
         
@@ -24,8 +37,11 @@
                     <div id="faith-bar-bg"><div id="faith-bar-fill"></div></div>
                     <span id="faith-text">0 / 100</span>
                 </div>
+                <button id="btn-restart" class="action-btn" style="background:#111; border-color:#555; flex:0.5; font-size:10px;">🔄 ПЕРЕЗАПУСК</button>
             </div>
+            
             <canvas id="game-canvas" width="680" height="550"></canvas>
+            
             <div id="ui-panel">
                 <div id="action-buttons">
                     <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
@@ -73,7 +89,7 @@
 
     <div id="tooltip"></div>
 
-    <!-- Модальное окно выбора действия -->
+    <!-- Модальные окна (Битва, Судьба, Вторжение) -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
@@ -85,7 +101,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно выбора судьбы -->
     <div id="surrender-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ПРОВИНЦИЯ ЗАХВАЧЕНА!</h2>
