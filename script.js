@@ -24,13 +24,13 @@ function getDefaultGame() {
         ai: { // Ватикан
             gold: 100, blood: 5,
             generals: { inquisitor: 5 },
-            mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 16 }, // Смещен далеко на запад
+            mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 16 },
             faith: 0
         },
         werewolf: { // Новая фракция Оборотней
             gold: 50, blood: 10,
             generals: { alpha: 3 },
-            mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 21 } // В горах
+            mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 21 }
         },
         provinces: [
             // 1-15 старые провинции
@@ -185,7 +185,7 @@ function collectIncome() {
             game.ai.gold += prov.income + aiGold;
             game.ai.faith += Math.floor(prov.population / 1000);
         } else if (prov.owner === 'werewolf') {
-            let wGold = 2; // Оборотни получают много золота с природных ресурсов
+            let wGold = 2;
             game.werewolf.gold += prov.income + wGold;
         }
     });
@@ -209,7 +209,7 @@ function updateLoyalty() {
                 if (b.type === 'fortress' && b.lvl === 1) change += 4;
                 if (b.type === 'fortress' && b.lvl === 2) change += 8;
             } else if (p.owner === 'werewolf') {
-                if (b.type === 'lair') change += 4; // Логово повышает лояльность
+                if (b.type === 'lair') change += 4;
             }
         });
         p.loyalty = Math.min(100, Math.max(0, p.loyalty + change));
@@ -285,8 +285,7 @@ function executeBattle(attackerSide, targetProv) {
             game.ai.mobileArmy.infantry = Math.max(0, game.ai.mobileArmy.infantry - transfer);
             game.ai.mobileArmy.location = targetProv.id;
         } else {
-            // Оборотни
-            targetProv.aiGarrison = tempGarrison; // Используем поле aiGarrison для хранения вражеских гарнизонов, т.к. у Оборотней своя армия
+            targetProv.aiGarrison = tempGarrison;
             game.werewolf.mobileArmy.infantry = Math.max(0, game.werewolf.mobileArmy.infantry - transfer);
             game.werewolf.mobileArmy.location = targetProv.id;
         }
@@ -347,7 +346,7 @@ function closeSurrenderModal() {
     updateUI();
 }
 
-// ================= СТРОИТЕЛЬСТВО (НОВАЯ ЛОГИКА LVL1 -> LVL2) =================
+// ================= СТРОИТЕЛЬСТВО =================
 function getTargetProvForAction() {
     let prov = game.provinces.find(p => p.id === game.selectedProvinceId);
     if (prov && prov.owner === 'player') return prov;
@@ -370,14 +369,13 @@ function buildStructure(type, lvl = 1) {
 
     if (game.player.gold < cost) return log(`❌ Нужно ${cost} золота.`, 'system');
     
-    // Логика проверки уровней
     if (type === 'grave_factory' || type === 'feast_hall') {
         const existing = prov.buildings.find(b => b.type === type);
         if (!existing) {
             if (lvl === 2) return log(`❌ Сначала постройте Lv1!`, 'system');
             prov.buildings.push({ type, lvl: 1 });
         } else if (existing.lvl === 1 && lvl === 2) {
-            existing.lvl = 2; // Апгрейд до Lv2
+            existing.lvl = 2;
         } else if (existing.lvl === 2 && lvl === 2) {
             return log(`❌ Уже есть максимальный уровень!`, 'system');
         } else {
@@ -465,11 +463,11 @@ function cancelSiege() {
     game.player.ap -= 1; updateUI();
 }
 
-// ================= УМНЫЙ ИИ (ВАТИКАН + ОБОРОТНИ) =================
+// ================= УМНЫЙ ИИ (С ОГРАНИЧЕНИЕМ НАЙМА) =================
 function aiTurn() {
     // === ВАТИКАН ===
     log('⛪ Ход Ватикана...', 'ai');
-    game.ai.gold += game.provinces.filter(p => p.owner === 'ai').length * 1; // Снижен доход до 1
+    game.ai.gold += game.provinces.filter(p => p.owner === 'ai').length * 1; 
     const aiProv = game.provinces.find(p => p.id === game.ai.mobileArmy.location);
 
     if (game.ai.gold >= 10 && aiProv && aiProv.owner === 'ai') {
@@ -477,16 +475,22 @@ function aiTurn() {
         if (!c) { aiProv.buildings.push({type:'church', lvl:1}); game.ai.gold-=10; game.ai.generals.inquisitor+=2; log('⛪ Церковь построена!', 'ai'); }
         else if (c.lvl === 1 && game.ai.gold >= 20) { c.lvl = 2; game.ai.gold-=20; game.ai.generals.inquisitor+=5; log('⛪ Собор построен!', 'ai'); }
     }
-    // Ватикан рекрутит медленнее
-    if (game.turn > 3) {
-        if (game.ai.gold >= 20) { game.ai.mobileArmy.cavalry += 3; game.ai.gold -= 20; }
-        if (game.ai.gold >= 15) { game.ai.mobileArmy.archer += 5; game.ai.gold -= 15; }
-        while (game.ai.gold >= 15) { game.ai.mobileArmy.infantry += 5; game.ai.gold -= 10; } // Подняли порог
+
+    // ОГРАНИЧЕНИЕ: Не более 2 наймов за ход!
+    let aiRecruits = 0;
+    if (game.turn > 3 && aiRecruits < 2) {
+        if (game.ai.gold >= 20 && aiRecruits < 2) { game.ai.mobileArmy.cavalry += 3; game.ai.gold -= 20; aiRecruits++; }
+        if (game.ai.gold >= 15 && aiRecruits < 2) { game.ai.mobileArmy.archer += 5; game.ai.gold -= 15; aiRecruits++; }
+        while (game.ai.gold >= 15 && aiRecruits < 2) { 
+            game.ai.mobileArmy.infantry += 5; 
+            game.ai.gold -= 10; 
+            aiRecruits++; 
+        }
     }
 
     // === ОБОРОТНИ ===
     log('🐺 Ход Оборотней...', 'werewolf');
-    game.werewolf.gold += game.provinces.filter(p => p.owner === 'werewolf').length * 3;
+    game.werewolf.gold += game.provinces.filter(p => p.owner === 'werewolf').length * 2; 
     const wProv = game.provinces.find(p => p.id === game.werewolf.mobileArmy.location);
 
     if (game.werewolf.gold >= 15 && wProv && wProv.owner === 'werewolf') {
@@ -494,19 +498,19 @@ function aiTurn() {
         if (!l) { wProv.buildings.push({type:'lair', lvl:1}); game.werewolf.gold-=15; log('🐺 Логово построено!', 'werewolf'); }
         else if (l.lvl === 1 && game.werewolf.gold >= 30) { l.lvl = 2; game.werewolf.gold-=30; log('🐺 Логово улучшено!', 'werewolf'); }
     }
-    // Оборотни агрессивно нанимают
-    if (game.turn > 2) {
-        if (game.werewolf.gold >= 10) { game.werewolf.mobileArmy.infantry += 5; game.werewolf.gold -= 10; }
-        if (game.werewolf.gold >= 15) { game.werewolf.mobileArmy.archer += 5; game.werewolf.gold -= 15; }
-        if (game.werewolf.gold >= 20) { game.werewolf.mobileArmy.cavalry += 3; game.werewolf.gold -= 20; }
+
+    // ОГРАНИЧЕНИЕ: Не более 2 наймов за ход!
+    let werewolfRecruits = 0;
+    if (game.turn > 2 && werewolfRecruits < 2) {
+        if (game.werewolf.gold >= 10 && werewolfRecruits < 2) { game.werewolf.mobileArmy.infantry += 5; game.werewolf.gold -= 10; werewolfRecruits++; }
+        if (game.werewolf.gold >= 15 && werewolfRecruits < 2) { game.werewolf.mobileArmy.archer += 5; game.werewolf.gold -= 15; werewolfRecruits++; }
+        if (game.werewolf.gold >= 20 && werewolfRecruits < 2) { game.werewolf.mobileArmy.cavalry += 3; game.werewolf.gold -= 20; werewolfRecruits++; }
     }
 
     // === ОБЩАЯ ЛОГИКА ДВИЖЕНИЯ ФРАКЦИЙ ===
     [ { obj: game.ai, name: 'Ватикан', ownerType: 'ai', prov: aiProv }, { obj: game.werewolf, name: 'Оборотни', ownerType: 'werewolf', prov: wProv } ].forEach(f => {
         if (f.prov && f.prov.owner === f.ownerType) {
-            // Находим врагов (для Оборотней враги - все, для Ватикана - игрок и оборотни)
             let enemies = game.provinces.filter(p => f.prov.neighbors.includes(p.id) && p.owner !== null && p.owner !== f.ownerType && p.owner !== 'player' && p.owner !== 'ai'); 
-            // Спец. логика для Ватикана и Оборотней, чтобы они видели друг друга
             let target = enemies.find(e => e.owner === 'player') || enemies.find(e => e.owner === (f.ownerType === 'ai' ? 'werewolf' : 'ai')) || (enemies.length > 0 ? enemies[0] : null);
             
             if (target) {
@@ -514,7 +518,6 @@ function aiTurn() {
                     target.siegeBy = f.ownerType;
                     log(`🏰 ${f.name} начал осаду ${target.name}.`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
                 } else if (target.siegeBy === f.ownerType && getTotalTroops(f.obj.mobileArmy) > 5) {
-                    // Авто-бой ИИ
                     let aLoss = Math.floor(Math.random() * 16) + 10;
                     let dLoss = Math.floor(Math.random() * 11) + 5;
                     let attArmy = f.obj.mobileArmy;
@@ -574,10 +577,10 @@ function checkGameConditions() {
     const aiCount = game.provinces.filter(p => p.owner === 'ai').length;
     const wCount = game.provinces.filter(p => p.owner === 'werewolf').length;
     
-    if (pCount === 0) gameOver('ai', true);
-    else if (aiCount === 0 && wCount === 0) gameOver('player', true);
-    else if (aiCount === 0 && pCount > wCount) gameOver('player', true); // Если Ватикан уничтожен, а Оборотней меньше
-    else if (wCount === 0 && pCount > aiCount) gameOver('player', true);
+    if (pCount === 0) gameOver('ai');
+    else if (aiCount === 0 && wCount === 0) gameOver('player');
+    else if (aiCount === 0 && pCount > wCount) gameOver('player');
+    else if (wCount === 0 && pCount > aiCount) gameOver('player');
 }
 
 function gameOver(winner) {
