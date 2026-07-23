@@ -64,6 +64,7 @@
                             <button id="recruit-inf" class="sub-btn">🗡️ 5 Пехоты (10🪙)</button>
                             <button id="recruit-arch" class="sub-btn">🏹 5 Лучников (15🪙)</button>
                             <button id="recruit-cav" class="sub-btn">🐴 3 Кавалерии (20🪙)</button>
+                            <button id="recruit-hvamp" class="sub-btn">🧛 Верховный вампир (30🪙, 10🩸)</button>
                         </div>
                     </div>
 
@@ -121,6 +122,21 @@
             <div id="gameover-options">
                 <button id="btn-gameover-restart" class="action-btn main-action" style="width: 80%;">🔄 НАЧАТЬ ИГРУ ЗАНОВО</button>
             </div>
+        </div>
+    </div>
+
+    <!-- НОВОЕ ОКНО ДЕТАЛИЗАЦИИ АРМИИ -->
+    <div id="army-details-modal" class="modal">
+        <div class="modal-content">
+            <h2>🧛 СОСТАВ АРМИИ ТЬМЫ</h2>
+            <div id="army-stats-list" style="margin: 20px 0; text-align: left; display: inline-block;">
+                <div>🗡️ Пехота: <span id="army-inf">0</span></div>
+                <div>🏹 Лучники: <span id="army-arch">0</span></div>
+                <div>🐴 Кавалерия: <span id="army-cav">0</span></div>
+                <div style="margin-top:10px; border-top:1px solid #663333; padding-top:5px; color:#d4af37;">🧛 Верховные вампиры (Генералы): <span id="army-gen">0</span></div>
+                <div style="margin-top:5px;">⚔️ Общая мощь армии: <span id="army-total" style="color:#d4af37;">0</span></div>
+            </div>
+            <button id="army-close-btn" class="action-btn" style="margin-top:10px;">ЗАКРЫТЬ</button>
         </div>
     </div>
 
