@@ -21,39 +21,31 @@ function getDefaultGame() {
             generals: { highVampire: 5 },
             mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 4 }
         },
-        ai: {
-            gold: 100, blood: 5,
-            generals: { inquisitor: 5 },
-            mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 16 },
-            faith: 0
-        },
-        werewolf: {
-            gold: 50, blood: 10,
-            generals: { alpha: 3 },
-            mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 21 }
-        },
+        ai: { gold: 100, blood: 5, generals: { inquisitor: 5 }, mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 16 }, faith: 0 },
+        werewolf: { gold: 50, blood: 10, generals: { alpha: 3 }, mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 21 } },
         provinces: [
-            { id: 1, name: 'Ватикан', owner: 'ai', x: 80, y: 100, aiGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [19], buildings: [{type:'church', lvl:1}], income: 2, loyalty: 100, population: 5000, playerSupport: 10, aiSupport: 90, slaveIncome: 0 },
-            { id: 2, name: 'Австрия', owner: 'ai', x: 410, y: 180, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [1, 3, 4, 9], buildings: [], income: 2, loyalty: 80, population: 3000, playerSupport: 20, aiSupport: 80, slaveIncome: 0 },
-            { id: 3, name: 'Венгрия', owner: 'ai', x: 500, y: 200, aiGarrison: { infantry: 15, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [2, 4, 5, 6, 8], buildings: [{type:'church', lvl:1}], income: 3, loyalty: 80, population: 4000, playerSupport: 15, aiSupport: 85, slaveIncome: 0 },
-            { id: 4, name: 'Трансильвания', owner: 'player', x: 530, y: 280, playerGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [2, 3, 5, 8, 10], buildings: [{type:'dark_temple', lvl:1}], income: 3, loyalty: 100, population: 4500, playerSupport: 90, aiSupport: 10, slaveIncome: 0 },
-            { id: 5, name: 'Валахия', owner: 'ai', x: 590, y: 320, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 6, 7, 11], buildings: [], income: 2, loyalty: 70, population: 2000, playerSupport: 40, aiSupport: 60, slaveIncome: 0 },
-            { id: 6, name: 'Молдавия', owner: 'ai', x: 630, y: 260, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [3, 5, 7, 12], buildings: [], income: 2, loyalty: 70, population: 2000, playerSupport: 30, aiSupport: 70, slaveIncome: 0 },
-            { id: 7, name: 'Одесса', owner: 'ai', x: 680, y: 350, aiGarrison: { infantry: 5, archer: 3 }, siegeBy: null, neighbors: [5, 6, 12, 13], buildings: [], income: 1, loyalty: 60, population: 1500, playerSupport: 50, aiSupport: 50, slaveIncome: 0 },
-            { id: 8, name: 'Богемия', owner: 'ai', x: 430, y: 250, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [3, 4, 9, 14], buildings: [{type:'church', lvl:1}], income: 2, loyalty: 70, population: 2500, playerSupport: 25, aiSupport: 75, slaveIncome: 0 },
-            { id: 9, name: 'Саксония', owner: 'ai', x: 320, y: 210, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [1, 2, 8, 14], buildings: [], income: 2, loyalty: 60, population: 2000, playerSupport: 30, aiSupport: 70, slaveIncome: 0 },
-            { id: 10, name: 'Сербия', owner: 'ai', x: 520, y: 370, aiGarrison: { infantry: 5, cavalry: 5 }, siegeBy: null, neighbors: [4, 11], buildings: [], income: 1, loyalty: 50, population: 1000, playerSupport: 50, aiSupport: 50, slaveIncome: 0 },
-            { id: 11, name: 'Болгария', owner: 'ai', x: 590, y: 430, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [5, 10, 13, 15], buildings: [], income: 1, loyalty: 50, population: 1500, playerSupport: 45, aiSupport: 55, slaveIncome: 0 },
-            { id: 12, name: 'Киевская Русь', owner: 'ai', x: 740, y: 200, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [6, 7, 13], buildings: [], income: 1, loyalty: 60, population: 1800, playerSupport: 20, aiSupport: 80, slaveIncome: 0 },
-            { id: 13, name: 'Крым', owner: 'ai', x: 720, y: 450, aiGarrison: { infantry: 5, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [7, 11, 12], buildings: [], income: 1, loyalty: 60, population: 1200, playerSupport: 35, aiSupport: 65, slaveIncome: 0 },
-            { id: 14, name: 'Польша', owner: 'ai', x: 360, y: 100, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [8, 9], buildings: [{type:'church', lvl:1}], income: 2, loyalty: 70, population: 2500, playerSupport: 15, aiSupport: 85, slaveIncome: 0 },
-            { id: 15, name: 'Византия', owner: 'ai', x: 640, y: 530, aiGarrison: { infantry: 20, archer: 10, cavalry: 5 }, siegeBy: null, neighbors: [11], buildings: [{type:'church', lvl:1}, {type:'fortress', lvl:1}], income: 5, loyalty: 80, population: 6000, playerSupport: 10, aiSupport: 90, slaveIncome: 0 },
-            { id: 16, name: 'Венеция', owner: 'ai', x: 250, y: 180, aiGarrison: { infantry: 15, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [1, 17], buildings: [], income: 3, loyalty: 90, population: 3500, playerSupport: 20, aiSupport: 80, slaveIncome: 0 },
-            { id: 17, name: 'Хорватия', owner: 'ai', x: 350, y: 240, aiGarrison: { infantry: 10, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [16, 18, 2], buildings: [], income: 2, loyalty: 80, population: 2500, playerSupport: 25, aiSupport: 75, slaveIncome: 0 },
-            { id: 18, name: 'Босния', owner: 'ai', x: 450, y: 290, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [17, 21, 10], buildings: [], income: 2, loyalty: 70, population: 2000, playerSupport: 30, aiSupport: 70, slaveIncome: 0 },
-            { id: 19, name: 'Ломбардия', owner: 'werewolf', x: 180, y: 120, aiGarrison: { infantry: 10, archer: 2 }, siegeBy: null, neighbors: [1, 16], buildings: [], income: 1, loyalty: 60, population: 2000, playerSupport: 30, aiSupport: 30, slaveIncome: 0 },
-            { id: 20, name: 'Карпаты', owner: 'werewolf', x: 480, y: 160, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [21, 3], buildings: [], income: 1, loyalty: 70, population: 3000, playerSupport: 20, aiSupport: 20, slaveIncome: 0 },
-            { id: 21, name: 'Дикая пуща', owner: 'werewolf', x: 560, y: 180, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [20, 5, 18], buildings: [], income: 1, loyalty: 60, population: 2500, playerSupport: 10, aiSupport: 10, slaveIncome: 0 },
+            // Добавлено поле fortification (Укрепления)
+            { id: 1, name: 'Ватикан', owner: 'ai', x: 80, y: 100, aiGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [19], buildings: [{type:'church', lvl:1}], income: 2, loyalty: 100, population: 5000, playerSupport: 10, aiSupport: 90, slaveIncome: 0, fortification: 2 },
+            { id: 2, name: 'Австрия', owner: 'ai', x: 410, y: 180, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [1, 3, 4, 9], buildings: [], income: 2, loyalty: 80, population: 3000, playerSupport: 20, aiSupport: 80, slaveIncome: 0, fortification: 1 },
+            { id: 3, name: 'Венгрия', owner: 'ai', x: 500, y: 200, aiGarrison: { infantry: 15, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [2, 4, 5, 6, 8], buildings: [{type:'church', lvl:1}], income: 3, loyalty: 80, population: 4000, playerSupport: 15, aiSupport: 85, slaveIncome: 0, fortification: 1 },
+            { id: 4, name: 'Трансильвания', owner: 'player', x: 530, y: 280, playerGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [2, 3, 5, 8, 10], buildings: [{type:'dark_temple', lvl:1}], income: 3, loyalty: 100, population: 4500, playerSupport: 90, aiSupport: 10, slaveIncome: 0, fortification: 2 },
+            { id: 5, name: 'Валахия', owner: 'ai', x: 590, y: 320, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 6, 7, 11], buildings: [], income: 2, loyalty: 70, population: 2000, playerSupport: 40, aiSupport: 60, slaveIncome: 0, fortification: 0 },
+            { id: 6, name: 'Молдавия', owner: 'ai', x: 630, y: 260, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [3, 5, 7, 12], buildings: [], income: 2, loyalty: 70, population: 2000, playerSupport: 30, aiSupport: 70, slaveIncome: 0, fortification: 0 },
+            { id: 7, name: 'Одесса', owner: 'ai', x: 680, y: 350, aiGarrison: { infantry: 5, archer: 3 }, siegeBy: null, neighbors: [5, 6, 12, 13], buildings: [], income: 1, loyalty: 60, population: 1500, playerSupport: 50, aiSupport: 50, slaveIncome: 0, fortification: 0 },
+            { id: 8, name: 'Богемия', owner: 'ai', x: 430, y: 250, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [3, 4, 9, 14], buildings: [{type:'church', lvl:1}], income: 2, loyalty: 70, population: 2500, playerSupport: 25, aiSupport: 75, slaveIncome: 0, fortification: 1 },
+            { id: 9, name: 'Саксония', owner: 'ai', x: 320, y: 210, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [1, 2, 8, 14], buildings: [], income: 2, loyalty: 60, population: 2000, playerSupport: 30, aiSupport: 70, slaveIncome: 0, fortification: 0 },
+            { id: 10, name: 'Сербия', owner: 'ai', x: 520, y: 370, aiGarrison: { infantry: 5, cavalry: 5 }, siegeBy: null, neighbors: [4, 11], buildings: [], income: 1, loyalty: 50, population: 1000, playerSupport: 50, aiSupport: 50, slaveIncome: 0, fortification: 0 },
+            { id: 11, name: 'Болгария', owner: 'ai', x: 590, y: 430, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [5, 10, 13, 15], buildings: [], income: 1, loyalty: 50, population: 1500, playerSupport: 45, aiSupport: 55, slaveIncome: 0, fortification: 0 },
+            { id: 12, name: 'Киевская Русь', owner: 'ai', x: 740, y: 200, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [6, 7, 13], buildings: [], income: 1, loyalty: 60, population: 1800, playerSupport: 20, aiSupport: 80, slaveIncome: 0, fortification: 0 },
+            { id: 13, name: 'Крым', owner: 'ai', x: 720, y: 450, aiGarrison: { infantry: 5, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [7, 11, 12], buildings: [], income: 1, loyalty: 60, population: 1200, playerSupport: 35, aiSupport: 65, slaveIncome: 0, fortification: 0 },
+            { id: 14, name: 'Польша', owner: 'ai', x: 360, y: 100, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [8, 9], buildings: [{type:'church', lvl:1}], income: 2, loyalty: 70, population: 2500, playerSupport: 15, aiSupport: 85, slaveIncome: 0, fortification: 1 },
+            { id: 15, name: 'Византия', owner: 'ai', x: 640, y: 530, aiGarrison: { infantry: 20, archer: 10, cavalry: 5 }, siegeBy: null, neighbors: [11], buildings: [{type:'church', lvl:1}, {type:'fortress', lvl:1}], income: 5, loyalty: 80, population: 6000, playerSupport: 10, aiSupport: 90, slaveIncome: 0, fortification: 3 },
+            { id: 16, name: 'Венеция', owner: 'ai', x: 250, y: 180, aiGarrison: { infantry: 15, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [1, 17], buildings: [], income: 3, loyalty: 90, population: 3500, playerSupport: 20, aiSupport: 80, slaveIncome: 0, fortification: 1 },
+            { id: 17, name: 'Хорватия', owner: 'ai', x: 350, y: 240, aiGarrison: { infantry: 10, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [16, 18, 2], buildings: [], income: 2, loyalty: 80, population: 2500, playerSupport: 25, aiSupport: 75, slaveIncome: 0, fortification: 0 },
+            { id: 18, name: 'Босния', owner: 'ai', x: 450, y: 290, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [17, 21, 10], buildings: [], income: 2, loyalty: 70, population: 2000, playerSupport: 30, aiSupport: 70, slaveIncome: 0, fortification: 0 },
+            { id: 19, name: 'Ломбардия', owner: 'werewolf', x: 180, y: 120, aiGarrison: { infantry: 10, archer: 2 }, siegeBy: null, neighbors: [1, 16], buildings: [], income: 1, loyalty: 60, population: 2000, playerSupport: 30, aiSupport: 30, slaveIncome: 0, fortification: 0 },
+            { id: 20, name: 'Карпаты', owner: 'werewolf', x: 480, y: 160, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [21, 3], buildings: [], income: 1, loyalty: 70, population: 3000, playerSupport: 20, aiSupport: 20, slaveIncome: 0, fortification: 0 },
+            { id: 21, name: 'Дикая пуща', owner: 'werewolf', x: 560, y: 180, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [20, 5, 18], buildings: [], income: 1, loyalty: 60, population: 2500, playerSupport: 10, aiSupport: 10, slaveIncome: 0, fortification: 0 },
         ]
     };
 }
@@ -67,16 +59,12 @@ function initGame() {
     updateUI(); log('🌙 Князь Тьмы, ваши войска готовы!', 'system');
 }
 
-// ИСПРАВЛЕНИЕ БАГА ПЕРЕЗАПУСКА
 function restartGame() {
     localStorage.removeItem('VampireWarSave');
-    game = getDefaultGame(); // Полный сброс состояния
-    game.gameOver = false; // Сброс флага конца игры
+    game = getDefaultGame(); 
+    game.gameOver = false; 
     document.getElementById('gameover-modal').style.display = 'none';
-    
-    // Включаем обратно все кнопки, которые могла отключить функция gameOver
     document.querySelectorAll('.action-btn, .sub-btn').forEach(btn => btn.disabled = false);
-    
     document.getElementById('start-menu').style.display = 'flex';
     document.getElementById('game-container').style.display = 'none';
     log('🔄 Игра перезапущена. Возврат в главное меню.', 'system');
@@ -89,8 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-new-game').addEventListener('click', () => { localStorage.removeItem('VampireWarSave'); game = getDefaultGame(); initGame(); });
     document.getElementById('btn-load-game').addEventListener('click', initGame);
     document.getElementById('btn-restart').addEventListener('click', () => { document.getElementById('gameover-modal').style.display = 'none'; restartGame(); });
-    document.getElementById('btn-gameover-restart').addEventListener('click', restartGame); // Исправленный обработчик
-
+    document.getElementById('btn-gameover-restart').addEventListener('click', restartGame);
     document.querySelectorAll('.dropdown-toggle').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -123,6 +110,8 @@ function loadGame() {
     return false;
 }
 
+function getTotalTroops(armyObj) { return (armyObj.infantry || 0) + (armyObj.archer || 0) + (armyObj.cavalry || 0); }
+
 function log(msg, type = 'system') {
     const container = document.getElementById('log-container');
     if (!container) return;
@@ -134,15 +123,22 @@ function log(msg, type = 'system') {
     container.appendChild(entry); container.scrollTop = container.scrollHeight;
 }
 
-function getTotalTroops(armyObj) { return (armyObj.infantry || 0) + (armyObj.archer || 0) + (armyObj.cavalry || 0); }
-
 function ensureArmyLocation() {
     let locProv = game.provinces.find(p => p.id === game.player.mobileArmy.location);
     if (!locProv || locProv.owner !== 'player') {
         let fallback = game.provinces.find(p => p.owner === 'player');
         if (fallback) { game.player.mobileArmy.location = fallback.id; } 
-        else if (!game.gameOver) { gameOver('ai'); }
     }
+}
+
+// ================= НОВАЯ МЕХАНИКА: ДЕНЬ И НОЧЬ =================
+function isNightTime() {
+    // Ход 1 - Ночь (Старт), Ход 2 - День, Ход 3 - Ночь, Ход 4 - День...
+    return game.turn % 2 !== 0; 
+}
+
+function getTimeOfDayMsg() {
+    return isNightTime() ? "🌙 СЕЙЧАС НОЧЬ" : "☀️ СЕЙЧАС ДЕНЬ";
 }
 
 function collectIncome() {
@@ -150,15 +146,28 @@ function collectIncome() {
         if (prov.owner === 'player') {
             let gBonus = 1, bBonus = 1, slaveBonus = (prov.slaveIncome || 0);
             prov.buildings.forEach(b => {
-                if (b.type === 'feast_hall' && b.lvl === 1) bBonus += 3; if (b.type === 'feast_hall' && b.lvl === 2) bBonus += 6;
-                if (b.type === 'dark_temple' && b.lvl === 1) gBonus += 2; if (b.type === 'dark_temple' && b.lvl === 2) gBonus += 5;
-                if (b.type === 'dungeon') gBonus += 2; if (b.type === 'castle') gBonus += 3;
+                if (b.type === 'feast_hall' && b.lvl === 1) bBonus += 3; 
+                if (b.type === 'feast_hall' && b.lvl === 2) bBonus += 6;
+                if (b.type === 'dark_temple' && b.lvl === 1) gBonus += 2; 
+                if (b.type === 'dark_temple' && b.lvl === 2) gBonus += 5;
+                if (b.type === 'dungeon') gBonus += 2; 
+                if (b.type === 'wall') gBonus += 1; // Стены дают небольшой доход от налогов
+                if (b.type === 'castle') gBonus += 3; // Замки дают хороший доход
             });
-            game.player.gold += prov.income + gBonus + slaveBonus; game.player.blood += 1 + bBonus;
+            game.player.gold += prov.income + gBonus + slaveBonus; 
+            game.player.blood += 1 + bBonus;
         } else if (prov.owner === 'ai') {
             let aiGold = 1;
-            prov.buildings.forEach(b => { if (b.type === 'church' && b.lvl === 1) aiGold += 2; if (b.type === 'church' && b.lvl === 2) aiGold += 5; if (b.type === 'fortress' && b.lvl === 1) aiGold += 3; if (b.type === 'fortress' && b.lvl === 2) aiGold += 6; });
-            game.ai.gold += prov.income + aiGold; game.ai.faith += Math.floor(prov.population / 1000);
+            prov.buildings.forEach(b => { 
+                if (b.type === 'church' && b.lvl === 1) aiGold += 2; 
+                if (b.type === 'church' && b.lvl === 2) aiGold += 5; 
+                if (b.type === 'fortress' && b.lvl === 1) aiGold += 3; 
+                if (b.type === 'fortress' && b.lvl === 2) aiGold += 6; 
+                if (b.type === 'wall') aiGold += 1;
+                if (b.type === 'castle') aiGold += 3;
+            });
+            game.ai.gold += prov.income + aiGold; 
+            game.ai.faith += Math.floor(prov.population / 1000);
         } else if (prov.owner === 'werewolf') {
             game.werewolf.gold += prov.income + 2;
         }
@@ -171,32 +180,101 @@ function updateLoyalty() {
         let change = -1;
         p.buildings.forEach(b => {
             if (p.owner === 'player') {
-                if (b.type === 'dark_temple' && b.lvl === 1) change += 3; if (b.type === 'dark_temple' && b.lvl === 2) change += 5;
-                if (b.type === 'feast_hall' && b.lvl === 1) change += 4; if (b.type === 'feast_hall' && b.lvl === 2) change += 8;
+                if (b.type === 'dark_temple' && b.lvl === 1) change += 3; 
+                if (b.type === 'dark_temple' && b.lvl === 2) change += 5;
+                if (b.type === 'feast_hall' && b.lvl === 1) change += 4; 
+                if (b.type === 'feast_hall' && b.lvl === 2) change += 8;
                 if (b.type === 'castle') change += 2;
+                if (b.type === 'wall') change += 1; // Стены дают чувство безопасности
             } else if (p.owner === 'ai') {
-                if (b.type === 'church' && b.lvl === 1) change += 3; if (b.type === 'church' && b.lvl === 2) change += 5;
-                if (b.type === 'fortress' && b.lvl === 1) change += 4; if (b.type === 'fortress' && b.lvl === 2) change += 8;
+                if (b.type === 'church' && b.lvl === 1) change += 3; 
+                if (b.type === 'church' && b.lvl === 2) change += 5;
+                if (b.type === 'fortress' && b.lvl === 1) change += 4; 
+                if (b.type === 'fortress' && b.lvl === 2) change += 8;
             } else if (p.owner === 'werewolf') {
                 if (b.type === 'lair') change += 4;
             }
         });
         p.loyalty = Math.min(100, Math.max(0, p.loyalty + change));
-        if (p.loyalty < 20 && Math.random() < 0.3) { p.owner = null; p.playerGarrison = {}; p.aiGarrison = {}; log(`💥 Бунт в ${p.name}!`, 'system'); }
+        if (p.loyalty < 20 && Math.random() < 0.3) { 
+            p.owner = null; 
+            p.playerGarrison = {}; 
+            p.aiGarrison = {}; 
+            log(`💥 Бунт в ${p.name}!`, 'system');
+            checkGameConditions(); 
+        }
     });
 }
 
-// ================= БИТВА =================
+// ================= БИТВА И УСЛОВИЯ ЗАХВАТА =================
+function checkCaptureRequirements(attackerSide, targetProv) {
+    let attIsPlayer = attackerSide === 'player';
+    let army = attIsPlayer ? game.player.mobileArmy : (attackerSide === 'ai' ? game.ai.mobileArmy : game.werewolf.mobileArmy);
+    
+    let inf = army.infantry || 0;
+    let cav = army.cavalry || 0;
+    let elites = attIsPlayer ? game.player.generals.highVampire : (attackerSide === 'ai' ? game.ai.generals.inquisitor : game.werewolf.generals.alpha);
+
+    // Базовые требования для пустой провинции без стен
+    let neededInf = 20;
+    let neededCav = 3;
+    let neededElites = 1;
+
+    // Усложняем требования, если есть укрепления
+    if (targetProv.fortification >= 1) { neededInf = 35; neededCav = 5; neededElites = 3; }
+    if (targetProv.fortification >= 3) { neededInf = 50; neededCav = 8; neededElites = 5; }
+
+    if (inf < neededInf || cav < neededCav || elites < neededElites) {
+        let missing = [];
+        if (inf < neededInf) missing.push(`Пехоты ${neededInf - inf}`);
+        if (cav < neededCav) missing.push(`Кавалерии ${neededCav - cav}`);
+        if (elites < neededElites) missing.push(`Элиты ${neededElites - elites}`);
+        
+        log(`❌ Недостаточно сил для штурма! Не хватает: ${missing.join(', ')}. Вам нужно больше войск.`, attIsPlayer ? 'player' : 'system');
+        return false;
+    }
+    return true;
+}
+
 function executeBattle(attackerSide, targetProv) {
-    game.battleActive = true;
+    if (game.battleActive) return;
+    
+    // Проверка времени суток
     let attIsPlayer = attackerSide === 'player';
     let attIsAI = attackerSide === 'ai';
+    let attIsWerewolf = attackerSide === 'werewolf';
+
+    if (!isNightTime()) {
+        if (attIsPlayer || attIsWerewolf) {
+            log('☀️ Сейчас день! Вампиры и Оборотни не могут атаковать при солнечном свете. Дождитесь ночи.', attIsPlayer ? 'player' : 'werewolf');
+            return;
+        }
+    }
+
+    // Проверка условий армии
+    if (!checkCaptureRequirements(attackerSide, targetProv)) {
+        if (attIsPlayer) {
+            let fallback = game.provinces.find(p => p.owner === 'player');
+            if (fallback) {
+                game.player.mobileArmy.location = fallback.id;
+                log(`🧛 Армия отступила в ${fallback.name}, так как была недостаточно сильна для штурма.`, 'player');
+            }
+            updateUI();
+        }
+        return;
+    }
+
+    game.battleActive = true;
     let attackerArmy = attIsPlayer ? game.player.mobileArmy : (attIsAI ? game.ai.mobileArmy : game.werewolf.mobileArmy);
     let attackerLosses = Math.floor(Math.random() * 16) + 10; 
     let defenderLosses = Math.floor(Math.random() * 11) + 5;
     let totalAtt = getTotalTroops(attackerArmy);
     let defenderGarrison = targetProv.owner === 'player' ? targetProv.playerGarrison : (targetProv.owner === 'ai' ? targetProv.aiGarrison : null);
     let totalDef = getTotalTroops(defenderGarrison || {});
+    
+    // Добавляем бонус защиты от укреплений
+    totalDef += targetProv.fortification * 5;
+
     let units = ['infantry', 'archer', 'cavalry'];
     
     if (totalAtt > 0) {
@@ -255,21 +333,18 @@ function executeBattle(attackerSide, targetProv) {
         log(`🛡️ Атака отбита!`, 'system');
         if (attIsPlayer && game.player.generals.highVampire > 0) game.player.generals.highVampire -= 1;
         else if (attIsAI && game.ai.generals.inquisitor > 0) game.ai.generals.inquisitor -= 1;
-        else if (!attIsPlayer && !attIsAI && game.werewolf.generals.alpha > 0) game.werewolf.generals.alpha -= 1;
+        else if (attIsWerewolf && game.werewolf.generals.alpha > 0) game.werewolf.generals.alpha -= 1;
         game.battleActive = false;
         checkGameConditions(); 
         updateUI();
 
-        // ИСПРАВЛЕНИЕ: Если армия уничтожена, но не захвачена
         if (attIsPlayer) {
             if (getTotalTroops(game.player.mobileArmy) === 0) {
                 let fallback = game.provinces.find(p => p.owner === 'player');
                 if (fallback) {
                     game.player.mobileArmy.location = fallback.id;
                     log(`🧟 Армия полностью уничтожена! Уцелевшие воины вернулись в ${fallback.name}. Наберите новых рекрутов.`, 'player');
-                } else {
-                    gameOver('ai');
-                }
+                } else { gameOver('ai'); }
             }
         }
     }
@@ -300,7 +375,7 @@ function closeSurrenderModal() {
     document.getElementById('surrender-modal').style.display = 'none'; game.surrenderActive = false; checkGameConditions(); updateUI();
 }
 
-// ================= СТРОИТЕЛЬСТВО =================
+// ================= СТРОИТЕЛЬСТВО И ЗАЩИТА =================
 function getTargetProvForAction() {
     let prov = game.provinces.find(p => p.id === game.selectedProvinceId);
     if (prov && prov.owner === 'player') return prov;
@@ -318,26 +393,53 @@ function buildStructure(type, lvl = 1) {
     else if (type === 'grave_factory') { cost = (lvl === 1 ? 30 : 50); name = `Фабрика гробов Lv${lvl}`; }
     else if (type === 'feast_hall') { cost = (lvl === 1 ? 20 : 40); name = `Пир. зал Lv${lvl}`; }
     else if (type === 'dungeon') { cost = 15; name = 'Тюрьма'; }
+    else if (type === 'wall') { cost = 10; name = 'Стены'; }
     else if (type === 'castle') { cost = 40; name = 'Замок'; }
+    
     if (game.player.gold < cost) return log(`❌ Нужно ${cost} золота.`, 'system');
-    if (type === 'grave_factory' || type === 'feast_hall') {
-        const existing = prov.buildings.find(b => b.type === type);
-        if (!existing) { if (lvl === 2) return log(`❌ Сначала постройте Lv1!`, 'system'); prov.buildings.push({ type, lvl: 1 }); } 
-        else if (existing.lvl === 1 && lvl === 2) { existing.lvl = 2; } 
-        else if (existing.lvl === 2 && lvl === 2) { return log(`❌ Уже есть максимальный уровень!`, 'system'); } 
-        else { return log(`❌ Уже есть Lv1. Нажмите кнопку Lv2 для улучшения.`, 'system'); }
-    } else {
-        if (prov.buildings.find(b => b.type === type)) return log(`❌ Уже есть.`, 'system');
+
+    // Обработка уникальных построек
+    if (type === 'wall') {
+        if (prov.buildings.find(b => b.type === 'wall')) return log(`❌ Стены уже построены.`, 'system');
         prov.buildings.push({ type, lvl: 1 });
+        prov.fortification += 1;
+        log(`🧱 Построены Стены в ${prov.name}! Укрепления +1 (всего ${prov.fortification}).`, 'player');
+    } else if (type === 'castle') {
+        if (prov.buildings.find(b => b.type === 'castle')) return log(`❌ Замок уже построен.`, 'system');
+        prov.buildings.push({ type, lvl: 1 });
+        prov.fortification += 2;
+        prov.playerGarrison = (prov.playerGarrison || { infantry:0, archer:0, cavalry:0 });
+        prov.playerGarrison.infantry += 20; // Замок дает 20 гарнизона
+        prov.loyalty += 3;
+        log(`🏰 Построен Замок в ${prov.name}! Укрепления +2, Гарнизон +20, Лояльность +3.`, 'player');
+    } else {
+        // Остальные постройки (Фабрика, Пир, и т.д.)
+        if (type === 'grave_factory' || type === 'feast_hall') {
+            const existing = prov.buildings.find(b => b.type === type);
+            if (!existing) { 
+                if (lvl === 2) return log(`❌ Сначала постройте Lv1!`, 'system'); 
+                prov.buildings.push({ type, lvl: 1 }); 
+            } 
+            else if (existing.lvl === 1 && lvl === 2) { existing.lvl = 2; } 
+            else if (existing.lvl === 2 && lvl === 2) { return log(`❌ Уже есть максимальный уровень!`, 'system'); } 
+            else { return log(`❌ Уже есть Lv1. Нажмите кнопку Lv2 для улучшения.`, 'system'); }
+        } else {
+            if (prov.buildings.find(b => b.type === type)) return log(`❌ Уже есть.`, 'system');
+            prov.buildings.push({ type, lvl: 1 });
+        }
+        game.player.gold -= cost;
+        if (type === 'grave_factory') { game.player.generals.highVampire += (lvl === 1 ? 2 : 5); }
+        log(`🏗️ Построен ${name} в ${prov.name}!`, 'player');
     }
+
     game.player.gold -= cost;
-    if (type === 'grave_factory') { game.player.generals.highVampire += (lvl === 1 ? 2 : 5); }
-    log(`🏗️ Построен ${name} в ${prov.name}!`, 'player');
     game.player.ap -= 1; updateUI();
 }
 
+// ================= НАЙМ ВОЙСК =================
 function recruitTroops(type) {
     if (!canAct()) return;
+    // Если сейчас день, вампиры не могут нанимать (логично, они спят). Но это на ваше усмотрение, пока оставлю возможность.
     const prov = getTargetProvForAction();
     if (!prov) return log('❌ Кликните на провинцию, чтобы выбрать место найма.', 'system');
 
@@ -345,7 +447,7 @@ function recruitTroops(type) {
         if (game.player.gold < 30 || game.player.blood < 10) return log('❌ Нужно 30 золота и 10 крови для Верховного вампира.', 'system');
         game.player.gold -= 30; game.player.blood -= 10;
         game.player.generals.highVampire += 1;
-        log(`🧛 Призван 1 Верховный вампир в вашу армию! Теперь их ${game.player.generals.highVampire}.`, 'player');
+        log(`🧛 Призван 1 Верховный вампир в вашу армию!`, 'player');
         game.player.ap -= 1; updateUI();
         return;
     }
@@ -354,7 +456,6 @@ function recruitTroops(type) {
     if (game.player.gold < u.cost) return log(`❌ Нужно ${u.cost} золота.`, 'system');
     game.player.gold -= u.cost;
 
-    // ИСПРАВЛЕНИЕ: Если армия мертва, возрождаем её прямо здесь
     if (getTotalTroops(game.player.mobileArmy) === 0) {
         game.player.mobileArmy.location = prov.id;
         game.player.mobileArmy[type] = (game.player.mobileArmy[type] || 0) + u.count;
@@ -450,39 +551,44 @@ function aiTurn() {
             
             if (enemies.length > 0) {
                 let target = enemies[0];
-                if (target.siegeBy === null && getTotalTroops(f.obj.mobileArmy) > 0) {
-                    target.siegeBy = f.ownerType;
-                    log(`🏰 ${f.name} начал осаду ${target.name}.`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
-                } else if (target.siegeBy === f.ownerType && getTotalTroops(f.obj.mobileArmy) > 5) {
-                    let aLoss = Math.floor(Math.random() * 16) + 10; let dLoss = Math.floor(Math.random() * 11) + 5;
-                    let attArmy = f.obj.mobileArmy; 
-                    let defGar = target.owner === 'player' ? target.playerGarrison : (target.owner === 'ai' ? target.aiGarrison : null);
-                    let totalAtt = getTotalTroops(attArmy); let units = ['infantry', 'archer', 'cavalry'];
-                    units.forEach(type => { let c = attArmy[type] || 0; let take = Math.floor(aLoss * (c / (totalAtt + 1))); take = Math.min(take, c); attArmy[type] = Math.max(0, c - take); });
-                    let totalDef = getTotalTroops(defGar || {});
-                    units.forEach(type => { let c = defGar && defGar[type] || 0; let take = Math.floor(dLoss * (c / (totalDef + 1))); take = Math.min(take, c); if (defGar) defGar[type] = Math.max(0, c - take); });
-                    
-                    if (getTotalTroops(defGar || {}) <= 0) {
-                        target.owner = 'ai';
-                        // ИСПРАВЛЕНИЕ: Если армия игрока стояла здесь, она отступает
-                        if (game.player.mobileArmy.location === target.id) {
-                             let fallback = game.provinces.find(p => p.owner === 'player');
-                             if (fallback) {
-                                 game.player.mobileArmy.location = fallback.id;
-                                 log(`🧛 Ваша армия была вынуждена отступить из ${target.name} в ${fallback.name}.`, 'player');
-                             } else {
-                                 gameOver('ai');
-                             }
+                
+                // Оборотни и Ватикан тоже подчиняются правилам дня и ночи
+                if (f.ownerType === 'werewolf' && !isNightTime()) {
+                    // Оборотни спят днем
+                } else {
+                    if (target.siegeBy === null && getTotalTroops(f.obj.mobileArmy) > 0) {
+                        target.siegeBy = f.ownerType;
+                        log(`🏰 ${f.name} начал осаду ${target.name}.`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
+                    } else if (target.siegeBy === f.ownerType && getTotalTroops(f.obj.mobileArmy) > 5) {
+                        // Проверка условий для ИИ (упрощенная)
+                        let aLoss = Math.floor(Math.random() * 16) + 10; let dLoss = Math.floor(Math.random() * 11) + 5;
+                        let attArmy = f.obj.mobileArmy; 
+                        let defGar = target.owner === 'player' ? target.playerGarrison : (target.owner === 'ai' ? target.aiGarrison : null);
+                        let totalAtt = getTotalTroops(attArmy); let units = ['infantry', 'archer', 'cavalry'];
+                        units.forEach(type => { let c = attArmy[type] || 0; let take = Math.floor(aLoss * (c / (totalAtt + 1))); take = Math.min(take, c); attArmy[type] = Math.max(0, c - take); });
+                        let totalDef = getTotalTroops(defGar || {});
+                        totalDef += target.fortification * 5; // Укрепления помогают ИИ
+                        units.forEach(type => { let c = defGar && defGar[type] || 0; let take = Math.floor(dLoss * (c / (totalDef + 1))); take = Math.min(take, c); if (defGar) defGar[type] = Math.max(0, c - take); });
+                        
+                        if (getTotalTroops(defGar || {}) <= 0) {
+                            target.owner = f.ownerType;
+                            if (game.player.mobileArmy.location === target.id) {
+                                 let fallback = game.provinces.find(p => p.owner === 'player');
+                                 if (fallback) {
+                                     game.player.mobileArmy.location = fallback.id;
+                                     log(`🧛 Ваша армия была вынуждена отступить из ${target.name} в ${fallback.name}.`, 'player');
+                                 } else { gameOver('ai'); }
+                            }
+                            target.aiGarrison = { infantry: Math.floor(getTotalTroops(attArmy)/2), archer: 0, cavalry: 0 };
+                            target.siegeBy = null; 
+                            f.obj.mobileArmy.infantry = Math.floor(f.obj.mobileArmy.infantry / 2); 
+                            f.obj.mobileArmy.location = target.id;
+                            log(`🏰 ${f.name} захватил ${target.name}!`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
+                        } else {
+                            if (f.ownerType === 'ai' && game.ai.generals.inquisitor > 0) game.ai.generals.inquisitor -= 1;
+                            else if (f.ownerType === 'werewolf' && game.werewolf.generals.alpha > 0) game.werewolf.generals.alpha -= 1;
+                            log(`🛡️ ${f.name} отбит!`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
                         }
-                        target.aiGarrison = { infantry: Math.floor(getTotalTroops(attArmy)/2), archer: 0, cavalry: 0 };
-                        target.siegeBy = null; 
-                        f.obj.mobileArmy.infantry = Math.floor(f.obj.mobileArmy.infantry / 2); 
-                        f.obj.mobileArmy.location = target.id;
-                        log(`🏰 ${f.name} захватил ${target.name}!`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
-                    } else {
-                        if (f.ownerType === 'ai' && game.ai.generals.inquisitor > 0) game.ai.generals.inquisitor -= 1;
-                        else if (f.ownerType === 'werewolf' && game.werewolf.generals.alpha > 0) game.werewolf.generals.alpha -= 1;
-                        log(`🛡️ ${f.name} отбит!`, f.ownerType === 'ai' ? 'ai' : 'werewolf');
                     }
                 }
             } else {
@@ -502,18 +608,17 @@ function endPlayerTurn() {
     if (game.provinces.filter(p => p.owner === 'player').length === 0) return gameOver('ai');
     collectIncome(); updateLoyalty(); game.player.ap = game.player.maxAp;
     game.turn++; if (game.turn % 2 === 1) game.day++;
-    log(`⏩ ХОД ${game.turn}. ДЕНЬ ${game.day}`, 'system');
+    log(`⏩ ХОД ${game.turn}. ${isNightTime() ? '🌙 НОЧЬ' : '☀️ ДЕНЬ'}.`, 'system');
     aiTurn(); saveGame(); updateUI();
 }
 
 function checkGameConditions() {
+    if (game.gameOver) return;
     const pCount = game.provinces.filter(p => p.owner === 'player').length;
     const aiCount = game.provinces.filter(p => p.owner === 'ai').length;
     const wCount = game.provinces.filter(p => p.owner === 'werewolf').length;
-    if (pCount === 0) gameOver('ai');
-    else if (aiCount === 0 && wCount === 0) gameOver('player');
-    else if (aiCount === 0 && pCount > wCount) gameOver('player');
-    else if (wCount === 0 && pCount > aiCount) gameOver('player');
+    if (pCount === 0) { return gameOver('ai'); }
+    if (aiCount === 0 && wCount === 0) { return gameOver('player'); }
 }
 
 function gameOver(winner) {
@@ -530,7 +635,7 @@ function gameOver(winner) {
 }
 function canAct() { return !game.gameOver && game.player.ap > 0 && !game.battleActive && !game.surrenderActive; }
 
-// ================= ОТРИСОВКА КАРТЫ =================
+// ================= ОТРИСОВКА КАРТЫ И UI =================
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -551,7 +656,9 @@ function drawMap() {
         }
         ctx.closePath();
         if (!isVis) { ctx.fillStyle='#080302'; ctx.strokeStyle='#080302'; ctx.fill(); ctx.stroke(); return; }
-        ctx.fillStyle = p.owner === 'player' ? '#8b1a1a' : (p.owner === 'ai' ? '#4a4a4a' : (p.owner === 'werewolf' ? '#2d3e2d' : '#2a1a1a'));
+        
+        let isNight = isNightTime();
+        ctx.fillStyle = p.owner === 'player' ? (isNight ? '#3d0b0b' : '#8b1a1a') : (p.owner === 'ai' ? (isNight ? '#2d2d2d' : '#4a4a4a') : (p.owner === 'werewolf' ? (isNight ? '#1a3d1a' : '#2d3e2d') : '#2a1a1a'));
         ctx.strokeStyle = p.owner === 'player' ? '#d4af37' : (p.owner === 'ai' ? '#c9a84c' : (p.owner === 'werewolf' ? '#6da86d' : '#3a2a25'));
         ctx.fill(); ctx.stroke();
 
@@ -569,6 +676,19 @@ function drawMap() {
         let g = p.owner === 'player' ? p.playerGarrison : p.aiGarrison;
         let gCount = getTotalTroops(g || {});
         if (gCount > 0) ctx.fillText(`🛡️Гарн:${gCount}`, p.x, p.y+15);
+        
+        // Шкала укреплений (визуальное отображение)
+        if (p.fortification > 0) {
+            ctx.fillStyle = '#d4af37'; 
+            ctx.fillText(`🏰Укр:${p.fortification}`, p.x, p.y+30);
+            // Рисуем маленькие полоски укреплений под названием
+            ctx.fillStyle = '#8b0000';
+            let fortStr = "▓".repeat(Math.min(p.fortification, 5));
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '10px monospace';
+            ctx.fillText(fortStr, p.x - 15, p.y+40);
+        }
+
         if (p.id === game.selectedProvinceId && p.owner === 'player') {
             ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 4; ctx.setLineDash([3, 3]);
             ctx.strokeRect(p.x - 45, p.y - 45, 90, 90);
@@ -615,7 +735,7 @@ function drawMap() {
 }
 
 function updateUI() {
-    ensureArmyLocation(); // ГАРАНТИРУЕМ, ЧТО АРМИЯ НЕ ПРОПАДАЕТ
+    ensureArmyLocation();
     document.getElementById('turn-counter').textContent = game.turn;
     document.getElementById('day-counter').textContent = game.day;
     document.getElementById('ap-counter').textContent = `${game.player.ap}/${game.player.maxAp}`;
@@ -651,6 +771,7 @@ document.getElementById('build-grave-2').addEventListener('click', () => buildSt
 document.getElementById('build-feast').addEventListener('click', () => buildStructure('feast_hall', 1));
 document.getElementById('build-feast-2').addEventListener('click', () => buildStructure('feast_hall', 2));
 document.getElementById('build-ritual').addEventListener('click', () => buildStructure('dark_temple'));
+document.getElementById('build-wall').addEventListener('click', () => buildStructure('wall'));
 document.getElementById('build-castle').addEventListener('click', () => buildStructure('castle'));
 document.getElementById('army-close-btn').addEventListener('click', () => { document.getElementById('army-details-modal').style.display = 'none'; });
 
@@ -695,7 +816,7 @@ canvas.addEventListener('mousemove', (e) => {
         tooltip.style.left = (e.clientX + 15) + 'px';
         tooltip.style.top = (e.clientY - 20) + 'px';
         let gCount = found.owner === 'player' ? getTotalTroops(found.playerGarrison||{}) : getTotalTroops(found.aiGarrison||{});
-        tooltip.innerHTML = `<b style="color:#d4af37;">${found.name}</b><br>Лояльность: ${Math.round(found.loyalty)}<br>Гарнизон: ${gCount}<br>Население: ${found.population}`;
+        tooltip.innerHTML = `<b style="color:#d4af37;">${found.name}</b><br>Лояльность: ${Math.round(found.loyalty)}<br>Гарнизон: ${gCount}<br>Население: ${found.population}<br>🏰 Укрепления: ${found.fortification}`;
     } else tooltip.style.display = 'none';
 });
 
@@ -727,25 +848,28 @@ canvas.addEventListener('click', (e) => {
                 break;
             }
 
-            if ((p.owner === 'ai' || p.owner === 'werewolf' || p.owner === null) && game.player.ap > 0) {
-                if (!curr.neighbors.includes(p.id)) return log('❌ Слишком далеко! Ходите по соседним провинциям.', 'system');
-                if (getTotalTroops(game.player.mobileArmy) === 0) return log('❌ Нет войск.', 'system');
-                game.pendingActionProvId = p.id;
-                document.getElementById('action-desc').textContent = `Ваша армия вошла в провинцию «${p.name}».`;
-                document.getElementById('action-modal').style.display = 'flex';
-                break;
-            }
-            
+            // ИСПРАВЛЕНИЕ: СВОБОДНОЕ ПЕРЕМЕЩЕНИЕ ПО СВОИМ ПРОВИНЦИЯМ
             if (p.owner === 'player' && p.id !== curr.id) {
-                if (!curr.neighbors.includes(p.id)) {
-                    let common = curr.neighbors.filter(n => game.provinces.find(pr => pr.id === n && pr.neighbors.includes(p.id)));
-                    let pathStr = common.length > 0 ? `Сначала идите в ${common.map(id => game.provinces.find(pr => pr.id === id).name).join(' или ')}` : "Дороги заблокированы врагами";
-                    return log(`❌ Слишком далеко! ${pathStr}.`, 'system');
-                }
                 game.player.mobileArmy.location = p.id;
                 game.player.ap -= 1;
                 log(`🏰 Армия передислоцировалась в ${p.name}.`, 'player');
                 updateUI(); break;
+            }
+
+            // ВТОРЖЕНИЕ ВО ВРАЖЕСКУЮ ПРОВИНЦИЮ (ТОЛЬКО ПО СОСЕДЯМ)
+            if ((p.owner === 'ai' || p.owner === 'werewolf' || p.owner === null) && game.player.ap > 0) {
+                if (!curr.neighbors.includes(p.id)) return log('❌ Слишком далеко! Вторгаться можно только в соседние провинции (отмечены золотым пунктиром).', 'system');
+                if (getTotalTroops(game.player.mobileArmy) === 0) return log('❌ Нет войск.', 'system');
+                
+                // Проверка времени суток
+                if (!isNightTime()) {
+                    return log('☀️ Сейчас день! Вампиры не могут атаковать. Дождитесь ночи.', 'player');
+                }
+
+                game.pendingActionProvId = p.id;
+                document.getElementById('action-desc').textContent = `Ваша армия вошла в провинцию «${p.name}».`;
+                document.getElementById('action-modal').style.display = 'flex';
+                break;
             }
         }
     }
