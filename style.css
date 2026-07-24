@@ -6,12 +6,11 @@
     --silver: #b8c0d0;
     --text-light: #d0d5e0;
     --highlight: #1a1828;
-    --vampire-red: #9b4a4a; /* Приглушенный пепельный красный */
+    --vampire-red: #9b4a4a;
     --vatican-gold: #808ca0;
 }
 body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Cinzel', serif; color: var(--text-light); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-/* СТАРТОВОЕ МЕНЮ (Metal Style) */
 .start-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: url('./assets/BACKGROUND 5.jpg') center/cover no-repeat;
@@ -27,7 +26,6 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 .start-buttons { display: flex; gap: 20px; justify-content: center; }
 .start-buttons button { width: 150px; padding: 15px; font-size: 16px; }
 
-/* ИГРОВОЙ КОНТЕЙНЕР */
 #game-container { display: none; position: relative; width: 950px; height: 840px; background-color: var(--ui-bg); border: 2px solid var(--ui-border); box-shadow: 0 0 50px rgba(74, 91, 154, 0.6); border-radius: 8px; display: flex; flex-direction: row; overflow: hidden; }
 #main-area { display: flex; flex-direction: column; width: 730px; height: 100%; flex-shrink: 0; border-right: 3px solid var(--ui-border); }
 #bg-layer { position: absolute; top: 0; left: 0; width: 730px; height: 600px; background-image: url('./assets/BACKGROUND 5.jpg'); background-size: cover; background-position: center; opacity: 0.15; z-index: 0; pointer-events: none; }
@@ -53,7 +51,6 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 .dropdown-content { display: none; position: absolute; background-color: var(--ui-bg); min-width: 140px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8); z-index: 3; border: 1px solid var(--metal-blue); bottom: 35px; left: 0; }
 .dropdown-content.open { display: block; }
 
-/* ПРАВАЯ КОЛОНКА (Metal Style) */
 #log-sidebar { width: 220px; height: 100%; background: #050508; padding: 10px; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; border-left: 3px solid var(--ui-border); z-index: 2; }
 #log-sidebar h3 { color: var(--silver); font-size: 14px; margin: 0; border-bottom: 1px solid var(--ui-border); padding-bottom: 5px; text-align: center; }
 #log-container { flex-grow: 1; overflow-y: scroll; margin-top: 5px; font-size: 11px; color: #808ca0; display: flex; flex-direction: column; gap: 3px; }
