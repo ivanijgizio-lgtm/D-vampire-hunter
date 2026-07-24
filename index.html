@@ -82,6 +82,7 @@
             </div>
         </div>
 
+        <!-- ПРАВАЯ КОЛОНКА: ОТДЕЛЬНО ОТ КАРТЫ -->
         <div id="log-sidebar">
             <h3>📜 ХРОНИКИ ТЬМЫ</h3>
             <div id="log-container"></div>
@@ -115,17 +116,18 @@
         </div>
     </div>
 
+    <!-- ОКНО ЗАВЕРШЕНИЯ ИГРЫ -->
     <div id="gameover-modal" class="modal">
         <div class="modal-content">
             <h2 id="gameover-title">🏆 ИГРА ЗАВЕРШЕНА!</h2>
             <p id="gameover-desc" style="margin: 15px 0; font-size: 16px;"></p>
             <div id="gameover-options">
-                <button id="btn-gameover-restart" class="action-btn main-action" style="width: 80%;">🔄 НАЧАТЬ ИГРУ ЗАНОВО</button>
+                <!-- ИЗМЕНЕНИЕ: Кнопка отделена от класса action-btn, чтобы gameOver её не блокировал -->
+                <button id="btn-gameover-restart" class="btn-restart-game main-action" style="width: 80%;">🔄 НАЧАТЬ ИГРУ ЗАНОВО</button>
             </div>
         </div>
     </div>
 
-    <!-- НОВОЕ ОКНО ДЕТАЛИЗАЦИИ АРМИИ -->
     <div id="army-details-modal" class="modal">
         <div class="modal-content">
             <h2>🧛 СОСТАВ АРМИИ ТЬМЫ</h2>
@@ -133,8 +135,8 @@
                 <div>🗡️ Пехота: <span id="army-inf">0</span></div>
                 <div>🏹 Лучники: <span id="army-arch">0</span></div>
                 <div>🐴 Кавалерия: <span id="army-cav">0</span></div>
-                <div style="margin-top:10px; border-top:1px solid #663333; padding-top:5px; color:#d4af37;">🧛 Верховные вампиры (Генералы): <span id="army-gen">0</span></div>
-                <div style="margin-top:5px;">⚔️ Общая мощь армии: <span id="army-total" style="color:#d4af37;">0</span></div>
+                <div style="margin-top:10px; border-top:1px solid #663333; padding-top:5px; color:#d4af37;">🧛 Верховные вампиры: <span id="army-gen">0</span></div>
+                <div style="margin-top:5px;">⚔️ Общая мощь: <span id="army-total" style="color:#d4af37;">0</span></div>
             </div>
             <button id="army-close-btn" class="action-btn" style="margin-top:10px;">ЗАКРЫТЬ</button>
         </div>
