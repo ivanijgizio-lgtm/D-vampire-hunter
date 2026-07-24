@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- СТАРТОВОЕ МЕНЮ -->
     <div id="start-menu" class="start-overlay">
         <div class="start-content">
             <h1>⚔️ ВОЙНА ТЕНЕЙ</h1>
@@ -20,7 +19,6 @@
         </div>
     </div>
 
-    <!-- ОСНОВНОЙ ИГРОВОЙ ИНТЕРФЕЙС -->
     <div id="game-container">
         <div id="bg-layer"></div>
         
@@ -31,7 +29,7 @@
                 <div class="stat">⚡ Действия: <span id="ap-counter">2/2</span></div>
                 <div class="stat">🩸 Кровь: <span id="blood-counter">10</span></div>
                 <div class="stat">💰 Золото: <span id="gold-counter">100</span></div>
-                <div class="stat">🧛 Генералы: <span id="elite-counter">5</span></div>
+                <div class="stat">🧛 Элита: <span id="elite-counter">5</span></div>
                 <div id="faith-container">
                     <span>⛪ ВЕРА ВАТИКАНА</span>
                     <div id="faith-bar-bg"><div id="faith-bar-fill"></div></div>
@@ -54,6 +52,7 @@
                             <button id="build-feast" class="sub-btn">🍷 Пир. зал Lv1 (20🪙)</button>
                             <button id="build-feast-2" class="sub-btn">🍷⬆️ Пир. зал Lv2 (40🪙)</button>
                             <button id="build-ritual" class="sub-btn">🕯️ Храм Тьмы (25🪙)</button>
+                            <button id="build-wall" class="sub-btn">🧱 Стены (10🪙)</button>
                             <button id="build-castle" class="sub-btn">🏰 Замок (40🪙)</button>
                         </div>
                     </div>
@@ -91,7 +90,6 @@
 
     <div id="tooltip"></div>
 
-    <!-- Модальные окна -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
@@ -116,13 +114,11 @@
         </div>
     </div>
 
-    <!-- ОКНО ЗАВЕРШЕНИЯ ИГРЫ -->
     <div id="gameover-modal" class="modal">
         <div class="modal-content">
             <h2 id="gameover-title">🏆 ИГРА ЗАВЕРШЕНА!</h2>
             <p id="gameover-desc" style="margin: 15px 0; font-size: 16px;"></p>
             <div id="gameover-options">
-                <!-- ИЗМЕНЕНИЕ: Кнопка отделена от класса action-btn, чтобы gameOver её не блокировал -->
                 <button id="btn-gameover-restart" class="btn-restart-game main-action" style="width: 80%;">🔄 НАЧАТЬ ИГРУ ЗАНОВО</button>
             </div>
         </div>
