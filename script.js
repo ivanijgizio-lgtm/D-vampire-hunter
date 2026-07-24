@@ -66,13 +66,21 @@ function initGame() {
     if (!loadGame()) { game = getDefaultGame(); }
     updateUI(); log('🌙 Князь Тьмы, ваши войска готовы!', 'system');
 }
+
+// ИСПРАВЛЕНИЕ БАГА ПЕРЕЗАПУСКА
 function restartGame() {
     localStorage.removeItem('VampireWarSave');
-    game = getDefaultGame();
+    game = getDefaultGame(); // Полный сброс состояния
+    game.gameOver = false; // Сброс флага конца игры
     document.getElementById('gameover-modal').style.display = 'none';
+    
+    // Включаем обратно все кнопки, которые могла отключить функция gameOver
+    document.querySelectorAll('.action-btn, .sub-btn').forEach(btn => btn.disabled = false);
+    
     document.getElementById('start-menu').style.display = 'flex';
     document.getElementById('game-container').style.display = 'none';
-    log('🔄 Игра перезапущена.', 'system'); updateUI();
+    log('🔄 Игра перезапущена. Возврат в главное меню.', 'system');
+    updateUI();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -81,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-new-game').addEventListener('click', () => { localStorage.removeItem('VampireWarSave'); game = getDefaultGame(); initGame(); });
     document.getElementById('btn-load-game').addEventListener('click', initGame);
     document.getElementById('btn-restart').addEventListener('click', () => { document.getElementById('gameover-modal').style.display = 'none'; restartGame(); });
-    document.getElementById('btn-gameover-restart').addEventListener('click', restartGame);
+    document.getElementById('btn-gameover-restart').addEventListener('click', restartGame); // Исправленный обработчик
 
     document.querySelectorAll('.dropdown-toggle').forEach(btn => {
         btn.addEventListener('click', function(e) {
@@ -128,17 +136,12 @@ function log(msg, type = 'system') {
 
 function getTotalTroops(armyObj) { return (armyObj.infantry || 0) + (armyObj.archer || 0) + (armyObj.cavalry || 0); }
 
-// ================= ЗАЩИТА ПОЗИЦИИ АРМИИ (ИСПРАВЛЕНИЕ ПРОПАЖИ) =================
 function ensureArmyLocation() {
     let locProv = game.provinces.find(p => p.id === game.player.mobileArmy.location);
-    // Если позиция недействительна или провинция не ваша
     if (!locProv || locProv.owner !== 'player') {
         let fallback = game.provinces.find(p => p.owner === 'player');
-        if (fallback) {
-            game.player.mobileArmy.location = fallback.id;
-        } else if (!game.gameOver) {
-            gameOver('ai'); // Если вообще нет провинций
-        }
+        if (fallback) { game.player.mobileArmy.location = fallback.id; } 
+        else if (!game.gameOver) { gameOver('ai'); }
     }
 }
 
@@ -183,7 +186,7 @@ function updateLoyalty() {
     });
 }
 
-// ================= БИТВА И ЗАХВАТ =================
+// ================= БИТВА =================
 function executeBattle(attackerSide, targetProv) {
     game.battleActive = true;
     let attIsPlayer = attackerSide === 'player';
@@ -257,7 +260,7 @@ function executeBattle(attackerSide, targetProv) {
         checkGameConditions(); 
         updateUI();
 
-        // ================= ИСПРАВЛЕНИЕ: ЕСЛИ АРМИЯ ПОГИБЛА ПОЛНОСТЬЮ =================
+        // ИСПРАВЛЕНИЕ: Если армия уничтожена, но не захвачена
         if (attIsPlayer) {
             if (getTotalTroops(game.player.mobileArmy) === 0) {
                 let fallback = game.provinces.find(p => p.owner === 'player');
@@ -333,7 +336,6 @@ function buildStructure(type, lvl = 1) {
     game.player.ap -= 1; updateUI();
 }
 
-// ================= ИСПРАВЛЕНИЕ: ВОЗРОЖДЕНИЕ АРМИИ ПРИ НАЙМЕ =================
 function recruitTroops(type) {
     if (!canAct()) return;
     const prov = getTargetProvForAction();
@@ -352,7 +354,7 @@ function recruitTroops(type) {
     if (game.player.gold < u.cost) return log(`❌ Нужно ${u.cost} золота.`, 'system');
     game.player.gold -= u.cost;
 
-    // ИСПРАВЛЕНИЕ: Если армия мертва (0 войск), возрождаем её прямо здесь
+    // ИСПРАВЛЕНИЕ: Если армия мертва, возрождаем её прямо здесь
     if (getTotalTroops(game.player.mobileArmy) === 0) {
         game.player.mobileArmy.location = prov.id;
         game.player.mobileArmy[type] = (game.player.mobileArmy[type] || 0) + u.count;
@@ -613,7 +615,7 @@ function drawMap() {
 }
 
 function updateUI() {
-    ensureArmyLocation(); // ГАРАНТИРУЕМ, ЧТО АРМИЯ ВСЕГДА НА КАРТЕ
+    ensureArmyLocation(); // ГАРАНТИРУЕМ, ЧТО АРМИЯ НЕ ПРОПАДАЕТ
     document.getElementById('turn-counter').textContent = game.turn;
     document.getElementById('day-counter').textContent = game.day;
     document.getElementById('ap-counter').textContent = `${game.player.ap}/${game.player.maxAp}`;
