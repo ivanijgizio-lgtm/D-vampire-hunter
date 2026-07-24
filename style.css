@@ -47,7 +47,7 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 .dropdown-content { display: none; position: absolute; background-color: var(--ui-bg); min-width: 140px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8); z-index: 3; border: 1px solid var(--gold); bottom: 35px; left: 0; }
 .dropdown-content.open { display: block; }
 
-#log-sidebar { width: 220px; height: 100%; background: #0f0a08; padding: 10px; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
+#log-sidebar { width: 220px; height: 100%; background: #0f0a08; padding: 10px; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; border-left: 3px solid var(--ui-border); z-index: 2; }
 #log-sidebar h3 { color: var(--gold); font-size: 14px; margin: 0; border-bottom: 1px solid var(--ui-border); padding-bottom: 5px; text-align: center; }
 #log-container { flex-grow: 1; overflow-y: scroll; margin-top: 5px; font-size: 11px; color: #ab8b7a; display: flex; flex-direction: column; gap: 3px; }
 .log-entry { border-bottom: 1px dotted #1a0f0c; padding: 2px 0; }
