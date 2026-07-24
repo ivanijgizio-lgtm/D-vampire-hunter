@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- СТАРТОВОЕ МЕНЮ -->
     <div id="start-menu" class="start-overlay">
         <div class="start-content">
             <h1>⚔️ ВОЙНА ТЕНЕЙ</h1>
@@ -20,7 +19,6 @@
         </div>
     </div>
 
-    <!-- ОСНОВНОЙ ИГРОВОЙ ИНТЕРФЕЙС -->
     <div id="game-container">
         <div id="bg-layer"></div>
         
@@ -31,7 +29,7 @@
                 <div class="stat">⚡ Действия: <span id="ap-counter">2/2</span></div>
                 <div class="stat">🩸 Кровь: <span id="blood-counter">10</span></div>
                 <div class="stat">💰 Золото: <span id="gold-counter">100</span></div>
-                <div class="stat">🧛 Элита: <span id="elite-counter">5</span></div>
+                <div class="stat">🧛 Лорды: <span id="elite-counter">5</span></div>
                 <div id="faith-container">
                     <span>⛪ ВЕРА ВАТИКАНА</span>
                     <div id="faith-bar-bg"><div id="faith-bar-fill"></div></div>
@@ -49,10 +47,9 @@
                     <div class="dropdown">
                         <button class="action-btn dropdown-toggle">🏗️ СТРОИТЬ</button>
                         <div class="dropdown-content">
-                            <button id="build-grave" class="sub-btn">⚰️ Фаб. гробов Lv1 (30🪙)</button>
-                            <button id="build-grave-2" class="sub-btn">⚰️⬆️ Фаб. гробов Lv2 (50🪙)</button>
-                            <button id="build-feast" class="sub-btn">🍷 Пир. зал Lv1 (20🪙)</button>
-                            <button id="build-feast-2" class="sub-btn">🍷⬆️ Пир. зал Lv2 (40🪙)</button>
+                            <button id="build-cemetery" class="sub-btn">🪦 Кладбище (30🪙)</button>
+                            <button id="build-barracks" class="sub-btn">⚔️ Казармы Lv1 (20🪙)</button>
+                            <button id="build-barracks-2" class="sub-btn">⚔️⬆️ Казармы Lv2 (50🪙)</button>
                             <button id="build-ritual" class="sub-btn">🕯️ Храм Тьмы (25🪙)</button>
                             <button id="build-wall" class="sub-btn">🧱 Стены (10🪙)</button>
                             <button id="build-castle" class="sub-btn">🏰 Замок (40🪙)</button>
@@ -65,7 +62,7 @@
                             <button id="recruit-inf" class="sub-btn">🗡️ 5 Пехоты (10🪙)</button>
                             <button id="recruit-arch" class="sub-btn">🏹 5 Лучников (15🪙)</button>
                             <button id="recruit-cav" class="sub-btn">🐴 3 Кавалерии (20🪙)</button>
-                            <button id="recruit-hvamp" class="sub-btn">🧛 Верховный вампир (30🪙, 10🩸)</button>
+                            <button id="recruit-knights" class="sub-btn">⚔️ Рыцари Тьмы (30🪙)</button>
                         </div>
                     </div>
 
@@ -133,14 +130,13 @@
                 <div>🗡️ Пехота: <span id="army-inf">0</span></div>
                 <div>🏹 Лучники: <span id="army-arch">0</span></div>
                 <div>🐴 Кавалерия: <span id="army-cav">0</span></div>
-                <div style="margin-top:10px; border-top:1px solid #663333; padding-top:5px; color:#d4af37;">🧛 Верховные вампиры: <span id="army-gen">0</span></div>
+                <div style="margin-top:10px; border-top:1px solid #663333; padding-top:5px; color:#d4af37;">🧛 Верховные Лорды: <span id="army-gen">0</span></div>
                 <div style="margin-top:5px;">⚔️ Общая мощь: <span id="army-total" style="color:#d4af37;">0</span></div>
             </div>
             <button id="army-close-btn" class="action-btn" style="margin-top:10px;">ЗАКРЫТЬ</button>
         </div>
     </div>
 
-    <!-- НОВОЕ: ОКНО ВСТРЕЧИ АРМИЙ -->
     <div id="army-battle-modal" class="modal">
         <div class="modal-content">
             <h2>⚔️ ВСТРЕЧА АРМИЙ!</h2>
