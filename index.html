@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- СТАРТОВОЕ МЕНЮ -->
     <div id="start-menu" class="start-overlay">
         <div class="start-content">
             <h1>⚔️ ВОЙНА ТЕНЕЙ</h1>
@@ -19,6 +20,7 @@
         </div>
     </div>
 
+    <!-- ОСНОВНОЙ ИГРОВОЙ ИНТЕРФЕЙС -->
     <div id="game-container">
         <div id="bg-layer"></div>
         
@@ -81,7 +83,6 @@
             </div>
         </div>
 
-        <!-- ПРАВАЯ КОЛОНКА: ОТДЕЛЬНО ОТ КАРТЫ -->
         <div id="log-sidebar">
             <h3>📜 ХРОНИКИ ТЬМЫ</h3>
             <div id="log-container"></div>
@@ -90,6 +91,7 @@
 
     <div id="tooltip"></div>
 
+    <!-- Модальные окна -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
@@ -135,6 +137,19 @@
                 <div style="margin-top:5px;">⚔️ Общая мощь: <span id="army-total" style="color:#d4af37;">0</span></div>
             </div>
             <button id="army-close-btn" class="action-btn" style="margin-top:10px;">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+
+    <!-- НОВОЕ: ОКНО ВСТРЕЧИ АРМИЙ -->
+    <div id="army-battle-modal" class="modal">
+        <div class="modal-content">
+            <h2>⚔️ ВСТРЕЧА АРМИЙ!</h2>
+            <p id="army-battle-desc">Вы встретили вражескую армию на поле боя. Ваши действия?</p>
+            <div id="army-battle-options">
+                <button id="btn-attack-army" class="action-btn main-action">⚔️ АТАКОВАТЬ</button>
+                <button id="btn-retreat-army" class="action-btn" style="background:#333; border-color:#555;">🚩 ОТСТУПИТЬ</button>
+            </div>
+            <p id="army-battle-result" style="margin-top:10px; font-size:14px; color:#aaa;"></p>
         </div>
     </div>
 
