@@ -2,6 +2,7 @@
     --bg-dark: #0a0605; --ui-bg: #140d0a; --ui-border: #663333;
     --gold: #d4af37; --blood-red: #8b0000; --text-light: #e6d5c3;
     --highlight: #5a1616; --vampire-red: #8b1a1a; --vatican-gold: #b08d55;
+    --night-blue: #1a2733;
 }
 body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Cinzel', serif; color: var(--text-light); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
@@ -20,10 +21,9 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 .start-buttons { display: flex; gap: 20px; justify-content: center; }
 .start-buttons button { width: 150px; padding: 15px; font-size: 16px; }
 
-#game-container { display: none; position: relative; width: 950px; height: 840px; background-color: var(--ui-bg); border: 2px solid var(--ui-border); box-shadow: 0 0 50px rgba(139, 0, 0, 0.7); border-radius: 8px; flex-direction: row; overflow: hidden; }
+#game-container { display: none; position: relative; width: 950px; height: 840px; background-color: var(--ui-bg); border: 2px solid var(--ui-border); box-shadow: 0 0 50px rgba(139, 0, 0, 0.7); border-radius: 8px; display: flex; flex-direction: row; overflow: hidden; }
 
-/* ЛЕВАЯ ОБЛАСТЬ: Карта и кнопки */
-#main-area { display: flex; flex-direction: column; width: 730px; height: 100%; border-right: 3px solid var(--ui-border); }
+#main-area { display: flex; flex-direction: column; width: 730px; height: 100%; flex-shrink: 0; border-right: 3px solid var(--ui-border); }
 #bg-layer { position: absolute; top: 0; left: 0; width: 730px; height: 600px; background-image: url('./assets/background.jpg'); background-size: cover; background-position: center; opacity: 0.1; z-index: 0; pointer-events: none; }
 
 #top-bar { display: flex; justify-content: space-evenly; align-items: center; padding: 8px 10px; background: rgba(0,0,0,0.9); border-bottom: 1px solid var(--ui-border); font-size: 12px; z-index: 2; }
@@ -47,14 +47,7 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 .dropdown-content { display: none; position: absolute; background-color: var(--ui-bg); min-width: 140px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8); z-index: 3; border: 1px solid var(--gold); bottom: 35px; left: 0; }
 .dropdown-content.open { display: block; }
 
-/* ПРАВАЯ ОБЛАСТЬ: Хроники (Полностью отделена от карты) */
-#log-sidebar { 
-    width: 220px; height: 100%; 
-    background: #0f0a08; 
-    padding: 10px; 
-    display: flex; flex-direction: column; overflow: hidden; 
-    flex-shrink: 0; /* Жестко фиксирует ширину, не давая колонкам слипаться */
-}
+#log-sidebar { width: 220px; height: 100%; background: #0f0a08; padding: 10px; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
 #log-sidebar h3 { color: var(--gold); font-size: 14px; margin: 0; border-bottom: 1px solid var(--ui-border); padding-bottom: 5px; text-align: center; }
 #log-container { flex-grow: 1; overflow-y: scroll; margin-top: 5px; font-size: 11px; color: #ab8b7a; display: flex; flex-direction: column; gap: 3px; }
 .log-entry { border-bottom: 1px dotted #1a0f0c; padding: 2px 0; }
@@ -62,6 +55,8 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 .log-entry.ai { color: var(--vatican-gold); font-style: italic; }
 .log-entry.werewolf { color: #7a7a7a; font-style: italic; }
 .log-entry.system { color: #6688aa; }
+.log-entry.day { color: #ffd700; font-weight: bold; }
+.log-entry.night { color: #1e90ff; font-weight: bold; }
 
 #tooltip { display: none; position: fixed; z-index: 20; background: rgba(10, 6, 5, 0.95); border: 1px solid var(--gold); border-radius: 5px; padding: 10px; font-size: 12px; pointer-events: none; }
 .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
@@ -70,16 +65,5 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 #action-options button, #surrender-options button { width: 100px; padding: 10px; }
 #surrender-result, #gameover-desc { margin-top: 10px; font-size: 14px; color: #aaa; }
 
-/* Специальный стиль для кнопки перезапуска, чтобы она не отключалась */
-.btn-restart-game { 
-    background: var(--blood-red); 
-    border: 1px solid var(--gold); 
-    color: var(--text-light); 
-    padding: 10px; 
-    border-radius: 4px; 
-    cursor: pointer; 
-    font-family: 'Cinzel', serif; 
-    font-weight: bold; 
-    transition: 0.2s;
-}
+.btn-restart-game { background: var(--blood-red); border: 1px solid var(--gold); color: var(--text-light); padding: 10px; border-radius: 4px; cursor: pointer; font-family: 'Cinzel', serif; font-weight: bold; transition: 0.2s; }
 .btn-restart-game:hover { background: var(--highlight); border-color: var(--gold); box-shadow: 0 0 10px rgba(139, 0, 0, 0.6); }
