@@ -87,7 +87,7 @@ function restartGame() {
     document.getElementById('start-menu').style.display = 'flex';
     document.getElementById('game-container').style.display = 'none';
     log('🔄 Дракула возвращается в тень. Перерождение...', 'system');
-    updateUI(); // Теперь не упадет, так как ctx уже объявлен выше
+    updateUI();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -242,13 +242,18 @@ function executeArmyBattle(attackerSide, targetSide) {
     game.armyBattleActive = false; checkGameConditions(); updateUI();
 }
 
+// ================= ИСПРАВЛЕНИЕ: ЗАХВАТ ТЕПЕРЬ ЗАВИСИТ ОТ ОБЩЕЙ СИЛЫ И НАЛИЧИЯ ЛОРДА =================
 function checkCaptureRequirements(attackerSide, targetProv) {
-    let attIsPlayer = attackerSide === 'player'; let army = attIsPlayer ? game.player.mobileArmy : (attackerSide === 'ai' ? game.ai.mobileArmy : game.werewolf.mobileArmy);
-    let inf = army.infantry || 0; let cav = army.cavalry || 0; let elites = attIsPlayer ? game.player.lords.length : (attackerSide === 'ai' ? game.ai.generals.inquisitor : game.werewolf.generals.alpha);
-    let neededInf = 20, neededCav = 3, neededElites = 1;
-    if (targetProv.fortification >= 1) { neededInf = 35; neededCav = 5; neededElites = 3; }
-    if (targetProv.fortification >= 3) { neededInf = 50; neededCav = 8; neededElites = 5; }
-    if (inf < neededInf || cav < neededCav || elites < neededElites) { let missing = []; if (inf < neededInf) missing.push(`Пехоты ${neededInf - inf}`); if (cav < neededCav) missing.push(`Кавалерии ${neededCav - cav}`); if (elites < neededElites) missing.push(`Лордов ${neededElites - elites}`); log(`❌ Недостаточно сил для штурма! Не хватает: ${missing.join(', ')}.`, attIsPlayer ? 'player' : 'system'); return false; }
+    let attIsPlayer = attackerSide === 'player'; 
+    let army = attIsPlayer ? game.player.mobileArmy : (attackerSide === 'ai' ? game.ai.mobileArmy : game.werewolf.mobileArmy);
+    let totalTroops = getTotalTroops(army);
+    let elites = attIsPlayer ? game.player.lords.length : (attackerSide === 'ai' ? game.ai.generals.inquisitor : game.werewolf.generals.alpha);
+
+    if (totalTroops < 1) return log('❌ В армии нет войск!', 'system') && false;
+    if (elites < 1) {
+        log(`❌ У вас нет Лордов для командования штурмом! Постройте Храм Тьмы.`, attIsPlayer ? 'player' : 'system');
+        return false;
+    }
     return true;
 }
 
@@ -270,6 +275,37 @@ function executeBattle(attackerSide, targetProv) {
     if (isVictory) { log(`🏰 Провинция ${targetProv.name} захвачена!`, attIsPlayer ? 'player' : (attIsAI ? 'ai' : 'werewolf')); targetProv.owner = attackerSide; targetProv.siegeBy = null; targetProv.aiGarrison = {}; targetProv.playerGarrison = {}; let remainingTroops = getTotalTroops(attackerArmy); let transfer = Math.floor(remainingTroops / 2); let tempGarrison = { infantry: transfer, archer: 0, cavalry: 0 }; if (attIsPlayer) { targetProv.playerGarrison = tempGarrison; game.player.mobileArmy.infantry = Math.max(0, game.player.mobileArmy.infantry - transfer); game.player.mobileArmy.location = targetProv.id; } else if (attIsAI) { targetProv.aiGarrison = tempGarrison; game.ai.mobileArmy.infantry = Math.max(0, game.ai.mobileArmy.infantry - transfer); game.ai.mobileArmy.location = targetProv.id; } else { targetProv.aiGarrison = tempGarrison; game.werewolf.mobileArmy.infantry = Math.max(0, game.werewolf.mobileArmy.infantry - transfer); game.werewolf.mobileArmy.location = targetProv.id; } game.battleActive = false; if (attIsPlayer) showSurrenderModal(targetProv); else { checkGameConditions(); updateUI(); } } 
     else { log(`🛡️ Атака отбита!`, 'system'); game.battleActive = false; checkGameConditions(); updateUI(); if (attIsPlayer && getTotalTroops(game.player.mobileArmy) === 0) { let fallback = game.provinces.find(p => p.owner === 'player'); if (fallback) { game.player.mobileArmy.location = fallback.id; log(`🧟 Армия уничтожена! Вернулись в ${fallback.name}.`, 'player'); } else { gameOver('ai'); } } }
 }
+
+// ================= ИСПРАВЛЕНИЕ: НОВЫЙ БАЛАНС СУДЬБЫ ПРОВИНЦИИ =================
+function showSurrenderModal(prov) {
+    if (game.surrenderActive) return;
+    game.surrenderActive = true;
+    document.getElementById('surrender-modal').style.display = 'flex';
+    const r = document.getElementById('surrender-result');
+    r.textContent = "";
+    document.getElementById('btn-exterminate').onclick = () => { 
+        game.player.gold += 1500; game.player.blood += 800; 
+        prov.loyalty = 5; prov.population -= 2000; 
+        log(`💀 Истребление! +1500 золота, +800 крови. Население сократилось, лояльность упала.`, 'player'); 
+        r.textContent = "Кровь и пепел! Ресурсы получены, но земля опустела."; closeSurrenderModal(); 
+    };
+    document.getElementById('btn-enslave').onclick = () => { 
+        game.player.gold += 500; game.player.blood += 200; 
+        prov.loyalty = 50; prov.slaveIncome = 2; 
+        if (!prov.playerGarrison) prov.playerGarrison = { infantry:0, archer:0, cavalry:0 }; 
+        prov.playerGarrison.infantry += 10; 
+        log(`⛓️ Порабощение! +500 золота, +200 крови. Гарнизон пополнен +10, лояльность высокая.`, 'player'); 
+        r.textContent = "Рабы пополнили ряды гарнизона. Лояльность сохранена."; closeSurrenderModal(); 
+    };
+    document.getElementById('btn-convert').onclick = () => { 
+        prov.loyalty += 20; 
+        if (!prov.playerGarrison) prov.playerGarrison = { infantry:0, archer:0, cavalry:0 }; 
+        prov.playerGarrison.infantry += 10; prov.population = Math.floor(prov.population * 1.2); 
+        log(`🧛 Обращение! +20 лояльности, +10 гарнизона.`, 'player'); 
+        r.textContent = "Новые слуги тьмы!"; closeSurrenderModal(); 
+    }; updateUI();
+}
+function closeSurrenderModal() { document.getElementById('surrender-modal').style.display = 'none'; game.surrenderActive = false; checkGameConditions(); updateUI(); }
 
 // ================= СТРОИТЕЛЬСТВО И АРМИЯ =================
 function getTargetProvForAction() {
@@ -301,16 +337,14 @@ function moveTroops(amount, toGarrison = true) {
 }
 function cancelSiege() { if (!canAct()) return; const prov = game.provinces.find(p => p.id === game.player.mobileArmy.location); if (!prov || prov.siegeBy !== 'player') return log('❌ Армия не осаждает.', 'system'); prov.siegeBy = null; const pProvs = game.provinces.filter(p => p.owner === 'player'); game.player.mobileArmy.location = pProvs.length > 0 ? pProvs[0].id : 4; log(`🚩 Осада снята.`, 'player'); game.player.ap -= 1; updateUI(); }
 
-// ================= ДИПЛОМАТИЯ, ТОРГОВЛЯ И ТЕХНОЛОГИИ (ОКНА ИСПРАВЛЕНЫ) =================
+// ================= ДИПЛОМАТИЯ, ТОРГОВЛЯ И ТЕХНОЛОГИИ =================
 function openDiplomacy() { if (game.gameOver) return; document.getElementById('diplomacy-info').textContent = `Золото: ${game.player.gold}`; document.getElementById('diplomacy-modal').style.display = 'flex'; }
 function openMarket() { if (game.gameOver) return; document.getElementById('market-info').textContent = `Золото: ${game.player.gold}, Кровь: ${game.player.blood} | ${game.player.marketUsed ? "(Использовано)" : "(Готово)"}`; document.getElementById('market-modal').style.display = 'flex'; }
 function openTech() { if (game.gameOver) return; document.getElementById('tech-info').textContent = `Золото: ${game.player.gold}`; document.getElementById('tech-modal').style.display = 'flex'; }
-
 function closeDiplomacy() { document.getElementById('diplomacy-modal').style.display = 'none'; }
 function closeMarket() { document.getElementById('market-modal').style.display = 'none'; }
 function closeTech() { document.getElementById('tech-modal').style.display = 'none'; }
 
-// Обработчики Дипломатии
 document.getElementById('dip-truce-ai').addEventListener('click', () => {
     if (game.player.gold < 30) return log('❌ Не хватает золота для перемирия.', 'system');
     if (game.player.truceTurnsAI > 0) return log('⛔ Перемирие с Ватиканом уже активно.', 'system');
@@ -336,7 +370,6 @@ document.getElementById('dip-alliance').addEventListener('click', () => {
     setTimeout(closeDiplomacy, 1000); updateUI();
 });
 
-// Обработчики Рынка
 document.getElementById('mkt-gold-to-blood').addEventListener('click', () => {
     if (game.player.marketUsed) return log('⛔ Рынок уже использован в этот ход.', 'system');
     if (game.player.gold < 10) return log('❌ Нужно 10 золота для обмена.', 'system');
@@ -354,7 +387,6 @@ document.getElementById('mkt-blood-to-gold').addEventListener('click', () => {
     setTimeout(closeMarket, 1000); updateUI();
 });
 
-// Обработчики Технологий
 document.getElementById('tech-reform').addEventListener('click', () => {
     if (game.player.techs.militaryReform) return log('⛔ Технология уже изучена.', 'system');
     if (game.player.gold < 30) return log('❌ Нужно 30 золота.', 'system');
@@ -380,7 +412,6 @@ document.getElementById('tech-trade').addEventListener('click', () => {
     setTimeout(closeTech, 1000); updateUI();
 });
 
-// Закрытие окон по клику вне их
 document.getElementById('diplomacy-modal').addEventListener('click', function(e) { if(e.target === this) closeDiplomacy(); });
 document.getElementById('market-modal').addEventListener('click', function(e) { if(e.target === this) closeMarket(); });
 document.getElementById('tech-modal').addEventListener('click', function(e) { if(e.target === this) closeTech(); });
@@ -400,7 +431,7 @@ function checkGameConditions() { if (game.gameOver) return; const pCount = game.
 function gameOver(winner) { if (game.gameOver) return; game.gameOver = true; document.querySelectorAll('.action-btn, .sub-btn').forEach(btn => btn.disabled = true); document.getElementById('bg-layer').style.opacity = '0.8'; const modal = document.getElementById('gameover-modal'); const title = document.getElementById('gameover-title'); const desc = document.getElementById('gameover-desc'); if (winner === 'player') { title.textContent = '🏆 ДРАКУЛА ВОЦАРИЛСЯ!'; desc.textContent = 'Европа навсегда погрузилась в вечную ночь.'; } else { title.textContent = '💀 ТЬМА ОТСТУПИЛА!'; desc.textContent = 'Враги оказались слишком сильны. Попробуйте изменить тактику.'; } modal.style.display = 'flex'; saveGame(); }
 function canAct() { return !game.gameOver && game.player.ap > 0 && !game.battleActive && !game.surrenderActive && !game.armyBattleActive; }
 
-// ================= ОТРИСОВКА КАРТЫ (ХОЛОДНЫЙ СТИЛЬ) =================
+// ================= ОТРИСОВКА КАРТЫ =================
 function drawMap() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const playerVisible = []; game.provinces.forEach(p => { if (p.owner === 'player') { playerVisible.push(p.id); p.neighbors.forEach(n => playerVisible.push(n)); } });
@@ -514,12 +545,52 @@ document.getElementById('btn-assault').addEventListener('click', () => { if (!ca
 document.getElementById('btn-attack-army').addEventListener('click', () => { if (!game.enemyArmyTarget) return; game.armyBattleActive = false; let enemyArmyObj = game.enemyArmyTarget === 'ai' ? game.ai.mobileArmy : game.werewolf.mobileArmy; let targetProv = game.provinces.find(p => p.id === enemyArmyObj.location); if(targetProv && targetProv.owner !== 'player') { game.player.mobileArmy.location = targetProv.id; log(`🧛 Ваша армия выдвинулась на перехват врага в ${targetProv.name}.`, 'player'); } game.player.ap -= 1; executeArmyBattle('player', game.enemyArmyTarget); game.enemyArmyTarget = null; document.getElementById('army-battle-modal').style.display = 'none'; updateUI(); });
 document.getElementById('btn-retreat-army').addEventListener('click', () => { game.armyBattleActive = false; log(`🚩 Вы отступили, не вступая в бой (потрачено 1 AP).`, 'system'); game.player.ap -= 1; game.enemyArmyTarget = null; document.getElementById('army-battle-modal').style.display = 'none'; updateUI(); });
 
+// ================= ИСПРАВЛЕНИЕ: ДОБАВЛЕН ТУЛТИП ДЛЯ АРМИЙ ПРИ НАВЕДЕНИИ =================
 canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top;
-    let found = null;
-    for (let p of game.provinces) { if ((x-p.x)*(x-p.x) + (y-p.y)*(y-p.y) < 2500) { found = p; break; } }
     const tooltip = document.getElementById('tooltip');
     if (!tooltip) return; 
+
+    const pProv = game.provinces.find(p => p.id === game.player.mobileArmy.location);
+    const aProv = game.provinces.find(p => p.id === game.ai.mobileArmy.location);
+    const wProv = game.provinces.find(p => p.id === game.werewolf.mobileArmy.location);
+    let pOff = 0, aOff = 0, wOff = 0;
+    if (pProv && aProv && pProv.id === aProv.id) { pOff = -20; aOff = 20; }
+    if (pProv && wProv && pProv.id === wProv.id) { pOff = -20; wOff = 20; }
+    if (aProv && wProv && aProv.id === wProv.id) { aOff = -20; wOff = 20; }
+
+    // Проверяем попадание в иконки армий с учетом смещения
+    if (pProv && getTotalTroops(game.player.mobileArmy) > 0) {
+        let dx = x - (pProv.x + pOff);
+        let dy = y - pProv.y + 15; // Корректировка центра иконки по Y
+        if (dx*dx + dy*dy < 2500) {
+            tooltip.style.display = 'block'; tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY - 20) + 'px';
+            tooltip.innerHTML = `<b style="color:#b8c0d0;">🧛 Армия Тьмы</b><br>Войск: ${getTotalTroops(game.player.mobileArmy)}<br>Лорды: ${game.player.lords.length}<br>Мощь: ${calcArmyPower(game.player.mobileArmy, true)}`;
+            return;
+        }
+    }
+    if (aProv && getTotalTroops(game.ai.mobileArmy) > 0) {
+        let dx = x - (aProv.x + aOff);
+        let dy = y - aProv.y + 15;
+        if (dx*dx + dy*dy < 2500) {
+            tooltip.style.display = 'block'; tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY - 20) + 'px';
+            tooltip.innerHTML = `<b style="color:#808ca0;">⛪ Армия Ватикана</b><br>Войск: ${getTotalTroops(game.ai.mobileArmy)}<br>Инквизиторы: ${game.ai.generals.inquisitor}<br>Мощь: ${calcArmyPower(game.ai.mobileArmy, false)}`;
+            return;
+        }
+    }
+    if (wProv && getTotalTroops(game.werewolf.mobileArmy) > 0) {
+        let dx = x - (wProv.x + wOff);
+        let dy = y - wProv.y + 15;
+        if (dx*dx + dy*dy < 2500) {
+            tooltip.style.display = 'block'; tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY - 20) + 'px';
+            tooltip.innerHTML = `<b style="color:#606a78;">🐺 Армия Оборотней</b><br>Войск: ${getTotalTroops(game.werewolf.mobileArmy)}<br>Альфы: ${game.werewolf.generals.alpha}<br>Мощь: ${calcArmyPower(game.werewolf.mobileArmy, false)}`;
+            return;
+        }
+    }
+
+    // Если не попали в армию, проверяем провинции
+    let found = null;
+    for (let p of game.provinces) { if ((x-p.x)*(x-p.x) + (y-p.y)*(y-p.y) < 2500) { found = p; break; } }
     if (found) {
         tooltip.style.display = 'block'; tooltip.style.left = (e.clientX + 15) + 'px'; tooltip.style.top = (e.clientY - 20) + 'px';
         let gCount = found.owner === 'player' ? getTotalTroops(found.playerGarrison||{}) : getTotalTroops(found.aiGarrison||{});
@@ -539,8 +610,17 @@ canvas.addEventListener('click', (e) => {
     if (game.player.ap === 0) return log('❌ У вас нет очков действий.', 'system');
     const rect = canvas.getBoundingClientRect(); const x = e.clientX - rect.left, y = e.clientY - rect.top;
     const pProv = game.provinces.find(p => p.id === game.player.mobileArmy.location); const aProv = game.provinces.find(p => p.id === game.ai.mobileArmy.location); const wProv = game.provinces.find(p => p.id === game.werewolf.mobileArmy.location);
-    if (aProv && getTotalTroops(game.ai.mobileArmy) > 0) { let dx = x - (aProv.x + (pProv && pProv.id === aProv.id ? 20 : 0)); let dy = y - aProv.y + 15; if (dx*dx + dy*dy < 2500) { if (!isNightTime()) { log('☀️ Сейчас день! Вы не можете атаковать.', 'player'); return; } game.enemyArmyTarget = 'ai'; document.getElementById('army-battle-desc').textContent = `Вы встретили армию Ватикана в провинции "${aProv.name}"!`; document.getElementById('army-battle-modal').style.display = 'flex'; document.getElementById('army-battle-result').textContent = ""; document.getElementById('btn-attack-army').disabled = false; document.getElementById('btn-retreat-army').disabled = false; return; } }
-    if (wProv && getTotalTroops(game.werewolf.mobileArmy) > 0) { let dx = x - (wProv.x + (pProv && pProv.id === wProv.id ? 20 : 0)); let dy = y - wProv.y + 15; if (dx*dx + dy*dy < 2500) { if (!isNightTime()) { log('☀️ Сейчас день! Вы не можете атаковать.', 'player'); return; } game.enemyArmyTarget = 'werewolf'; document.getElementById('army-battle-desc').textContent = `Вы встретили армию Оборотней в провинции "${wProv.name}"!`; document.getElementById('army-battle-modal').style.display = 'flex'; document.getElementById('army-battle-result').textContent = ""; document.getElementById('btn-attack-army').disabled = false; document.getElementById('btn-retreat-army').disabled = false; return; } }
+    let pOff = 0, aOff = 0, wOff = 0;
+    if (pProv && aProv && pProv.id === aProv.id) { pOff = -20; aOff = 20; }
+    if (pProv && wProv && pProv.id === wProv.id) { pOff = -20; wOff = 20; }
+    if (aProv && wProv && aProv.id === wProv.id) { aOff = -20; wOff = 20; }
+
+    if (aProv && getTotalTroops(game.ai.mobileArmy) > 0) {
+        let dx = x - (aProv.x + aOff); let dy = y - aProv.y + 15;
+        if (dx*dx + dy*dy < 2500) { if (!isNightTime()) { log('☀️ Сейчас день! Вы не можете атаковать.', 'player'); return; } game.enemyArmyTarget = 'ai'; document.getElementById('army-battle-desc').textContent = `Вы встретили армию Ватикана в провинции "${aProv.name}"!`; document.getElementById('army-battle-modal').style.display = 'flex'; document.getElementById('army-battle-result').textContent = ""; document.getElementById('btn-attack-army').disabled = false; document.getElementById('btn-retreat-army').disabled = false; return; } }
+    if (wProv && getTotalTroops(game.werewolf.mobileArmy) > 0) {
+        let dx = x - (wProv.x + wOff); let dy = y - wProv.y + 15;
+        if (dx*dx + dy*dy < 2500) { if (!isNightTime()) { log('☀️ Сейчас день! Вы не можете атаковать.', 'player'); return; } game.enemyArmyTarget = 'werewolf'; document.getElementById('army-battle-desc').textContent = `Вы встретили армию Оборотней в провинции "${wProv.name}"!`; document.getElementById('army-battle-modal').style.display = 'flex'; document.getElementById('army-battle-result').textContent = ""; document.getElementById('btn-attack-army').disabled = false; document.getElementById('btn-retreat-army').disabled = false; return; } }
     for (let p of game.provinces) { if ((x-p.x)*(x-p.x) + (y-p.y)*(y-p.y) < 2500) { const curr = game.provinces.find(pr => pr.id === game.player.mobileArmy.location); if (p.owner === 'player' && p.id === curr.id) { game.selectedProvinceId = p.id; log(`📍 Выбрана ${p.name} для стройки.`, 'system'); updateUI(); break; } if (p.owner === 'player' && p.id !== curr.id) { game.player.mobileArmy.location = p.id; game.player.ap -= 1; log(`🏰 Армия передислоцировалась в ${p.name}.`, 'player'); updateUI(); break; } if ((p.owner === 'ai' || p.owner === 'werewolf' || p.owner === null) && game.player.ap > 0) { if (!curr.neighbors.includes(p.id)) return log('❌ Слишком далеко! Вторгаться можно только в соседние провинции.', 'system'); if (getTotalTroops(game.player.mobileArmy) === 0) return log('❌ Нет войск.', 'system'); if (!isNightTime()) return log('☀️ Сейчас день! Вампиры не могут атаковать.', 'player'); game.pendingActionProvId = p.id; document.getElementById('action-desc').textContent = `Ваша армия вошла в провинцию «${p.name}».`; document.getElementById('action-modal').style.display = 'flex'; break; } } }
 });
 
