@@ -56,6 +56,10 @@ function getDefaultGame() {
 }
 let game = getDefaultGame();
 
+// ИСПРАВЛЕНИЕ ОШИБКИ TDZ: ВЫНОСИМ СANVAS И CTX В САМЫЙ ВЕРХ!
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+
 // ================= ИМЕНА И ЛОР ПОСТРОЕК =================
 const LORD_NAMES = [
     "Граф Дракулос", "Леди Сильвана", "Барон Ноктюрн", "Графиня Морвен", 
@@ -83,7 +87,7 @@ function restartGame() {
     document.getElementById('start-menu').style.display = 'flex';
     document.getElementById('game-container').style.display = 'none';
     log('🔄 Дракула возвращается в тень. Перерождение...', 'system');
-    updateUI();
+    updateUI(); // Теперь не упадет, так как ctx уже объявлен выше
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -191,8 +195,6 @@ function calcArmyPower(army, isPlayer) {
     return Math.floor(totalPower * generalBonus);
 }
 
-// --- Остальные функции битв, экономики, дипломатии, технологий и UI остаются без изменений по логике, но адаптированы под холодные цвета в отрисовке. ---
-
 function collectIncome() {
     game.provinces.forEach(prov => {
         if (prov.owner === 'player') {
@@ -299,24 +301,89 @@ function moveTroops(amount, toGarrison = true) {
 }
 function cancelSiege() { if (!canAct()) return; const prov = game.provinces.find(p => p.id === game.player.mobileArmy.location); if (!prov || prov.siegeBy !== 'player') return log('❌ Армия не осаждает.', 'system'); prov.siegeBy = null; const pProvs = game.provinces.filter(p => p.owner === 'player'); game.player.mobileArmy.location = pProvs.length > 0 ? pProvs[0].id : 4; log(`🚩 Осада снята.`, 'player'); game.player.ap -= 1; updateUI(); }
 
-// ================= ДИПЛОМАТИЯ, ТОРГОВЛЯ И ТЕХНОЛОГИИ =================
+// ================= ДИПЛОМАТИЯ, ТОРГОВЛЯ И ТЕХНОЛОГИИ (ОКНА ИСПРАВЛЕНЫ) =================
 function openDiplomacy() { if (game.gameOver) return; document.getElementById('diplomacy-info').textContent = `Золото: ${game.player.gold}`; document.getElementById('diplomacy-modal').style.display = 'flex'; }
 function openMarket() { if (game.gameOver) return; document.getElementById('market-info').textContent = `Золото: ${game.player.gold}, Кровь: ${game.player.blood} | ${game.player.marketUsed ? "(Использовано)" : "(Готово)"}`; document.getElementById('market-modal').style.display = 'flex'; }
 function openTech() { if (game.gameOver) return; document.getElementById('tech-info').textContent = `Золото: ${game.player.gold}`; document.getElementById('tech-modal').style.display = 'flex'; }
-// Слушатели для дипломатии, рынка и технологий (как в предыдущей версии)
 
-// Добавим обработчики (упрощенные для краткости, но рабочие)
-document.getElementById('dip-truce-ai').onclick = () => { if (game.player.gold >= 30 && game.player.truceTurnsAI === 0) { game.player.gold -= 30; game.player.truceTurnsAI = 2; log('🕊️ Перемирие с Ватиканом на 2 хода!', 'player'); } };
-document.getElementById('dip-truce-wolf').onclick = () => { if (game.player.gold >= 30 && game.player.truceTurnsWolf === 0) { game.player.gold -= 30; game.player.truceTurnsWolf = 2; log('🕊️ Перемирие с Оборотнями на 2 хода!', 'player'); } };
-document.getElementById('mkt-gold-to-blood').onclick = () => { if (!game.player.marketUsed && game.player.gold >= 10) { game.player.gold -= 10; game.player.blood += 8; game.player.marketUsed = true; log('⚖️ Обмен: 10 Золота → 8 Крови.', 'player'); } };
-document.getElementById('mkt-blood-to-gold').onclick = () => { if (!game.player.marketUsed && game.player.blood >= 10) { game.player.blood -= 10; game.player.gold += 8; game.player.marketUsed = true; log('⚖️ Обмен: 10 Крови → 8 Золота.', 'player'); } };
-document.getElementById('tech-reform').onclick = () => { if (game.player.gold >= 30 && !game.player.techs.militaryReform) { game.player.gold -= 30; game.player.techs.militaryReform = true; log('⚔️ Исследована "Военная реформа"! +10% к мощи армии.', 'player'); } };
-document.getElementById('tech-necro').onclick = () => { if (game.player.gold >= 30 && !game.player.techs.necromancy) { game.player.gold -= 30; game.player.techs.necromancy = true; log('💀 Исследована "Некромантия"!', 'player'); } };
-document.getElementById('tech-trade').onclick = () => { if (game.player.gold >= 30 && !game.player.techs.tradeRoutes) { game.player.gold -= 30; game.player.techs.tradeRoutes = true; log('📜 Исследованы "Торговые пути"!', 'player'); } };
-// Закрытие модальных окон
-document.querySelectorAll('#diplomacy-modal, #market-modal, #tech-modal').forEach(el => {
-    el.addEventListener('click', (e) => { if (e.target === el) el.style.display = 'none'; });
+function closeDiplomacy() { document.getElementById('diplomacy-modal').style.display = 'none'; }
+function closeMarket() { document.getElementById('market-modal').style.display = 'none'; }
+function closeTech() { document.getElementById('tech-modal').style.display = 'none'; }
+
+// Обработчики Дипломатии
+document.getElementById('dip-truce-ai').addEventListener('click', () => {
+    if (game.player.gold < 30) return log('❌ Не хватает золота для перемирия.', 'system');
+    if (game.player.truceTurnsAI > 0) return log('⛔ Перемирие с Ватиканом уже активно.', 'system');
+    game.player.gold -= 30; game.player.truceTurnsAI = 2;
+    log(`🕊️ Перемирие с Ватиканом на 2 хода!`, 'player');
+    document.getElementById('diplomacy-result').textContent = "Перемирие заключено!";
+    setTimeout(closeDiplomacy, 1000); updateUI();
 });
+document.getElementById('dip-truce-wolf').addEventListener('click', () => {
+    if (game.player.gold < 30) return log('❌ Не хватает золота для перемирия.', 'system');
+    if (game.player.truceTurnsWolf > 0) return log('⛔ Перемирие с Оборотнями уже активно.', 'system');
+    game.player.gold -= 30; game.player.truceTurnsWolf = 2;
+    log(`🕊️ Перемирие с Оборотнями на 2 хода!`, 'player');
+    document.getElementById('diplomacy-result').textContent = "Перемирие заключено!";
+    setTimeout(closeDiplomacy, 1000); updateUI();
+});
+document.getElementById('dip-alliance').addEventListener('click', () => {
+    if (game.player.gold < 50) return log('❌ Не хватает золота для союза.', 'system');
+    if (game.player.allianceWithAI) return log('⛔ Союз против Оборотней уже активен.', 'system');
+    game.player.gold -= 50; game.player.allianceWithAI = true;
+    log(`⚔️ Заключен союз с Ватиканом против Оборотней!`, 'player');
+    document.getElementById('diplomacy-result').textContent = "Союз заключен!";
+    setTimeout(closeDiplomacy, 1000); updateUI();
+});
+
+// Обработчики Рынка
+document.getElementById('mkt-gold-to-blood').addEventListener('click', () => {
+    if (game.player.marketUsed) return log('⛔ Рынок уже использован в этот ход.', 'system');
+    if (game.player.gold < 10) return log('❌ Нужно 10 золота для обмена.', 'system');
+    game.player.gold -= 10; game.player.blood += 8; game.player.marketUsed = true;
+    log(`⚖️ Обмен: 10 Золота → 8 Крови.`, 'player');
+    document.getElementById('market-result').textContent = "Обмен успешен!";
+    setTimeout(closeMarket, 1000); updateUI();
+});
+document.getElementById('mkt-blood-to-gold').addEventListener('click', () => {
+    if (game.player.marketUsed) return log('⛔ Рынок уже использован в этот ход.', 'system');
+    if (game.player.blood < 10) return log('❌ Нужно 10 крови для обмена.', 'system');
+    game.player.blood -= 10; game.player.gold += 8; game.player.marketUsed = true;
+    log(`⚖️ Обмен: 10 Крови → 8 Золота.`, 'player');
+    document.getElementById('market-result').textContent = "Обмен успешен!";
+    setTimeout(closeMarket, 1000); updateUI();
+});
+
+// Обработчики Технологий
+document.getElementById('tech-reform').addEventListener('click', () => {
+    if (game.player.techs.militaryReform) return log('⛔ Технология уже изучена.', 'system');
+    if (game.player.gold < 30) return log('❌ Нужно 30 золота.', 'system');
+    game.player.gold -= 30; game.player.techs.militaryReform = true;
+    log(`⚔️ Исследована "Военная реформа"! +10% к мощи армии.`, 'player');
+    document.getElementById('tech-result').textContent = "Технология изучена!";
+    setTimeout(closeTech, 1000); updateUI();
+});
+document.getElementById('tech-necro').addEventListener('click', () => {
+    if (game.player.techs.necromancy) return log('⛔ Технология уже изучена.', 'system');
+    if (game.player.gold < 30) return log('❌ Нужно 30 золота.', 'system');
+    game.player.gold -= 30; game.player.techs.necromancy = true;
+    log(`💀 Исследована "Некромантия"! Убитые враги дают кровь.`, 'player');
+    document.getElementById('tech-result').textContent = "Технология изучена!";
+    setTimeout(closeTech, 1000); updateUI();
+});
+document.getElementById('tech-trade').addEventListener('click', () => {
+    if (game.player.techs.tradeRoutes) return log('⛔ Технология уже изучена.', 'system');
+    if (game.player.gold < 30) return log('❌ Нужно 30 золота.', 'system');
+    game.player.gold -= 30; game.player.techs.tradeRoutes = true;
+    log(`📜 Исследованы "Торговые пути"! Рынок можно использовать 2 раза.`, 'player');
+    document.getElementById('tech-result').textContent = "Технология изучена!";
+    setTimeout(closeTech, 1000); updateUI();
+});
+
+// Закрытие окон по клику вне их
+document.getElementById('diplomacy-modal').addEventListener('click', function(e) { if(e.target === this) closeDiplomacy(); });
+document.getElementById('market-modal').addEventListener('click', function(e) { if(e.target === this) closeMarket(); });
+document.getElementById('tech-modal').addEventListener('click', function(e) { if(e.target === this) closeTech(); });
 
 // ================= КОНЕЦ ХОДА =================
 function endPlayerTurn() {
@@ -334,9 +401,6 @@ function gameOver(winner) { if (game.gameOver) return; game.gameOver = true; doc
 function canAct() { return !game.gameOver && game.player.ap > 0 && !game.battleActive && !game.surrenderActive && !game.armyBattleActive; }
 
 // ================= ОТРИСОВКА КАРТЫ (ХОЛОДНЫЙ СТИЛЬ) =================
-const canvas = document.getElementById('game-canvas');
-const ctx = canvas.getContext('2d');
-
 function drawMap() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const playerVisible = []; game.provinces.forEach(p => { if (p.owner === 'player') { playerVisible.push(p.id); p.neighbors.forEach(n => playerVisible.push(n)); } });
