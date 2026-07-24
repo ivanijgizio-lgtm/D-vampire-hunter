@@ -17,7 +17,6 @@ function getDefaultGame() {
         selectedProvinceId: null,
         pendingActionProvId: null,
         enemyArmyTarget: null,
-        // Атмосферные таймеры
         weather: { lightning: false, rain: false, sunset: false, sunsetTimer: 0 },
         player: {
             ap: 2, maxAp: 2, gold: 100, blood: 10,
@@ -32,7 +31,6 @@ function getDefaultGame() {
         ai: { gold: 100, blood: 5, generals: { inquisitor: 5 }, mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 40 }, faith: 0 },
         werewolf: { gold: 50, blood: 10, generals: { alpha: 3 }, mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 45 } },
         provinces: [
-            // Старые + Новые области
             { id: 1, name: 'Ватикан', owner: 'ai', x: 235, y: 170, aiGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [17, 19], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 5, ai: 90, werewolf: 5 }, population: 5000, slaveIncome: 0, fortification: 3, terrain: 'plains', terrainBonus: 0 },
             { id: 2, name: 'Австрия', owner: 'ai', x: 400, y: 180, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 16, 24], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
             { id: 3, name: 'Венгрия', owner: 'ai', x: 480, y: 190, aiGarrison: { infantry: 15, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [2, 4, 5, 27, 28], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 20, ai: 70, werewolf: 10 }, population: 4000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
@@ -54,29 +52,22 @@ function getDefaultGame() {
             { id: 19, name: 'Ломбардия', owner: 'werewolf', x: 220, y: 130, aiGarrison: { infantry: 10, archer: 2 }, siegeBy: null, neighbors: [1, 20, 16], buildings: [], income: 1, support: { player: 10, ai: 20, werewolf: 70 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5 },
             { id: 20, name: 'Карпаты', owner: 'werewolf', x: 480, y: 150, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [21, 22, 3], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 3000, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2 },
             { id: 21, name: 'Дикая пуща', owner: 'werewolf', x: 560, y: 170, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [20, 22, 5, 18, 27], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 2500, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2 },
-            // НОВЫЕ ОБЛАСТИ (Западная и Северная Европа)
             { id: 22, name: 'Пруссия', owner: 'ai', x: 560, y: 90, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [20, 21, 39], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
             { id: 23, name: 'Германия', owner: 'ai', x: 310, y: 100, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [14, 38, 22], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
             { id: 24, name: 'Бавария', owner: 'ai', x: 370, y: 220, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [2, 9, 16, 8], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
             { id: 25, name: 'Греция', owner: 'ai', x: 540, y: 440, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [10, 11, 4, 18], buildings: [], income: 2, support: { player: 30, ai: 50, werewolf: 20 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5 },
             { id: 26, name: 'Балканы', owner: 'ai', x: 600, y: 380, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [5, 11, 25], buildings: [], income: 2, support: { player: 40, ai: 40, werewolf: 20 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 27, name: 'Трансильвания-Восток', owner: 'ai', x: 490, y: 230, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 18, 21, 8], buildings: [], income: 1, support: { player: 30, ai: 60, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 }, // буферная зона
+            { id: 27, name: 'Трансильвания-Восток', owner: 'ai', x: 490, y: 230, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 18, 21, 8], buildings: [], income: 1, support: { player: 30, ai: 60, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
             { id: 28, name: 'Словакия', owner: 'ai', x: 450, y: 150, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 14, 20, 27], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            
-            // Франция и Испания
             { id: 30, name: 'Франция', owner: 'ai', x: 170, y: 180, aiGarrison: { infantry: 20 }, siegeBy: null, neighbors: [31, 32, 1, 33, 34], buildings: [{type:'church', lvl:1}], income: 4, support: { player: 10, ai: 80, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
             { id: 31, name: 'Бретань', owner: 'ai', x: 110, y: 160, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [30, 33, 36], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
             { id: 32, name: 'Бургундия', owner: 'ai', x: 220, y: 210, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [30, 16, 1], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
             { id: 33, name: 'Аквитания', owner: 'ai', x: 150, y: 250, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [30, 31, 34], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
             { id: 34, name: 'Испания', owner: 'ai', x: 130, y: 330, aiGarrison: { infantry: 15, cavalry: 5 }, siegeBy: null, neighbors: [30, 33, 36, 37], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 10, ai: 80, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
             { id: 36, name: 'Португалия', owner: 'ai', x: 80, y: 300, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [31, 34, 37], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            
-            // Британские острова
             { id: 37, name: 'Англия', owner: 'ai', x: 70, y: 130, aiGarrison: { infantry: 15, archer: 5 }, siegeBy: null, neighbors: [36, 40], buildings: [{type:'church', lvl:1}], income: 4, support: { player: 10, ai: 80, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
             { id: 38, name: 'Шотландия', owner: 'ai', x: 60, y: 70, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [37], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
             { id: 39, name: 'Ирландия', owner: 'ai', x: 20, y: 110, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [37], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-
-            // Скандинавия и Прибалтика
             { id: 40, name: 'Дания', owner: 'ai', x: 270, y: 30, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [39, 41, 14, 23], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
             { id: 41, name: 'Швеция', owner: 'ai', x: 260, y: -10, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [40, 42], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
             { id: 42, name: 'Норвегия', owner: 'ai', x: 180, y: -20, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [41, 39], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
@@ -96,6 +87,18 @@ const LORD_NAMES = [
     "Генерал Кровавый Клык", "Некромант Зерет"
 ];
 
+// ================= ФУНКЦИЯ ЗАПУСКА МУЗЫКИ (НОВОЕ) =================
+function playBackgroundMusic() {
+    const bgm = document.getElementById('bgm');
+    if (bgm) {
+        bgm.volume = 0.2; // Громкость 20%, чтобы не перебивать звуки игры
+        bgm.play().catch(e => {
+            // Игнорируем ошибку, если файла нет или браузер блокирует автозапуск
+            console.log("Фоновая музыка не загружена или заблокирована браузером.");
+        });
+    }
+}
+
 // ================= СТАРТОВОЕ МЕНЮ =================
 function initGame() {
     document.getElementById('start-menu').style.display = 'none';
@@ -104,6 +107,8 @@ function initGame() {
         game = getDefaultGame(); 
         for(let i=0; i<5; i++) { addNewLordToPlayer(); }
     }
+    // Включаем музыку при старте игры
+    playBackgroundMusic();
     updateUI(); log('🦇 Дракула пробудился! Европа ждёт завоевателя.', 'system');
 }
 
@@ -327,7 +332,6 @@ function buildStructure(type) {
 function recruitTroops(type) {
     if (!canAct()) return; const prov = getTargetProvForAction(); if (!prov) return log('❌ Кликните на провинцию, чтобы выбрать место найма.', 'system');
 
-    // Призыв Лорда проверяет наличие Храма Тьмы в любой провинции Игрока
     if (type === 'lord') {
         let hasDarkTemple = game.provinces.some(p => p.owner === 'player' && p.buildings.find(b => b.type === 'dark_temple'));
         if (!hasDarkTemple) return log('❌ Постройте Храм Тьмы (20🪙), чтобы призывать Лордов!', 'system');
@@ -365,7 +369,6 @@ function endPlayerTurn() {
     collectIncome(); updateSupport(); game.player.ap = game.player.maxAp;
     game.turn++; if (game.turn % 2 === 1) game.day++;
     log(`⏩ ХОД ${game.turn}. ${isNightTime() ? '🌙 НОЧЬ' : '☀️ ДЕНЬ'}.`, 'system');
-    // Проверка погодных эффектов
     checkWeather();
     aiTurn(); saveGame(); updateUI();
 }
@@ -376,20 +379,9 @@ function canAct() { return !game.gameOver && game.player.ap > 0 && !game.battleA
 
 // ================= АТМОСФЕРНЫЕ ЭФФЕКТЫ =================
 function checkWeather() {
-    // Закат каждые 20 ходов
-    if (game.turn % 20 === 0) {
-        startSunset();
-    }
-    // Дождь каждые 10 ходов
-    if (game.turn % 10 === 0) {
-        game.weather.rain = true;
-        setTimeout(() => { game.weather.rain = false; }, 8000);
-    }
-    // Молнии каждые 5 ходов
-    if (game.turn % 5 === 0) {
-        game.weather.lightning = true;
-        setTimeout(() => { game.weather.lightning = false; }, 6000);
-    }
+    if (game.turn % 20 === 0) { startSunset(); }
+    if (game.turn % 10 === 0) { game.weather.rain = true; setTimeout(() => { game.weather.rain = false; }, 8000); }
+    if (game.turn % 5 === 0) { game.weather.lightning = true; setTimeout(() => { game.weather.lightning = false; }, 6000); }
 }
 
 function startSunset() {
@@ -397,7 +389,6 @@ function startSunset() {
     if (!overlay) return;
     overlay.style.display = 'block';
     overlay.style.opacity = '0';
-    // Плавное затемнение на 15 секунд
     setTimeout(() => { overlay.style.opacity = '1'; }, 100);
     setTimeout(() => {
         overlay.style.opacity = '0';
@@ -562,7 +553,6 @@ function drawMap() {
     }
     ctx.shadowBlur = 0;
 
-    // Отрисовка погоды поверх всего
     drawWeather();
 }
 
