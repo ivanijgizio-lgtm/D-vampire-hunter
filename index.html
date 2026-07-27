@@ -52,6 +52,10 @@
                             <button id="build-barracks" class="sub-btn" data-lore="barracks">⚔️ Казармы Lv1 (20🪙)</button>
                             <button id="build-barracks-2" class="sub-btn" data-lore="barracks_lv2">⚔️⬆️ Казармы Lv2 (50🪙)</button>
                             <button id="build-ritual" class="sub-btn" data-lore="ritual">🕯️ Храм Тьмы (20🪙)</button>
+                            <button id="build-dungeon" class="sub-btn" data-lore="dungeon">⛓️ Тюрьма (15🪙)</button>
+                            <button id="build-executions" class="sub-btn" data-lore="executions">🪓 Казни (10🪙)</button>
+                            <button id="build-ball" class="sub-btn" data-lore="ball">🎭 Бал Вампиров (30🪙)</button>
+                            <button id="build-center" class="sub-btn" data-lore="center">🧛 Центр Обращения (25🪙)</button>
                             <button id="build-wall" class="sub-btn" data-lore="wall">🧱 Стены (10🪙)</button>
                             <button id="build-castle" class="sub-btn" data-lore="castle">🏰 Замок (40🪙)</button>
                             <button id="build-market" class="sub-btn" data-lore="market">🏪 Рынок (20🪙)</button>
@@ -93,13 +97,9 @@
         </div>
     </div>
 
-    <!-- ТУЛТИП ДЛЯ ЛОРА ПОСТРОЕК -->
+    <div id="tooltip"></div>
     <div id="lore-tooltip"></div>
 
-    <!-- ОБЩИЙ ТУЛТИП -->
-    <div id="tooltip"></div>
-
-    <!-- Модальные окна -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
@@ -188,17 +188,6 @@
                 <button id="tech-trade" class="action-btn" style="width:80%;">📜 Торговые пути (Рынок работает 2 раза за ход)</button>
             </div>
             <p id="tech-result" style="margin-top:10px; font-size:14px; color:#b8c0d0;"></p>
-        </div>
-    </div>
-
-    <!-- ОКНО ОБУЧЕНИЯ (ТУТОРИАЛ) -->
-    <div id="tutorial-modal" class="modal">
-        <div class="modal-content">
-            <h2 id="tutorial-title">🦇 ДОБРО ПОЖАЛОВАТЬ, КНЯЗЬ ТЬМЫ!</h2>
-            <p id="tutorial-desc" style="margin: 15px 0; font-size: 15px; line-height: 1.5;"></p>
-            <div id="tutorial-options">
-                <button id="btn-tutorial-next" class="action-btn main-action">ПОНЯЛ!</button>
-            </div>
         </div>
     </div>
 
