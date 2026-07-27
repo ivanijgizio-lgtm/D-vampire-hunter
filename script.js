@@ -9,12 +9,16 @@ sprites.werewolf.src = './assets/werewolf-character.webp';
 sprites.highVampire.src = './assets/high_vampire.png.png'; 
 sprites.inquisitor.src = './assets/inquisitor.png.png';
 
-// ================= ЛОР И ЭНЦИКЛОПЕДИЯ (НОВОЕ) =================
+// ================= ЛОР И ЭНЦИКЛОПЕДИЯ (ОБНОВЛЕНА) =================
 const BUILD_LORE = {
     'cemetery': "🪦 Кладбище: Некрополь, куда стекаются неупокоенные души. Дарует +5 крови за ход.",
     'barracks': "⚔️ Казармы Lv1: Сердце военной машины. Без них обычные войска не могут быть призваны.",
     'barracks_lv2': "⚔️⬆️ Казармы Lv2: Тренировочный полигон для элиты. Открывает призыв Рыцарей Тьмы.",
-    'ritual': "🕯️ Храм Тьмы: Святилище тёмных сил. Открывает возможность найма Верховных Лордов за 10 золота.",
+    'ritual': "🕯️ Храм Тьмы: Святилище, притягивающее тёмные силы. Укрепляет веру населения во мрак (+5 поддержки Тьмы, +3 лояльности). Открывает найм Лордов.",
+    'dungeon': "⛓️ Тюрьма: Темницы, где стонут враги Тьмы. Страх заставляет население подчиняться, но ожесточает сердца (+10 поддержки Тьмы, -5 лояльности).",
+    'executions': "🪓 Казни: Эшафоты и дыбы на главной площади. Ужас и повиновение — вот плоды этих зрелищ (+15 поддержки Тьмы, -10 лояльности, -200 населения).",
+    'ball': "🎭 Бал Вампиров: Роскошный пир для знати Тьмы. Жители мечтают попасть в высшее общество, но угощение для гостей стоит крови (+20 поддержки Тьмы, +5 лояльности, -200 населения).",
+    'center': "🧛 Центр Обращения: Центр, где жители превращаются в покорных слуг тьмы (+10 поддержки Тьмы, +5 лояльности, +100 населения, +5 крови/ход).",
     'wall': "🧱 Стены: Защита от вторжений. +1 к укреплениям провинции.",
     'castle': "🏰 Замок: Оплот власти. +2 укрепления, +20 гарнизона и повышает поддержку Тьмы.",
     'market': "🏪 Рынок: Торговая площадь. Позволяет обменивать ресурсы 1 раз в ход."
@@ -30,8 +34,7 @@ const LORD_NAMES = [
 function getDefaultGame() {
     return {
         turn: 1, day: 1, gameOver: false, battleActive: false, surrenderActive: false, armyBattleActive: false,
-        // Добавлен шаг туториала. 0 - Старт, 1 - Построить храм, 2 - Нанять лорда, 3 - Атаковать, 4 - Завершено
-        tutorialStep: 0, 
+        tutorialStep: 0,
         fogOfWar: true, 
         selectedProvinceId: null,
         pendingActionProvId: null,
@@ -50,49 +53,49 @@ function getDefaultGame() {
         ai: { gold: 100, blood: 5, generals: { inquisitor: 5 }, mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 40 }, faith: 0 },
         werewolf: { gold: 50, blood: 10, generals: { alpha: 3 }, mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 45 } },
         provinces: [
-            { id: 1, name: 'Ватикан', owner: 'ai', x: 235, y: 170, aiGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [17, 19], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 5, ai: 90, werewolf: 5 }, population: 5000, slaveIncome: 0, fortification: 3, terrain: 'plains', terrainBonus: 0 },
-            { id: 2, name: 'Австрия', owner: 'ai', x: 400, y: 180, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 16, 24], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 3, name: 'Венгрия', owner: 'ai', x: 480, y: 190, aiGarrison: { infantry: 15, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [2, 4, 5, 27, 28], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 20, ai: 70, werewolf: 10 }, population: 4000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 4, name: 'Трансильвания', owner: 'player', x: 510, y: 260, playerGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [2, 3, 5, 8, 25], buildings: [{type:'dark_temple', lvl:1}], income: 3, support: { player: 80, ai: 5, werewolf: 15 }, population: 4500, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
-            { id: 5, name: 'Валахия', owner: 'ai', x: 580, y: 290, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 6, 7, 26], buildings: [], income: 2, support: { player: 30, ai: 45, werewolf: 25 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 6, name: 'Молдавия', owner: 'ai', x: 630, y: 240, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [3, 5, 7, 12, 13], buildings: [], income: 2, support: { player: 40, ai: 40, werewolf: 20 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2 },
-            { id: 7, name: 'Одесса', owner: 'ai', x: 660, y: 340, aiGarrison: { infantry: 5, archer: 3 }, siegeBy: null, neighbors: [5, 6, 12, 13], buildings: [], income: 1, support: { player: 45, ai: 30, werewolf: 25 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 8, name: 'Богемия', owner: 'ai', x: 430, y: 240, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [3, 4, 9, 24], buildings: [{type:'church', lvl:1}], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 9, name: 'Саксония', owner: 'ai', x: 340, y: 200, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [8, 14, 16, 38], buildings: [], income: 2, support: { player: 30, ai: 60, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 10, name: 'Сербия', owner: 'ai', x: 520, y: 350, aiGarrison: { infantry: 5, cavalry: 5 }, siegeBy: null, neighbors: [4, 11, 25], buildings: [], income: 1, support: { player: 50, ai: 30, werewolf: 20 }, population: 1000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 11, name: 'Болгария', owner: 'ai', x: 580, y: 420, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [5, 10, 13, 15, 29], buildings: [], income: 1, support: { player: 40, ai: 40, werewolf: 20 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5 },
-            { id: 12, name: 'Киевская Русь', owner: 'ai', x: 720, y: 180, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [6, 7, 13, 35], buildings: [], income: 1, support: { player: 15, ai: 80, werewolf: 5 }, population: 1800, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 13, name: 'Крым', owner: 'ai', x: 700, y: 430, aiGarrison: { infantry: 5, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [6, 7, 11, 12], buildings: [], income: 1, support: { player: 35, ai: 50, werewolf: 15 }, population: 1200, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 14, name: 'Польша', owner: 'ai', x: 370, y: 110, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [8, 9, 39, 16], buildings: [{type:'church', lvl:1}], income: 2, support: { player: 10, ai: 80, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 15, name: 'Византия', owner: 'ai', x: 640, y: 530, aiGarrison: { infantry: 20, archer: 10, cavalry: 5 }, siegeBy: null, neighbors: [11, 29], buildings: [{type:'church', lvl:1}, {type:'fortress', lvl:1}], income: 5, support: { player: 5, ai: 90, werewolf: 5 }, population: 6000, slaveIncome: 0, fortification: 3, terrain: 'plains', terrainBonus: 0 },
-            { id: 16, name: 'Венеция', owner: 'ai', x: 290, y: 190, aiGarrison: { infantry: 15, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [1, 9, 14, 17, 24], buildings: [], income: 3, support: { player: 15, ai: 80, werewolf: 5 }, population: 3500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 17, name: 'Хорватия', owner: 'ai', x: 390, y: 290, aiGarrison: { infantry: 10, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [1, 16, 18, 25], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 0, terrain: 'river', terrainBonus: 1 },
-            { id: 18, name: 'Босния', owner: 'ai', x: 450, y: 310, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [17, 21, 25, 27], buildings: [], income: 2, support: { player: 25, ai: 35, werewolf: 40 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 19, name: 'Ломбардия', owner: 'werewolf', x: 220, y: 130, aiGarrison: { infantry: 10, archer: 2 }, siegeBy: null, neighbors: [1, 20, 16], buildings: [], income: 1, support: { player: 10, ai: 20, werewolf: 70 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5 },
-            { id: 20, name: 'Карпаты', owner: 'werewolf', x: 480, y: 150, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [21, 22, 3], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 3000, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2 },
-            { id: 21, name: 'Дикая пуща', owner: 'werewolf', x: 560, y: 170, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [20, 22, 5, 18, 27], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 2500, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2 },
-            { id: 22, name: 'Пруссия', owner: 'ai', x: 560, y: 90, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [20, 21, 39], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 23, name: 'Германия', owner: 'ai', x: 310, y: 100, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [14, 38, 22], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 24, name: 'Бавария', owner: 'ai', x: 370, y: 220, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [2, 9, 16, 8], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 25, name: 'Греция', owner: 'ai', x: 540, y: 440, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [10, 11, 4, 18], buildings: [], income: 2, support: { player: 30, ai: 50, werewolf: 20 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5 },
-            { id: 26, name: 'Балканы', owner: 'ai', x: 600, y: 380, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [5, 11, 25], buildings: [], income: 2, support: { player: 40, ai: 40, werewolf: 20 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 27, name: 'Трансильвания-Восток', owner: 'ai', x: 490, y: 230, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 18, 21, 8], buildings: [], income: 1, support: { player: 30, ai: 60, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 28, name: 'Словакия', owner: 'ai', x: 450, y: 150, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 14, 20, 27], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 30, name: 'Франция', owner: 'ai', x: 170, y: 180, aiGarrison: { infantry: 20 }, siegeBy: null, neighbors: [31, 32, 1, 33, 34], buildings: [{type:'church', lvl:1}], income: 4, support: { player: 10, ai: 80, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
-            { id: 31, name: 'Бретань', owner: 'ai', x: 110, y: 160, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [30, 33, 36], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 32, name: 'Бургундия', owner: 'ai', x: 220, y: 210, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [30, 16, 1], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 33, name: 'Аквитания', owner: 'ai', x: 150, y: 250, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [30, 31, 34], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 34, name: 'Испания', owner: 'ai', x: 130, y: 330, aiGarrison: { infantry: 15, cavalry: 5 }, siegeBy: null, neighbors: [30, 33, 36, 37], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 10, ai: 80, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
-            { id: 36, name: 'Португалия', owner: 'ai', x: 80, y: 300, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [31, 34, 37], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 37, name: 'Англия', owner: 'ai', x: 70, y: 130, aiGarrison: { infantry: 15, archer: 5 }, siegeBy: null, neighbors: [36, 40], buildings: [{type:'church', lvl:1}], income: 4, support: { player: 10, ai: 80, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0 },
-            { id: 38, name: 'Шотландия', owner: 'ai', x: 60, y: 70, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [37], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0 },
-            { id: 39, name: 'Ирландия', owner: 'ai', x: 20, y: 110, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [37], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 40, name: 'Дания', owner: 'ai', x: 270, y: 30, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [39, 41, 14, 23], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 41, name: 'Швеция', owner: 'ai', x: 260, y: -10, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [40, 42], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 42, name: 'Норвегия', owner: 'ai', x: 180, y: -20, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [41, 39], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 43, name: 'Финляндия', owner: 'ai', x: 410, y: -10, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [41, 35], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 44, name: 'Прибалтика', owner: 'ai', x: 460, y: 40, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [35, 14, 23], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0 },
-            { id: 45, name: 'Северные земли', owner: 'werewolf', x: 560, y: -20, aiGarrison: { infantry: 10, cavalry: 3 }, siegeBy: null, neighbors: [22, 41, 35], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2 },
+            { id: 1, name: 'Ватикан', owner: 'ai', x: 235, y: 170, aiGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [17, 19], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 5, ai: 90, werewolf: 5 }, population: 5000, slaveIncome: 0, fortification: 3, terrain: 'plains', terrainBonus: 0, loyalty: 100 },
+            { id: 2, name: 'Австрия', owner: 'ai', x: 400, y: 180, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 16, 24], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 80 },
+            { id: 3, name: 'Венгрия', owner: 'ai', x: 480, y: 190, aiGarrison: { infantry: 15, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [2, 4, 5, 27, 28], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 20, ai: 70, werewolf: 10 }, population: 4000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 80 },
+            { id: 4, name: 'Трансильвания', owner: 'player', x: 510, y: 260, playerGarrison: { infantry: 20, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [2, 3, 5, 8, 25], buildings: [{type:'dark_temple', lvl:1}], income: 3, support: { player: 80, ai: 5, werewolf: 15 }, population: 4500, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0, loyalty: 100 },
+            { id: 5, name: 'Валахия', owner: 'ai', x: 580, y: 290, aiGarrison: { infantry: 10, archer: 2, cavalry: 3 }, siegeBy: null, neighbors: [3, 4, 6, 7, 26], buildings: [], income: 2, support: { player: 30, ai: 45, werewolf: 25 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 6, name: 'Молдавия', owner: 'ai', x: 630, y: 260, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [3, 5, 7, 12, 13], buildings: [], income: 2, support: { player: 40, ai: 40, werewolf: 20 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2, loyalty: 70 },
+            { id: 7, name: 'Одесса', owner: 'ai', x: 660, y: 340, aiGarrison: { infantry: 5, archer: 3 }, siegeBy: null, neighbors: [5, 6, 12, 13], buildings: [], income: 1, support: { player: 45, ai: 30, werewolf: 25 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 8, name: 'Богемия', owner: 'ai', x: 430, y: 250, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [3, 4, 9, 24], buildings: [{type:'church', lvl:1}], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 9, name: 'Саксония', owner: 'ai', x: 320, y: 210, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [1, 2, 8, 14], buildings: [], income: 2, support: { player: 30, ai: 60, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 10, name: 'Сербия', owner: 'ai', x: 520, y: 370, aiGarrison: { infantry: 5, cavalry: 5 }, siegeBy: null, neighbors: [4, 11, 25], buildings: [], income: 1, support: { player: 50, ai: 30, werewolf: 20 }, population: 1000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 50 },
+            { id: 11, name: 'Болгария', owner: 'ai', x: 580, y: 420, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [5, 10, 13, 15, 29], buildings: [], income: 1, support: { player: 40, ai: 40, werewolf: 20 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5, loyalty: 50 },
+            { id: 12, name: 'Киевская Русь', owner: 'ai', x: 720, y: 180, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [6, 7, 13, 35], buildings: [], income: 1, support: { player: 15, ai: 80, werewolf: 5 }, population: 1800, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 13, name: 'Крым', owner: 'ai', x: 700, y: 430, aiGarrison: { infantry: 5, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [6, 7, 11, 12], buildings: [], income: 1, support: { player: 35, ai: 50, werewolf: 15 }, population: 1200, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 14, name: 'Польша', owner: 'ai', x: 370, y: 110, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [8, 9, 39, 16], buildings: [{type:'church', lvl:1}], income: 2, support: { player: 10, ai: 80, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 15, name: 'Византия', owner: 'ai', x: 640, y: 530, aiGarrison: { infantry: 20, archer: 10, cavalry: 5 }, siegeBy: null, neighbors: [11, 29], buildings: [{type:'church', lvl:1}, {type:'fortress', lvl:1}], income: 5, support: { player: 5, ai: 90, werewolf: 5 }, population: 6000, slaveIncome: 0, fortification: 3, terrain: 'plains', terrainBonus: 0, loyalty: 80 },
+            { id: 16, name: 'Венеция', owner: 'ai', x: 290, y: 190, aiGarrison: { infantry: 15, archer: 5, cavalry: 5 }, siegeBy: null, neighbors: [1, 9, 14, 17, 24], buildings: [], income: 3, support: { player: 15, ai: 80, werewolf: 5 }, population: 3500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 90 },
+            { id: 17, name: 'Хорватия', owner: 'ai', x: 390, y: 290, aiGarrison: { infantry: 10, archer: 3, cavalry: 2 }, siegeBy: null, neighbors: [1, 16, 18, 25], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 0, terrain: 'river', terrainBonus: 1, loyalty: 80 },
+            { id: 18, name: 'Босния', owner: 'ai', x: 450, y: 310, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [17, 21, 25, 27], buildings: [], income: 2, support: { player: 25, ai: 35, werewolf: 40 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 19, name: 'Ломбардия', owner: 'werewolf', x: 220, y: 130, aiGarrison: { infantry: 10, archer: 2 }, siegeBy: null, neighbors: [1, 20, 16], buildings: [], income: 1, support: { player: 10, ai: 20, werewolf: 70 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5, loyalty: 60 },
+            { id: 20, name: 'Карпаты', owner: 'werewolf', x: 480, y: 150, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [21, 22, 3], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 3000, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2, loyalty: 70 },
+            { id: 21, name: 'Дикая пуща', owner: 'werewolf', x: 560, y: 170, aiGarrison: { infantry: 10, cavalry: 5 }, siegeBy: null, neighbors: [20, 22, 5, 18, 27], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 2500, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2, loyalty: 60 },
+            { id: 22, name: 'Пруссия', owner: 'ai', x: 560, y: 90, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [20, 21, 39], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 23, name: 'Германия', owner: 'ai', x: 310, y: 100, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [14, 38, 22], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 24, name: 'Бавария', owner: 'ai', x: 370, y: 220, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [2, 9, 16, 8], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 25, name: 'Греция', owner: 'ai', x: 540, y: 440, aiGarrison: { infantry: 10, archer: 5 }, siegeBy: null, neighbors: [10, 11, 4, 18], buildings: [], income: 2, support: { player: 30, ai: 50, werewolf: 20 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'mountains', terrainBonus: 5, loyalty: 50 },
+            { id: 26, name: 'Балканы', owner: 'ai', x: 600, y: 380, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [5, 11, 25], buildings: [], income: 2, support: { player: 40, ai: 40, werewolf: 20 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 27, name: 'Трансильвания-Восток', owner: 'ai', x: 490, y: 230, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 18, 21, 8], buildings: [], income: 1, support: { player: 30, ai: 60, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 28, name: 'Словакия', owner: 'ai', x: 450, y: 150, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [3, 14, 20, 27], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 30, name: 'Франция', owner: 'ai', x: 170, y: 180, aiGarrison: { infantry: 20 }, siegeBy: null, neighbors: [31, 32, 1, 33, 34], buildings: [{type:'church', lvl:1}], income: 4, support: { player: 10, ai: 80, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0, loyalty: 80 },
+            { id: 31, name: 'Бретань', owner: 'ai', x: 110, y: 160, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [30, 33, 36], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 32, name: 'Бургундия', owner: 'ai', x: 220, y: 210, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [30, 16, 1], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 33, name: 'Аквитания', owner: 'ai', x: 150, y: 250, aiGarrison: { infantry: 12 }, siegeBy: null, neighbors: [30, 31, 34], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 34, name: 'Испания', owner: 'ai', x: 130, y: 330, aiGarrison: { infantry: 15, cavalry: 5 }, siegeBy: null, neighbors: [30, 33, 36, 37], buildings: [{type:'church', lvl:1}], income: 3, support: { player: 10, ai: 80, werewolf: 10 }, population: 2500, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0, loyalty: 80 },
+            { id: 36, name: 'Португалия', owner: 'ai', x: 80, y: 300, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [31, 34, 37], buildings: [], income: 2, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 37, name: 'Англия', owner: 'ai', x: 70, y: 130, aiGarrison: { infantry: 15, archer: 5 }, siegeBy: null, neighbors: [36, 40], buildings: [{type:'church', lvl:1}], income: 4, support: { player: 10, ai: 80, werewolf: 10 }, population: 3000, slaveIncome: 0, fortification: 2, terrain: 'plains', terrainBonus: 0, loyalty: 80 },
+            { id: 38, name: 'Шотландия', owner: 'ai', x: 60, y: 70, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [37], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 1, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 39, name: 'Ирландия', owner: 'ai', x: 20, y: 110, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [37], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 40, name: 'Дания', owner: 'ai', x: 270, y: 30, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [39, 41, 14, 23], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 41, name: 'Швеция', owner: 'ai', x: 260, y: -10, aiGarrison: { infantry: 15 }, siegeBy: null, neighbors: [40, 42], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 2000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 42, name: 'Норвегия', owner: 'ai', x: 180, y: -20, aiGarrison: { infantry: 10 }, siegeBy: null, neighbors: [41, 39], buildings: [], income: 2, support: { player: 15, ai: 75, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 43, name: 'Финляндия', owner: 'ai', x: 410, y: -10, aiGarrison: { infantry: 5 }, siegeBy: null, neighbors: [41, 35], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1000, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 60 },
+            { id: 44, name: 'Прибалтика', owner: 'ai', x: 460, y: 40, aiGarrison: { infantry: 8 }, siegeBy: null, neighbors: [35, 14, 23], buildings: [], income: 1, support: { player: 20, ai: 70, werewolf: 10 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'plains', terrainBonus: 0, loyalty: 70 },
+            { id: 45, name: 'Северные земли', owner: 'werewolf', x: 560, y: -20, aiGarrison: { infantry: 10, cavalry: 3 }, siegeBy: null, neighbors: [22, 41, 35], buildings: [], income: 1, support: { player: 10, ai: 10, werewolf: 80 }, population: 1500, slaveIncome: 0, fortification: 0, terrain: 'forest', terrainBonus: 2, loyalty: 60 },
         ]
     };
 }
@@ -112,19 +115,19 @@ function playBackgroundMusic() {
     }
 }
 
-// ================= ТУТОРИАЛ (ОБУЧЕНИЕ) И ЛОР =================
+// ================= ТУТОРИАЛ (ОБУЧЕНИЕ) =================
 function advanceTutorial(step) {
     if (step === 0 && game.tutorialStep === 0) {
-        game.tutorialStep = 1; // Переходим к шагу "Построй Храм"
+        game.tutorialStep = 1;
         setTimeout(() => showTutorialStep(1), 100);
     } else if (step === 1 && game.tutorialStep === 1) {
-        game.tutorialStep = 2; // Переходим к шагу "Найми Лорда"
+        game.tutorialStep = 2;
         setTimeout(() => showTutorialStep(2), 100);
     } else if (step === 2 && game.tutorialStep === 2) {
-        game.tutorialStep = 3; // Переходим к шагу "Атакуй"
+        game.tutorialStep = 3;
         setTimeout(() => showTutorialStep(3), 100);
     } else if (step === 3 && game.tutorialStep === 3) {
-        game.tutorialStep = 4; // Завершаем обучение
+        game.tutorialStep = 4;
         showTutorialStep(4);
     }
 }
@@ -136,7 +139,7 @@ function showTutorialStep(step) {
     const btn = document.getElementById('btn-tutorial-next');
     btn.style.display = 'block';
 
-    if (step === 0) { // Начало (вызывается в initGame)
+    if (step === 0) {
         title.textContent = "🦇 ДОБРО ПОЖАЛОВАТЬ, КНЯЗЬ ТЬМЫ!";
         desc.innerHTML = "Ваша цель — захватить Европу. Но для начала вам нужно усилить армию.<br><br>1. Откройте меню <b>«СТРОИТЬ»</b>.<br>2. Нажмите <b>«Храм Тьмы»</b> в Трансильвании.<br>Храм откроет вам доступ к найму Верховных Лордов.";
         btn.onclick = () => { modal.style.display = 'none'; };
@@ -148,20 +151,19 @@ function showTutorialStep(step) {
         modal.style.display = 'flex';
     } else if (step === 2) {
         title.textContent = "🧛 ЛОРД ПРИЗВАН!";
-        desc.innerHTML = "Ваш Лорд готов к битве!<br><br>Сейчас <b>НОЧЬ</b>. Кликните на соседнюю вражескую провинцию (например, <b>Валахия</b>) и выберите <b>«АТАКОВАТЬ»</b>, чтобы начать завоевание!";
+        desc.innerHTML = "Ваш Лорд готов к битве!<br><br>Сейчас <b>НОЧЬ</b>. Кликните на соседнюю вражескую провинцию и выберите <b>«АТАКОВАТЬ»</b>.";
         btn.onclick = () => { modal.style.display = 'none'; };
         modal.style.display = 'flex';
     } else if (step === 3) {
         title.textContent = "⚔️ ПЕРВАЯ ПОБЕДА БЛИЗКО!";
-        desc.innerHTML = "Вы сделали первые шаги. Помните: <b>ночью</b> вы сильны, а <b>днем</b> вампиры не могут атаковать.<br><br>Стройте Замки для обороны, нанимайте войска и захватывайте всю Европу!";
+        desc.innerHTML = "Помните: <b>ночью</b> вы сильны, а <b>днем</b> вампиры не могут атаковать.<br><br>Стройте Замки для обороны и обращайте жителей в слуг тьмы.";
         btn.onclick = () => {
             modal.style.display = 'none';
-            game.tutorialStep = 4; // Завершено
+            game.tutorialStep = 4;
             btn.style.display = 'none';
         };
         modal.style.display = 'flex';
     } else if (step === 4) {
-        // Туториал завершен, просто скрываем
         modal.style.display = 'none';
         document.getElementById('btn-tutorial-next').style.display = 'none';
     }
@@ -174,14 +176,9 @@ function initGame() {
     if (!loadGame()) { 
         game = getDefaultGame(); 
         for(let i=0; i<5; i++) { addNewLordToPlayer(); }
-        // Запускаем туториал с шага 0 для новой игры
         setTimeout(() => showTutorialStep(0), 500);
     } else {
-        // Если игра загружена и туториал не завершен, ставим его в соответствие
-        if (game.tutorialStep < 4) {
-            // Можно автоматически завершить туториал для старых сохранений
-            game.tutorialStep = 4;
-        }
+        if (game.tutorialStep < 4) game.tutorialStep = 4;
     }
     playBackgroundMusic();
     updateUI(); log('🦇 Дракула пробудился! Европа ждёт завоевателя.', 'system');
@@ -190,7 +187,6 @@ function initGame() {
 function restartGame() {
     const bgm = document.getElementById('bgm');
     if (bgm) { bgm.pause(); bgm.currentTime = 0; }
-    
     localStorage.removeItem('VampireWarSave');
     game = getDefaultGame(); 
     game.gameOver = false; 
@@ -287,8 +283,10 @@ function collectIncome() {
             prov.buildings.forEach(b => {
                 if (b.type === 'feast_hall' && b.lvl === 1) bBonus += 3; if (b.type === 'feast_hall' && b.lvl === 2) bBonus += 6;
                 if (b.type === 'dark_temple' && b.lvl === 1) gBonus += 2; if (b.type === 'dark_temple' && b.lvl === 2) gBonus += 5;
-                if (b.type === 'dungeon') gBonus += 2; if (b.type === 'wall') gBonus += 1; if (b.type === 'castle') gBonus += 3;
+                if (b.type === 'dungeon') gBonus += 2; 
+                if (b.type === 'wall') gBonus += 1; if (b.type === 'castle') gBonus += 3;
                 if (b.type === 'cemetery' && b.lvl === 1) bBonus += 5; 
+                if (b.type === 'center') bBonus += 5; // Центр обращения дает кровь
             });
             game.player.gold += prov.income + gBonus + slaveBonus; game.player.blood += 1 + bBonus;
         } else if (prov.owner === 'ai') {
@@ -397,40 +395,57 @@ function getTargetProvForAction() {
     return null;
 }
 
+// ================= ОБНОВЛЕННАЯ ФУНКЦИЯ СТРОИТЕЛЬСТВА =================
 function buildStructure(type) {
     if (!canAct()) return; const prov = getTargetProvForAction(); if (!prov) return log('❌ Кликните на свою провинцию на карте, чтобы выбрать её.', 'system'); let cost = 0, name = "", lvl = 1;
-    if (type === 'dark_temple') { cost = 20; name = 'Храм Тьмы'; } else if (type === 'barracks') { cost = 20; name = 'Казармы Lv1'; } else if (type === 'barracks_lv2') { cost = 50; name = 'Казармы Lv2'; lvl = 2; } else if (type === 'cemetery') { cost = 30; name = 'Кладбище'; } else if (type === 'dungeon') { cost = 15; name = 'Тюрьма'; } else if (type === 'wall') { cost = 10; name = 'Стены'; } else if (type === 'castle') { cost = 40; name = 'Замок'; } else if (type === 'market') { cost = 20; name = 'Рынок'; } else { return log(`❌ Неизвестная постройка.`, 'system'); }
+    if (type === 'dark_temple') { cost = 20; name = 'Храм Тьмы'; } else if (type === 'barracks') { cost = 20; name = 'Казармы Lv1'; } else if (type === 'barracks_lv2') { cost = 50; name = 'Казармы Lv2'; lvl = 2; } else if (type === 'cemetery') { cost = 30; name = 'Кладбище'; } else if (type === 'dungeon') { cost = 15; name = 'Тюрьма'; } else if (type === 'executions') { cost = 10; name = 'Казни'; } else if (type === 'ball') { cost = 30; name = 'Бал Вампиров'; } else if (type === 'center') { cost = 25; name = 'Центр Обращения'; } else if (type === 'wall') { cost = 10; name = 'Стены'; } else if (type === 'castle') { cost = 40; name = 'Замок'; } else if (type === 'market') { cost = 20; name = 'Рынок'; } else { return log(`❌ Неизвестная постройка.`, 'system'); }
     if (game.player.gold < cost) return log(`❌ Нужно ${cost} золота.`, 'system');
-    if (type === 'wall') { if (prov.buildings.find(b => b.type === 'wall')) return log(`❌ Стены уже построены.`, 'system'); prov.buildings.push({ type, lvl: 1 }); prov.fortification += 1; log(`🧱 Построены Стены в ${prov.name}! Укрепления +1.`, 'player'); } 
-    else if (type === 'castle') { if (prov.buildings.find(b => b.type === 'castle')) return log(`❌ Замок уже построен.`, 'system'); prov.buildings.push({ type, lvl: 1 }); prov.fortification += 2; prov.playerGarrison = (prov.playerGarrison || { infantry:0, archer:0, cavalry:0 }); prov.playerGarrison.infantry += 20; prov.support.player += 5; log(`🏰 Построен Замок в ${prov.name}! Укрепления +2, Гарнизон +20.`, 'player'); } 
-    else { if (type === 'barracks_lv2') { const existing = prov.buildings.find(b => b.type === 'barracks'); if (!existing) return log(`❌ Сначала постройте Казармы Lv1!`, 'system'); if (existing.lvl === 2) return log(`❌ Уже есть Lv2.`, 'system'); existing.lvl = 2; } else if (type === 'barracks') { if (prov.buildings.find(b => b.type === 'barracks')) return log(`❌ Уже есть.`, 'system'); prov.buildings.push({ type, lvl: 1 }); } else { if (prov.buildings.find(b => b.type === type)) return log(`❌ Уже есть.`, 'system'); prov.buildings.push({ type, lvl: 1 }); } game.player.gold -= cost; log(`🏗️ Построен ${name} в ${prov.name}!`, 'player'); }
 
-    // ТУТОРИАЛ: Если построили Храм Тьмы и это шаг 0
-    if (type === 'dark_temple' && game.tutorialStep === 0) {
-        advanceTutorial(0);
-    }
+    // Блокировка дублирования
+    if (type === 'wall') { if (prov.buildings.find(b => b.type === 'wall')) return log(`❌ Стены уже построены.`, 'system'); }
+    else if (type === 'castle') { if (prov.buildings.find(b => b.type === 'castle')) return log(`❌ Замок уже построен.`, 'system'); }
+    else if (type === 'barracks_lv2') { 
+        const existing = prov.buildings.find(b => b.type === 'barracks'); 
+        if (!existing) return log(`❌ Сначала постройте Казармы Lv1!`, 'system'); 
+        if (existing.lvl === 2) return log(`❌ Уже есть Lv2.`, 'system'); 
+        existing.lvl = 2; 
+        game.player.gold -= cost; log(`⚔️ Казармы улучшены до Lv2 в ${prov.name}!`, 'player'); 
+        game.player.ap -= 1; updateUI(); return; 
+    } 
+    else if (type === 'barracks') { if (prov.buildings.find(b => b.type === 'barracks')) return log(`❌ Уже есть.`, 'system'); }
+    else { if (prov.buildings.find(b => b.type === type)) return log(`❌ Уже есть.`, 'system'); }
+
+    // Вносим изменения в провинцию (Лояльность, Поддержка, Население)
+    game.player.gold -= cost;
+    prov.buildings.push({ type, lvl: 1 });
+
+    // Специальные эффекты
+    if (type === 'dark_temple') { prov.loyalty = Math.min(100, prov.loyalty + 3); prov.support.player = Math.min(100, prov.support.player + 5); log(`🕯️ Храм Тьмы возведен! +5 поддержки, +3 лояльности.`, 'player'); } 
+    else if (type === 'dungeon') { prov.loyalty = Math.max(0, prov.loyalty - 5); prov.support.player = Math.min(100, prov.support.player + 10); log(`⛓️ Тюрьма возведена! +10 поддержки, -5 лояльности.`, 'player'); } 
+    else if (type === 'executions') { prov.loyalty = Math.max(0, prov.loyalty - 10); prov.support.player = Math.min(100, prov.support.player + 15); prov.population = Math.max(100, prov.population - 200); log(`🪓 Казни начались! +15 поддержки, -10 лояльности, -200 населения.`, 'player'); } 
+    else if (type === 'ball') { prov.loyalty = Math.min(100, prov.loyalty + 5); prov.support.player = Math.min(100, prov.support.player + 20); prov.population = Math.max(100, prov.population - 200); log(`🎭 Бал Вампиров в разгаре! +20 поддержки, +5 лояльности, -200 населения.`, 'player'); } 
+    else if (type === 'center') { prov.loyalty = Math.min(100, prov.loyalty + 5); prov.support.player = Math.min(100, prov.support.player + 10); prov.population = Math.min(10000, prov.population + 100); log(`🧛 Центр Обращения построен! +10 поддержки, +5 лояльности, +100 населения.`, 'player'); } 
+    else if (type === 'wall') { prov.fortification += 1; log(`🧱 Построены Стены в ${prov.name}! Укрепления +1.`, 'player'); } 
+    else if (type === 'castle') { prov.fortification += 2; prov.playerGarrison = (prov.playerGarrison || { infantry:0, archer:0, cavalry:0 }); prov.playerGarrison.infantry += 20; prov.support.player += 5; log(`🏰 Построен Замок в ${prov.name}! Укрепления +2, Гарнизон +20.`, 'player'); } 
+    else if (type === 'market') { log(`🏪 Рынок построен в ${prov.name}!`, 'player'); } 
+    else if (type === 'cemetery') { log(`🪦 Кладбище открыто! Даёт +5 крови в ход.`, 'player'); } 
+    else if (type === 'barracks') { log(`🏗️ Построены Казармы Lv1 в ${prov.name}!`, 'player'); }
+
+    if (type === 'dark_temple' && game.tutorialStep === 0) { advanceTutorial(0); }
     game.player.ap -= 1; updateUI();
 }
 
+// ================= ОСТАЛЬНЫЕ ФУНКЦИИ БЕЗ ИЗМЕНЕНИЙ =================
 function recruitTroops(type) {
     if (!canAct()) return; const prov = getTargetProvForAction(); if (!prov) return log('❌ Кликните на провинцию, чтобы выбрать место найма.', 'system');
-
     if (type === 'lord') {
         let hasDarkTemple = game.provinces.some(p => p.owner === 'player' && p.buildings.find(b => b.type === 'dark_temple'));
         if (!hasDarkTemple) return log('❌ Постройте Храм Тьмы (20🪙), чтобы призывать Лордов!', 'system');
         if (game.player.gold < 10) return log('❌ Нужно 10 золота для призыва Лорда.', 'system');
-        game.player.gold -= 10;
-        addNewLordToPlayer();
-        game.player.ap -= 1; 
-        
-        // ТУТОРИАЛ: Если наняли Лорда и это шаг 1
-        if (game.tutorialStep === 1) {
-            advanceTutorial(1);
-        }
-        updateUI();
-        return;
+        game.player.gold -= 10; addNewLordToPlayer(); game.player.ap -= 1; 
+        if (game.tutorialStep === 1) { advanceTutorial(1); }
+        updateUI(); return;
     }
-
     if (type === 'infantry' || type === 'archer' || type === 'cavalry') { let hasBarracks = prov.buildings.find(b => b.type === 'barracks'); if (!hasBarracks) return log('❌ Постройте Казармы Lv1 (20🪙) в этой провинции для найма!', 'system'); }
     if (type === 'knights') { let hasBarracksLv2 = prov.buildings.find(b => b.type === 'barracks' && b.lvl === 2); if (!hasBarracksLv2) return log('❌ Требуются Казармы Lv2 (50🪙) для призыва Рыцарей Тьмы!', 'system'); if (game.player.gold < 30) return log('❌ Нужно 30 золота для Рыцарей Тьмы.', 'system'); game.player.gold -= 30; game.player.mobileArmy.cavalry = (game.player.mobileArmy.cavalry || 0) + 2; log(`⚔️ 2 Рыцаря Тьмы призваны в армию!`, 'player'); game.player.ap -= 1; updateUI(); return; }
     const u = { infantry: { cost: 10, count: 5 }, archer: { cost: 15, count: 5 }, cavalry: { cost: 20, count: 3 } }[type]; if (game.player.gold < u.cost) return log(`❌ Нужно ${u.cost} золота.`, 'system'); game.player.gold -= u.cost;
@@ -711,6 +726,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('build-barracks').addEventListener('click', () => buildStructure('barracks'));
     document.getElementById('build-barracks-2').addEventListener('click', () => buildStructure('barracks_lv2'));
     document.getElementById('build-ritual').addEventListener('click', () => buildStructure('dark_temple'));
+    document.getElementById('build-dungeon').addEventListener('click', () => buildStructure('dungeon'));
+    document.getElementById('build-executions').addEventListener('click', () => buildStructure('executions'));
+    document.getElementById('build-ball').addEventListener('click', () => buildStructure('ball'));
+    document.getElementById('build-center').addEventListener('click', () => buildStructure('center'));
     document.getElementById('build-wall').addEventListener('click', () => buildStructure('wall'));
     document.getElementById('build-castle').addEventListener('click', () => buildStructure('castle'));
     document.getElementById('build-market').addEventListener('click', () => buildStructure('market'));
@@ -814,7 +833,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game.player.ap -= 1; game.enemyArmyTarget = null; document.getElementById('army-battle-modal').style.display = 'none'; updateUI();
     });
 
-    // ================= ЭНЦИКЛОПЕДИЯ ЛОРА ПОСТРОЕК (НОВОЕ) =================
+    // Энциклопедия и Лор
     document.querySelectorAll('.sub-btn[data-lore]').forEach(btn => {
         btn.addEventListener('mouseenter', (e) => {
             const loreKey = btn.getAttribute('data-lore');
