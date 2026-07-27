@@ -36,6 +36,7 @@
                     <span id="faith-text">0 / 100</span>
                 </div>
                 <button id="btn-restart" class="action-btn" style="background:#111; border-color:#4a5b9a; flex:0.5; font-size:10px;">🔄 МЕНЮ</button>
+                <button id="btn-music-toggle" class="action-btn" style="flex:0.3; font-size:10px;">🎵 ВКЛ</button>
             </div>
             
             <canvas id="game-canvas" width="680" height="550"></canvas>
@@ -45,15 +46,15 @@
                     <button id="btn-assault" class="action-btn" disabled>💥 ШТУРМ</button>
                     
                     <div class="dropdown">
-                        <button class="action-btn dropdown-toggle">🏗️ ПОСТРОИТЬ</button>
+                        <button class="action-btn dropdown-toggle">🏗️ СТРОИТЬ</button>
                         <div class="dropdown-content">
-                            <button id="build-cemetery" class="sub-btn">🪦 Кладбище (30🪙)</button>
-                            <button id="build-barracks" class="sub-btn">⚔️ Казармы Lv1 (20🪙)</button>
-                            <button id="build-barracks-2" class="sub-btn">⚔️⬆️ Казармы Lv2 (50🪙)</button>
-                            <button id="build-ritual" class="sub-btn">🕯️ Храм Тьмы (20🪙)</button>
-                            <button id="build-wall" class="sub-btn">🧱 Стены (10🪙)</button>
-                            <button id="build-castle" class="sub-btn">🏰 Замок (40🪙)</button>
-                            <button id="build-market" class="sub-btn">🏪 Рынок (20🪙)</button>
+                            <button id="build-cemetery" class="sub-btn" data-lore="cemetery">🪦 Кладбище (30🪙)</button>
+                            <button id="build-barracks" class="sub-btn" data-lore="barracks">⚔️ Казармы Lv1 (20🪙)</button>
+                            <button id="build-barracks-2" class="sub-btn" data-lore="barracks_lv2">⚔️⬆️ Казармы Lv2 (50🪙)</button>
+                            <button id="build-ritual" class="sub-btn" data-lore="ritual">🕯️ Храм Тьмы (20🪙)</button>
+                            <button id="build-wall" class="sub-btn" data-lore="wall">🧱 Стены (10🪙)</button>
+                            <button id="build-castle" class="sub-btn" data-lore="castle">🏰 Замок (40🪙)</button>
+                            <button id="build-market" class="sub-btn" data-lore="market">🏪 Рынок (20🪙)</button>
                         </div>
                     </div>
 
@@ -77,11 +78,9 @@
                     </div>
 
                     <button id="btn-cancel-siege" class="action-btn">🚫 СНЯТЬ</button>
-                    
                     <button id="btn-open-diplomacy" class="action-btn">🤝 ДИПЛОМАТИЯ</button>
                     <button id="btn-open-market" class="action-btn">⚖️ РЫНОК</button>
                     <button id="btn-open-tech" class="action-btn">⚙️ ТЕХНОЛОГИИ</button>
-                    
                     <button id="btn-end-turn" class="action-btn main-action">⏩ СЛЕД. ХОД</button>
                 </div>
             </div>
@@ -94,7 +93,13 @@
         </div>
     </div>
 
+    <!-- ТУЛТИП ДЛЯ ЛОРА ПОСТРОЕК -->
+    <div id="lore-tooltip"></div>
+
+    <!-- ОБЩИЙ ТУЛТИП -->
     <div id="tooltip"></div>
+
+    <!-- Модальные окна -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
@@ -186,8 +191,18 @@
         </div>
     </div>
 
-    <!-- АУДИО-ПЛЕЕР ФОНОВОЙ МУЗЫКИ -->
-    <audio id="bgm" src="./assets/bgm.mp3" loop volume="0.2"></audio>
+    <!-- ОКНО ОБУЧЕНИЯ (ТУТОРИАЛ) -->
+    <div id="tutorial-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="tutorial-title">🦇 ДОБРО ПОЖАЛОВАТЬ, КНЯЗЬ ТЬМЫ!</h2>
+            <p id="tutorial-desc" style="margin: 15px 0; font-size: 15px; line-height: 1.5;"></p>
+            <div id="tutorial-options">
+                <button id="btn-tutorial-next" class="action-btn main-action">ПОНЯЛ!</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgm" src="./assets/bgm.mp3" loop></audio>
 
     <script src="script.js"></script>
 </body>
