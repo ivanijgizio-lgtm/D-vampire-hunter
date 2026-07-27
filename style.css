@@ -9,6 +9,7 @@
     --vampire-red: #9b4a4a;
     --vatican-gold: #808ca0;
 }
+* { box-sizing: border-box; }
 body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Cinzel', serif; color: var(--text-light); display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
 .start-overlay {
@@ -21,22 +22,9 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
     padding: 60px; text-align: center; box-shadow: 0 0 60px rgba(74, 91, 154, 0.4);
     backdrop-filter: blur(4px);
 }
-.gothic-title {
-    font-family: 'Grenze Gotisch', serif;
-    margin-bottom: 20px;
-}
-.gothic-main {
-    font-size: 56px;
-    color: var(--silver);
-    text-shadow: 0 0 20px rgba(74, 91, 154, 0.8);
-    letter-spacing: 4px;
-}
-.gothic-sub {
-    font-size: 32px;
-    color: var(--metal-blue);
-    text-shadow: 0 0 10px rgba(74, 91, 154, 0.4);
-    letter-spacing: 6px;
-}
+.gothic-title { font-family: 'Grenze Gotisch', serif; margin-bottom: 20px; }
+.gothic-main { font-size: 56px; color: var(--silver); text-shadow: 0 0 20px rgba(74, 91, 154, 0.8); letter-spacing: 4px; }
+.gothic-sub { font-size: 32px; color: var(--metal-blue); text-shadow: 0 0 10px rgba(74, 91, 154, 0.4); letter-spacing: 6px; }
 .start-content p { color: #808ca0; margin-bottom: 30px; font-size: 14px; font-family: 'Cinzel', serif; }
 .start-buttons { display: flex; gap: 20px; justify-content: center; }
 .start-buttons button { width: 150px; padding: 15px; font-size: 16px; font-family: 'Cinzel', serif; }
@@ -54,12 +42,11 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
 #faith-bar-fill { height: 100%; width: 0%; background: var(--metal-blue); border-radius: 4px; transition: width 0.5s; }
 #faith-text { font-size: 10px; color: #808ca0; }
 
-/* Наложение тумана поверх карты */
-#fog-canvas { position: absolute; top: 25px; left: 0; width: 730px; height: 550px; pointer-events: none; z-index: 2; opacity: 0.6; }
+#fog-canvas { position: absolute; top: 25px; left: 0; width: 730px; height: 550px; pointer-events: none; z-index: 2; opacity: 0.5; }
 #game-canvas { position: relative; z-index: 1; background-color: transparent; margin: 0 auto; border-bottom: 2px solid var(--ui-border); width: 730px; height: 550px; cursor: crosshair; }
-#ui-panel { z-index: 3; background: rgba(0, 0, 0, 0.95); padding: 8px; display: flex; flex-direction: column; height: 120px; }
+#ui-panel { z-index: 3; background: rgba(0, 0, 0, 0.95); padding: 8px; display: flex; flex-direction: column; height: 130px; }
 
-#action-buttons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-start; padding: 2px 0; }
+#action-buttons { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; padding: 2px 0; }
 .action-btn {
     background: linear-gradient(to bottom, #1a1828, #0f0d18);
     border: 1px solid var(--ui-border);
@@ -70,28 +57,29 @@ body { margin: 0; padding: 0; background-color: var(--bg-dark); font-family: 'Ci
     cursor: pointer;
     transition: 0.2s;
     flex: 1 1 auto;
-    min-width: 55px;
+    min-width: 60px;
     max-width: 110px;
     font-size: 11px;
     text-align: center;
     white-space: nowrap;
     box-sizing: border-box;
-    /* Объемный, вырезанный текст */
     text-shadow: 0 2px 0 #000;
 }
 .action-btn:hover:not(:disabled) { background: var(--highlight); border-color: var(--metal-blue); box-shadow: 0 0 10px rgba(74, 91, 154, 0.6); }
 .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .main-action { background: linear-gradient(to bottom, #2a2440, #1a1828); border-color: var(--metal-blue); font-weight: bold; color: var(--silver); }
 .garrison-btn { background: linear-gradient(to bottom, #0a1510, #050a08); }
-.dropdown { position: relative; display: inline-block; flex: 1 1 auto; min-width: 55px; max-width: 110px; }
+.dropdown { position: relative; display: inline-block; flex: 1 1 auto; min-width: 60px; max-width: 110px; }
 .sub-btn { background: #0f0d18; border: none; color: var(--text-light); padding: 6px 8px; width: 100%; text-align: left; cursor: pointer; border-bottom: 1px solid var(--ui-border); font-size: 11px; box-sizing: border-box; white-space: nowrap; text-shadow: 0 2px 0 #000; }
 .sub-btn:hover { background: var(--highlight); }
-.dropdown-content { display: none; position: absolute; background-color: var(--ui-bg); min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8); z-index: 10; border: 1px solid var(--metal-blue); bottom: 38px; left: 0; border-radius: 4px; padding: 2px 0; }
+.dropdown-content { display: none; position: absolute; background-color: var(--ui-bg); min-width: 180px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.8); z-index: 10; border: 1px solid var(--metal-blue); bottom: 38px; left: -10px; border-radius: 4px; padding: 2px 0; }
 .dropdown-content.open { display: block; }
 
 #log-sidebar { width: 220px; min-width: 220px; height: 100%; flex-shrink: 0; background: #050508; padding: 10px; display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box; border-left: 3px solid var(--ui-border); }
 #log-sidebar h3 { color: var(--silver); font-size: 14px; margin: 0; border-bottom: 1px solid var(--ui-border); padding-bottom: 5px; text-align: center; }
-#log-container { flex-grow: 1; overflow-y: scroll; margin-top: 5px; font-size: 11px; color: #808ca0; display: flex; flex-direction: column; gap: 3px; }
+
+/* ОСНОВНОЕ ИСПРАВЛЕНИЕ ЛОГА (Убрана огромная пустота) */
+#log-container { flex: 1; min-height: 0; overflow-y: scroll; margin-top: 5px; font-size: 11px; color: #808ca0; display: flex; flex-direction: column; gap: 3px; padding-bottom: 5px;}
 .log-entry { border-bottom: 1px dotted #1a1828; padding: 2px 0; }
 .log-entry.player { color: var(--silver); }
 .log-entry.ai { color: var(--vatican-gold); font-style: italic; }
