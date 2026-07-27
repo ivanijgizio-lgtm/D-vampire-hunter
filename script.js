@@ -9,15 +9,34 @@ sprites.werewolf.src = './assets/werewolf-character.webp';
 sprites.highVampire.src = './assets/high_vampire.png.png'; 
 sprites.inquisitor.src = './assets/inquisitor.png.png';
 
+// ================= ЛОР И ЭНЦИКЛОПЕДИЯ (НОВОЕ) =================
+const BUILD_LORE = {
+    'cemetery': "🪦 Кладбище: Некрополь, куда стекаются неупокоенные души. Дарует +5 крови за ход.",
+    'barracks': "⚔️ Казармы Lv1: Сердце военной машины. Без них обычные войска не могут быть призваны.",
+    'barracks_lv2': "⚔️⬆️ Казармы Lv2: Тренировочный полигон для элиты. Открывает призыв Рыцарей Тьмы.",
+    'ritual': "🕯️ Храм Тьмы: Святилище тёмных сил. Открывает возможность найма Верховных Лордов за 10 золота.",
+    'wall': "🧱 Стены: Защита от вторжений. +1 к укреплениям провинции.",
+    'castle': "🏰 Замок: Оплот власти. +2 укрепления, +20 гарнизона и повышает поддержку Тьмы.",
+    'market': "🏪 Рынок: Торговая площадь. Позволяет обменивать ресурсы 1 раз в ход."
+};
+
+const LORD_NAMES = [
+    "Граф Дракулос", "Леди Сильвана", "Барон Ноктюрн", "Графиня Морвен", 
+    "Владыка Варгос", "Лорд Мортис", "Принц Теней", "Леди Вэйн", 
+    "Генерал Кровавый Клык", "Некромант Зерет"
+];
+
 // ================= ДАННЫЕ ИГРЫ =================
 function getDefaultGame() {
     return {
         turn: 1, day: 1, gameOver: false, battleActive: false, surrenderActive: false, armyBattleActive: false,
+        // Добавлен шаг туториала. 0 - Старт, 1 - Построить храм, 2 - Нанять лорда, 3 - Атаковать, 4 - Завершено
+        tutorialStep: 0, 
         fogOfWar: true, 
         selectedProvinceId: null,
         pendingActionProvId: null,
         enemyArmyTarget: null,
-        weather: { lightning: false, rain: false, sunset: false, sunsetTimer: 0 },
+        weather: { lightning: false, rain: false, sunset: false },
         player: {
             ap: 2, maxAp: 2, gold: 100, blood: 10,
             lords: [], 
@@ -81,21 +100,70 @@ let game = getDefaultGame();
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
-const LORD_NAMES = [
-    "Граф Дракулос", "Леди Сильвана", "Барон Ноктюрн", "Графиня Морвен", 
-    "Владыка Варгос", "Лорд Мортис", "Принц Теней", "Леди Вэйн", 
-    "Генерал Кровавый Клык", "Некромант Зерет"
-];
-
-// ================= ФУНКЦИЯ ЗАПУСКА МУЗЫКИ (НОВОЕ) =================
+// ================= ФУНКЦИЯ ЗАПУСКА МУЗЫКИ =================
 function playBackgroundMusic() {
     const bgm = document.getElementById('bgm');
     if (bgm) {
-        bgm.volume = 0.2; // Громкость 20%, чтобы не перебивать звуки игры
+        bgm.volume = 0.4;
+        bgm.load();
         bgm.play().catch(e => {
-            // Игнорируем ошибку, если файла нет или браузер блокирует автозапуск
-            console.log("Фоновая музыка не загружена или заблокирована браузером.");
+            console.warn("⚠️ Браузер заблокировал фоновую музыку:", e.message);
         });
+    }
+}
+
+// ================= ТУТОРИАЛ (ОБУЧЕНИЕ) И ЛОР =================
+function advanceTutorial(step) {
+    if (step === 0 && game.tutorialStep === 0) {
+        game.tutorialStep = 1; // Переходим к шагу "Построй Храм"
+        setTimeout(() => showTutorialStep(1), 100);
+    } else if (step === 1 && game.tutorialStep === 1) {
+        game.tutorialStep = 2; // Переходим к шагу "Найми Лорда"
+        setTimeout(() => showTutorialStep(2), 100);
+    } else if (step === 2 && game.tutorialStep === 2) {
+        game.tutorialStep = 3; // Переходим к шагу "Атакуй"
+        setTimeout(() => showTutorialStep(3), 100);
+    } else if (step === 3 && game.tutorialStep === 3) {
+        game.tutorialStep = 4; // Завершаем обучение
+        showTutorialStep(4);
+    }
+}
+
+function showTutorialStep(step) {
+    const modal = document.getElementById('tutorial-modal');
+    const title = document.getElementById('tutorial-title');
+    const desc = document.getElementById('tutorial-desc');
+    const btn = document.getElementById('btn-tutorial-next');
+    btn.style.display = 'block';
+
+    if (step === 0) { // Начало (вызывается в initGame)
+        title.textContent = "🦇 ДОБРО ПОЖАЛОВАТЬ, КНЯЗЬ ТЬМЫ!";
+        desc.innerHTML = "Ваша цель — захватить Европу. Но для начала вам нужно усилить армию.<br><br>1. Откройте меню <b>«СТРОИТЬ»</b>.<br>2. Нажмите <b>«Храм Тьмы»</b> в Трансильвании.<br>Храм откроет вам доступ к найму Верховных Лордов.";
+        btn.onclick = () => { modal.style.display = 'none'; };
+        modal.style.display = 'flex';
+    } else if (step === 1) {
+        title.textContent = "🕯️ ХРАМ ВОЗВЕДЕН!";
+        desc.innerHTML = "Отлично! Лорды — ваша ключевая сила для командования армией.<br><br>Теперь откройте меню <b>«ПРИЗВАТЬ»</b> и наймите первого <b>Лорда</b> за 10 золота.";
+        btn.onclick = () => { modal.style.display = 'none'; };
+        modal.style.display = 'flex';
+    } else if (step === 2) {
+        title.textContent = "🧛 ЛОРД ПРИЗВАН!";
+        desc.innerHTML = "Ваш Лорд готов к битве!<br><br>Сейчас <b>НОЧЬ</b>. Кликните на соседнюю вражескую провинцию (например, <b>Валахия</b>) и выберите <b>«АТАКОВАТЬ»</b>, чтобы начать завоевание!";
+        btn.onclick = () => { modal.style.display = 'none'; };
+        modal.style.display = 'flex';
+    } else if (step === 3) {
+        title.textContent = "⚔️ ПЕРВАЯ ПОБЕДА БЛИЗКО!";
+        desc.innerHTML = "Вы сделали первые шаги. Помните: <b>ночью</b> вы сильны, а <b>днем</b> вампиры не могут атаковать.<br><br>Стройте Замки для обороны, нанимайте войска и захватывайте всю Европу!";
+        btn.onclick = () => {
+            modal.style.display = 'none';
+            game.tutorialStep = 4; // Завершено
+            btn.style.display = 'none';
+        };
+        modal.style.display = 'flex';
+    } else if (step === 4) {
+        // Туториал завершен, просто скрываем
+        modal.style.display = 'none';
+        document.getElementById('btn-tutorial-next').style.display = 'none';
     }
 }
 
@@ -106,13 +174,23 @@ function initGame() {
     if (!loadGame()) { 
         game = getDefaultGame(); 
         for(let i=0; i<5; i++) { addNewLordToPlayer(); }
+        // Запускаем туториал с шага 0 для новой игры
+        setTimeout(() => showTutorialStep(0), 500);
+    } else {
+        // Если игра загружена и туториал не завершен, ставим его в соответствие
+        if (game.tutorialStep < 4) {
+            // Можно автоматически завершить туториал для старых сохранений
+            game.tutorialStep = 4;
+        }
     }
-    // Включаем музыку при старте игры
     playBackgroundMusic();
     updateUI(); log('🦇 Дракула пробудился! Европа ждёт завоевателя.', 'system');
 }
 
 function restartGame() {
+    const bgm = document.getElementById('bgm');
+    if (bgm) { bgm.pause(); bgm.currentTime = 0; }
+    
     localStorage.removeItem('VampireWarSave');
     game = getDefaultGame(); 
     game.gameOver = false; 
@@ -326,6 +404,11 @@ function buildStructure(type) {
     if (type === 'wall') { if (prov.buildings.find(b => b.type === 'wall')) return log(`❌ Стены уже построены.`, 'system'); prov.buildings.push({ type, lvl: 1 }); prov.fortification += 1; log(`🧱 Построены Стены в ${prov.name}! Укрепления +1.`, 'player'); } 
     else if (type === 'castle') { if (prov.buildings.find(b => b.type === 'castle')) return log(`❌ Замок уже построен.`, 'system'); prov.buildings.push({ type, lvl: 1 }); prov.fortification += 2; prov.playerGarrison = (prov.playerGarrison || { infantry:0, archer:0, cavalry:0 }); prov.playerGarrison.infantry += 20; prov.support.player += 5; log(`🏰 Построен Замок в ${prov.name}! Укрепления +2, Гарнизон +20.`, 'player'); } 
     else { if (type === 'barracks_lv2') { const existing = prov.buildings.find(b => b.type === 'barracks'); if (!existing) return log(`❌ Сначала постройте Казармы Lv1!`, 'system'); if (existing.lvl === 2) return log(`❌ Уже есть Lv2.`, 'system'); existing.lvl = 2; } else if (type === 'barracks') { if (prov.buildings.find(b => b.type === 'barracks')) return log(`❌ Уже есть.`, 'system'); prov.buildings.push({ type, lvl: 1 }); } else { if (prov.buildings.find(b => b.type === type)) return log(`❌ Уже есть.`, 'system'); prov.buildings.push({ type, lvl: 1 }); } game.player.gold -= cost; log(`🏗️ Построен ${name} в ${prov.name}!`, 'player'); }
+
+    // ТУТОРИАЛ: Если построили Храм Тьмы и это шаг 0
+    if (type === 'dark_temple' && game.tutorialStep === 0) {
+        advanceTutorial(0);
+    }
     game.player.ap -= 1; updateUI();
 }
 
@@ -338,7 +421,13 @@ function recruitTroops(type) {
         if (game.player.gold < 10) return log('❌ Нужно 10 золота для призыва Лорда.', 'system');
         game.player.gold -= 10;
         addNewLordToPlayer();
-        game.player.ap -= 1; updateUI();
+        game.player.ap -= 1; 
+        
+        // ТУТОРИАЛ: Если наняли Лорда и это шаг 1
+        if (game.tutorialStep === 1) {
+            advanceTutorial(1);
+        }
+        updateUI();
         return;
     }
 
@@ -377,13 +466,12 @@ function checkGameConditions() { if (game.gameOver) return; const pCount = game.
 function gameOver(winner) { if (game.gameOver) return; game.gameOver = true; document.querySelectorAll('.action-btn, .sub-btn').forEach(btn => btn.disabled = true); document.getElementById('bg-layer').style.opacity = '0.8'; const modal = document.getElementById('gameover-modal'); const title = document.getElementById('gameover-title'); const desc = document.getElementById('gameover-desc'); if (winner === 'player') { title.textContent = '🏆 ДРАКУЛА ВОЦАРИЛСЯ!'; desc.textContent = 'Европа навсегда погрузилась в вечную ночь.'; } else { title.textContent = '💀 ТЬМА ОТСТУПИЛА!'; desc.textContent = 'Враги оказались слишком сильны. Попробуйте изменить тактику.'; } modal.style.display = 'flex'; saveGame(); }
 function canAct() { return !game.gameOver && game.player.ap > 0 && !game.battleActive && !game.surrenderActive && !game.armyBattleActive; }
 
-// ================= АТМОСФЕРНЫЕ ЭФФЕКТЫ =================
+// ================= ПОГОДА =================
 function checkWeather() {
     if (game.turn % 20 === 0) { startSunset(); }
     if (game.turn % 10 === 0) { game.weather.rain = true; setTimeout(() => { game.weather.rain = false; }, 8000); }
     if (game.turn % 5 === 0) { game.weather.lightning = true; setTimeout(() => { game.weather.lightning = false; }, 6000); }
 }
-
 function startSunset() {
     const overlay = document.getElementById('sunset-overlay');
     if (!overlay) return;
@@ -395,7 +483,6 @@ function startSunset() {
         setTimeout(() => { overlay.style.display = 'none'; }, 2000);
     }, 15000);
 }
-
 function drawWeather() {
     if (game.weather.rain) {
         ctx.strokeStyle = 'rgba(150, 180, 200, 0.3)';
@@ -574,7 +661,7 @@ function updateUI() {
     drawMap();
 }
 
-// ================= DOMContentLoaded (ВСЕ ОБРАБОТЧИКИ КЛИКОВ) =================
+// ================= ОБРАБОТЧИКИ =================
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start-menu').style.display = 'flex';
     document.getElementById('game-container').style.display = 'none';
@@ -595,6 +682,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.dropdown')) {
             document.querySelectorAll('.dropdown-content.open').forEach(el => el.classList.remove('open'));
+        }
+    });
+
+    document.getElementById('btn-music-toggle').addEventListener('click', () => {
+        const bgm = document.getElementById('bgm');
+        if (bgm.paused) {
+            bgm.volume = 0.4;
+            bgm.play();
+            document.getElementById('btn-music-toggle').textContent = "🎵 ВЫКЛ";
+        } else {
+            bgm.pause();
+            document.getElementById('btn-music-toggle').textContent = "🎵 ВКЛ";
         }
     });
 
@@ -713,6 +812,24 @@ document.addEventListener('DOMContentLoaded', () => {
         game.armyBattleActive = false;
         log(`🚩 Вы отступили, не вступая в бой (потрачено 1 AP).`, 'system');
         game.player.ap -= 1; game.enemyArmyTarget = null; document.getElementById('army-battle-modal').style.display = 'none'; updateUI();
+    });
+
+    // ================= ЭНЦИКЛОПЕДИЯ ЛОРА ПОСТРОЕК (НОВОЕ) =================
+    document.querySelectorAll('.sub-btn[data-lore]').forEach(btn => {
+        btn.addEventListener('mouseenter', (e) => {
+            const loreKey = btn.getAttribute('data-lore');
+            const loreText = BUILD_LORE[loreKey];
+            if (loreText) {
+                const loreTooltip = document.getElementById('lore-tooltip');
+                loreTooltip.textContent = loreText;
+                loreTooltip.style.display = 'block';
+                loreTooltip.style.left = (e.pageX + 10) + 'px';
+                loreTooltip.style.top = (e.pageY + 10) + 'px';
+            }
+        });
+        btn.addEventListener('mouseleave', () => {
+            document.getElementById('lore-tooltip').style.display = 'none';
+        });
     });
 
     canvas.addEventListener('mousemove', (e) => {
