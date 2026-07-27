@@ -11,6 +11,9 @@ sprites.inquisitor.src = './assets/inquisitor.png.png';
 
 // ================= ЛОР И ЭНЦИКЛОПЕДИЯ (ОБНОВЛЕНА) =================
 const BUILD_LORE = {
+    'build': "🏗️ СТРОИТЬ: Возводите тёмные сооружения, усиливающие вашу мощь и влияние на население.",
+    'recruit': "🧛 ПРИЗВАТЬ: Найдите подходящих солдат и слуг для своей армии Тьмы. Каждое подразделение требует казарм.",
+    'garrison': "🛡️ ГАРНИЗОН: Перемещайте войска между активной армией и гарнизоном провинции для её защиты.",
     'cemetery': "🪦 Кладбище: Некрополь, куда стекаются неупокоенные души. Дарует +5 крови за ход.",
     'barracks': "⚔️ Казармы Lv1: Сердце военной машины. Без них обычные войска не могут быть призваны.",
     'barracks_lv2': "⚔️⬆️ Казармы Lv2: Тренировочный полигон для элиты. Открывает призыв Рыцарей Тьмы.",
@@ -19,9 +22,16 @@ const BUILD_LORE = {
     'executions': "🪓 Казни: Эшафоты и дыбы на главной площади. Ужас и повиновение — вот плоды этих зрелищ (+15 поддержки Тьмы, -10 лояльности, -200 населения).",
     'ball': "🎭 Бал Вампиров: Роскошный пир для знати Тьмы. Жители мечтают попасть в высшее общество, но угощение для гостей стоит крови (+20 поддержки Тьмы, +5 лояльности, -200 населения).",
     'center': "🧛 Центр Обращения: Центр, где жители превращаются в покорных слуг тьмы (+10 поддержки Тьмы, +5 лояльности, +100 населения, +5 крови/ход).",
+    'citadel': "🏰 Цитадель: Оплот налоговой системы и тёмной бюрократии. Дарует право нанимать Сборщиков душ.",
     'wall': "🧱 Стены: Защита от вторжений. +1 к укреплениям провинции.",
     'castle': "🏰 Замок: Оплот власти. +2 укрепления, +20 гарнизона и повышает поддержку Тьмы.",
-    'market': "🏪 Рынок: Торговая площадь. Позволяет обменивать ресурсы 1 раз в ход."
+    'market': "🏪 Рынок: Торговая площадь. Позволяет обменивать ресурсы 1 раз в ход.",
+    'infantry': "🗡️ Пехота: Основа любой армии. Надёжные щиты и копья, готовые стоять насмерть.",
+    'archer': "🏹 Лучники: Меткие стрелки, сеющие хаос на расстоянии.",
+    'cavalry': "🐴 Кавалерия: Быстрые и маневренные всадники, идеально подходят для фланговых атак.",
+    'knights': "⚔️ Рыцари Тьмы: Элитные бойцы в тяжёлой броне. Молот Тьмы, сокрушающий вражеские строй.",
+    'lord': "👑 Верховный Лорд: Бессмертный генерал. Без него армия не может штурмовать провинции.",
+    'soul_collector': "💀 Сборщик душ: Таинственный посредник, выбивающий долги и души. Приносит 50 золота каждый ход."
 };
 
 const LORD_NAMES = [
@@ -49,6 +59,9 @@ function getDefaultGame() {
             allianceWithAI: false,
             truceTurnsAI: 0,
             truceTurnsWolf: 0,
+            // Новые флаги для Цитадели и Сборщика душ
+            hasCitadel: false,
+            hasSoulCollector: false,
         },
         ai: { gold: 100, blood: 5, generals: { inquisitor: 5 }, mobileArmy: { infantry: 50, archer: 10, cavalry: 10, location: 40 }, faith: 0 },
         werewolf: { gold: 50, blood: 10, generals: { alpha: 3 }, mobileArmy: { infantry: 30, archer: 5, cavalry: 10, location: 45 } },
@@ -276,6 +289,7 @@ function calcArmyPower(army, isPlayer) {
     return Math.floor(totalPower * generalBonus);
 }
 
+// ================= СБОР ДОХОДОВ (СБОРЩИК ДУШ +50 ЗОЛОТА) =================
 function collectIncome() {
     game.provinces.forEach(prov => {
         if (prov.owner === 'player') {
@@ -286,14 +300,22 @@ function collectIncome() {
                 if (b.type === 'dungeon') gBonus += 2; 
                 if (b.type === 'wall') gBonus += 1; if (b.type === 'castle') gBonus += 3;
                 if (b.type === 'cemetery' && b.lvl === 1) bBonus += 5; 
-                if (b.type === 'center') bBonus += 5; // Центр обращения дает кровь
+                if (b.type === 'center') bBonus += 5;
             });
             game.player.gold += prov.income + gBonus + slaveBonus; game.player.blood += 1 + bBonus;
         } else if (prov.owner === 'ai') {
             let aiGold = 1; prov.buildings.forEach(b => { if (b.type === 'church' && b.lvl === 1) aiGold += 2; if (b.type === 'church' && b.lvl === 2) aiGold += 5; if (b.type === 'fortress' && b.lvl === 1) aiGold += 3; if (b.type === 'fortress' && b.lvl === 2) aiGold += 6; if (b.type === 'wall') aiGold += 1; if (b.type === 'castle') aiGold += 3; });
             game.ai.gold += prov.income + aiGold; game.ai.faith += Math.floor(prov.population / 1000);
         } else if (prov.owner === 'werewolf') { game.werewolf.gold += prov.income + 2; }
-    }); updateUI();
+    });
+
+    // Сборщик душ: +50 золота за ход
+    if (game.player.hasSoulCollector) {
+        game.player.gold += 50;
+        log(`💀 Сборщик душ принес 50 золота.`, 'player');
+    }
+
+    updateUI();
 }
 
 function updateSupport() {
@@ -395,15 +417,15 @@ function getTargetProvForAction() {
     return null;
 }
 
-// ================= ОБНОВЛЕННАЯ ФУНКЦИЯ СТРОИТЕЛЬСТВА =================
+// ================= НОВЫЕ СТРОЙКИ И ЮНИТЫ =================
 function buildStructure(type) {
     if (!canAct()) return; const prov = getTargetProvForAction(); if (!prov) return log('❌ Кликните на свою провинцию на карте, чтобы выбрать её.', 'system'); let cost = 0, name = "", lvl = 1;
-    if (type === 'dark_temple') { cost = 20; name = 'Храм Тьмы'; } else if (type === 'barracks') { cost = 20; name = 'Казармы Lv1'; } else if (type === 'barracks_lv2') { cost = 50; name = 'Казармы Lv2'; lvl = 2; } else if (type === 'cemetery') { cost = 30; name = 'Кладбище'; } else if (type === 'dungeon') { cost = 15; name = 'Тюрьма'; } else if (type === 'executions') { cost = 10; name = 'Казни'; } else if (type === 'ball') { cost = 30; name = 'Бал Вампиров'; } else if (type === 'center') { cost = 25; name = 'Центр Обращения'; } else if (type === 'wall') { cost = 10; name = 'Стены'; } else if (type === 'castle') { cost = 40; name = 'Замок'; } else if (type === 'market') { cost = 20; name = 'Рынок'; } else { return log(`❌ Неизвестная постройка.`, 'system'); }
+    if (type === 'dark_temple') { cost = 20; name = 'Храм Тьмы'; } else if (type === 'barracks') { cost = 20; name = 'Казармы Lv1'; } else if (type === 'barracks_lv2') { cost = 50; name = 'Казармы Lv2'; lvl = 2; } else if (type === 'cemetery') { cost = 30; name = 'Кладбище'; } else if (type === 'dungeon') { cost = 15; name = 'Тюрьма'; } else if (type === 'executions') { cost = 10; name = 'Казни'; } else if (type === 'ball') { cost = 30; name = 'Бал Вампиров'; } else if (type === 'center') { cost = 25; name = 'Центр Обращения'; } else if (type === 'citadel') { cost = 40; name = 'Цитадель'; } else if (type === 'wall') { cost = 10; name = 'Стены'; } else if (type === 'castle') { cost = 40; name = 'Замок'; } else if (type === 'market') { cost = 20; name = 'Рынок'; } else { return log(`❌ Неизвестная постройка.`, 'system'); }
     if (game.player.gold < cost) return log(`❌ Нужно ${cost} золота.`, 'system');
 
-    // Блокировка дублирования
     if (type === 'wall') { if (prov.buildings.find(b => b.type === 'wall')) return log(`❌ Стены уже построены.`, 'system'); }
     else if (type === 'castle') { if (prov.buildings.find(b => b.type === 'castle')) return log(`❌ Замок уже построен.`, 'system'); }
+    else if (type === 'citadel') { if (prov.buildings.find(b => b.type === 'citadel')) return log(`❌ Цитадель уже построена.`, 'system'); }
     else if (type === 'barracks_lv2') { 
         const existing = prov.buildings.find(b => b.type === 'barracks'); 
         if (!existing) return log(`❌ Сначала постройте Казармы Lv1!`, 'system'); 
@@ -415,16 +437,15 @@ function buildStructure(type) {
     else if (type === 'barracks') { if (prov.buildings.find(b => b.type === 'barracks')) return log(`❌ Уже есть.`, 'system'); }
     else { if (prov.buildings.find(b => b.type === type)) return log(`❌ Уже есть.`, 'system'); }
 
-    // Вносим изменения в провинцию (Лояльность, Поддержка, Население)
     game.player.gold -= cost;
     prov.buildings.push({ type, lvl: 1 });
 
-    // Специальные эффекты
     if (type === 'dark_temple') { prov.loyalty = Math.min(100, prov.loyalty + 3); prov.support.player = Math.min(100, prov.support.player + 5); log(`🕯️ Храм Тьмы возведен! +5 поддержки, +3 лояльности.`, 'player'); } 
     else if (type === 'dungeon') { prov.loyalty = Math.max(0, prov.loyalty - 5); prov.support.player = Math.min(100, prov.support.player + 10); log(`⛓️ Тюрьма возведена! +10 поддержки, -5 лояльности.`, 'player'); } 
     else if (type === 'executions') { prov.loyalty = Math.max(0, prov.loyalty - 10); prov.support.player = Math.min(100, prov.support.player + 15); prov.population = Math.max(100, prov.population - 200); log(`🪓 Казни начались! +15 поддержки, -10 лояльности, -200 населения.`, 'player'); } 
     else if (type === 'ball') { prov.loyalty = Math.min(100, prov.loyalty + 5); prov.support.player = Math.min(100, prov.support.player + 20); prov.population = Math.max(100, prov.population - 200); log(`🎭 Бал Вампиров в разгаре! +20 поддержки, +5 лояльности, -200 населения.`, 'player'); } 
     else if (type === 'center') { prov.loyalty = Math.min(100, prov.loyalty + 5); prov.support.player = Math.min(100, prov.support.player + 10); prov.population = Math.min(10000, prov.population + 100); log(`🧛 Центр Обращения построен! +10 поддержки, +5 лояльности, +100 населения.`, 'player'); } 
+    else if (type === 'citadel') { game.player.hasCitadel = true; log(`🏰 Цитадель построена в ${prov.name}! Открыт найм Сборщиков душ.`, 'player'); } 
     else if (type === 'wall') { prov.fortification += 1; log(`🧱 Построены Стены в ${prov.name}! Укрепления +1.`, 'player'); } 
     else if (type === 'castle') { prov.fortification += 2; prov.playerGarrison = (prov.playerGarrison || { infantry:0, archer:0, cavalry:0 }); prov.playerGarrison.infantry += 20; prov.support.player += 5; log(`🏰 Построен Замок в ${prov.name}! Укрепления +2, Гарнизон +20.`, 'player'); } 
     else if (type === 'market') { log(`🏪 Рынок построен в ${prov.name}!`, 'player'); } 
@@ -435,9 +456,9 @@ function buildStructure(type) {
     game.player.ap -= 1; updateUI();
 }
 
-// ================= ОСТАЛЬНЫЕ ФУНКЦИИ БЕЗ ИЗМЕНЕНИЙ =================
 function recruitTroops(type) {
     if (!canAct()) return; const prov = getTargetProvForAction(); if (!prov) return log('❌ Кликните на провинцию, чтобы выбрать место найма.', 'system');
+
     if (type === 'lord') {
         let hasDarkTemple = game.provinces.some(p => p.owner === 'player' && p.buildings.find(b => b.type === 'dark_temple'));
         if (!hasDarkTemple) return log('❌ Постройте Храм Тьмы (20🪙), чтобы призывать Лордов!', 'system');
@@ -446,6 +467,17 @@ function recruitTroops(type) {
         if (game.tutorialStep === 1) { advanceTutorial(1); }
         updateUI(); return;
     }
+
+    if (type === 'soul_collector') {
+        if (!game.player.hasCitadel) return log('❌ Сначала постройте Цитадель (40🪙)!', 'system');
+        if (game.player.hasSoulCollector) return log('❌ Сборщик душ уже нанят.', 'system');
+        if (game.player.gold < 25) return log('❌ Нужно 25 золота.', 'system');
+        game.player.gold -= 25;
+        game.player.hasSoulCollector = true;
+        log(`💀 Сборщик душ нанят! Будет приносить 50 золота каждый ход.`, 'player');
+        game.player.ap -= 1; updateUI(); return;
+    }
+
     if (type === 'infantry' || type === 'archer' || type === 'cavalry') { let hasBarracks = prov.buildings.find(b => b.type === 'barracks'); if (!hasBarracks) return log('❌ Постройте Казармы Lv1 (20🪙) в этой провинции для найма!', 'system'); }
     if (type === 'knights') { let hasBarracksLv2 = prov.buildings.find(b => b.type === 'barracks' && b.lvl === 2); if (!hasBarracksLv2) return log('❌ Требуются Казармы Lv2 (50🪙) для призыва Рыцарей Тьмы!', 'system'); if (game.player.gold < 30) return log('❌ Нужно 30 золота для Рыцарей Тьмы.', 'system'); game.player.gold -= 30; game.player.mobileArmy.cavalry = (game.player.mobileArmy.cavalry || 0) + 2; log(`⚔️ 2 Рыцаря Тьмы призваны в армию!`, 'player'); game.player.ap -= 1; updateUI(); return; }
     const u = { infantry: { cost: 10, count: 5 }, archer: { cost: 15, count: 5 }, cavalry: { cost: 20, count: 3 } }[type]; if (game.player.gold < u.cost) return log(`❌ Нужно ${u.cost} золота.`, 'system'); game.player.gold -= u.cost;
@@ -721,6 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('recruit-cav').addEventListener('click', () => recruitTroops('cavalry'));
     document.getElementById('recruit-knights').addEventListener('click', () => recruitTroops('knights'));
     document.getElementById('recruit-lord').addEventListener('click', () => recruitTroops('lord'));
+    document.getElementById('recruit-soul').addEventListener('click', () => recruitTroops('soul_collector'));
 
     document.getElementById('build-cemetery').addEventListener('click', () => buildStructure('cemetery'));
     document.getElementById('build-barracks').addEventListener('click', () => buildStructure('barracks'));
@@ -730,6 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('build-executions').addEventListener('click', () => buildStructure('executions'));
     document.getElementById('build-ball').addEventListener('click', () => buildStructure('ball'));
     document.getElementById('build-center').addEventListener('click', () => buildStructure('center'));
+    document.getElementById('build-citadel').addEventListener('click', () => buildStructure('citadel'));
     document.getElementById('build-wall').addEventListener('click', () => buildStructure('wall'));
     document.getElementById('build-castle').addEventListener('click', () => buildStructure('castle'));
     document.getElementById('build-market').addEventListener('click', () => buildStructure('market'));
@@ -833,8 +867,8 @@ document.addEventListener('DOMContentLoaded', () => {
         game.player.ap -= 1; game.enemyArmyTarget = null; document.getElementById('army-battle-modal').style.display = 'none'; updateUI();
     });
 
-    // Энциклопедия и Лор
-    document.querySelectorAll('.sub-btn[data-lore]').forEach(btn => {
+    // Энциклопедия и Лор (Добавлена поддержка главных кнопок дропдаунов)
+    document.querySelectorAll('[data-lore]').forEach(btn => {
         btn.addEventListener('mouseenter', (e) => {
             const loreKey = btn.getAttribute('data-lore');
             const loreText = BUILD_LORE[loreKey];
