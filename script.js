@@ -1,13 +1,23 @@
-// ================= ЗАГРУЗКА АССЕТОВ (ПУТИ ИСПРАВЛЕНЫ НА .png) =================
+// ================= ЗАГРУЗКА АССЕТОВ (ПУТИ ОБНОВЛЕНЫ ПО ЗАПРОСУ) =================
 const sprites = {
     player: new Image(), ai: new Image(), werewolf: new Image(),
-    highVampire: new Image(), inquisitor: new Image()
+    highVampire: new Image(), inquisitor: new Image(),
+    aiGeneral: new Image(), wolfGeneral: new Image() // Добавили генералов для будущего использования
 };
-sprites.player.src = './assets/vampir.png';
-sprites.ai.src = './assets/knight.png';
-sprites.werewolf.src = './assets/werewolf.png';
-sprites.highVampire.src = './assets/high_vampire.png'; 
-sprites.inquisitor.src = './assets/inquisitor.png';
+// Основная армия Игрока (Вампиры)
+sprites.player.src = './assets/Vampire Army.png';
+// Основная армия Ватикана
+sprites.ai.src = './assets/Knight Vatican.jpg';
+// Генерал Ватикана (учтена ваша опечатка в названии файла)
+sprites.aiGeneral.src = './assets/Knigt Vatican General.gif'; 
+// Инквизиторы Ватикана
+sprites.inquisitor.src = './assets/Vatican Inquisitor.png';
+// Верховный Лорд Вампир
+sprites.highVampire.src = './assets/Lord Vampire.jpg';
+// Основная армия Оборотней
+sprites.werewolf.src = './assets/Werewolf Army.webp';
+// Генерал Оборотней
+sprites.wolfGeneral.src = './assets/Werewolf general.jpg';
 
 // ================= ЛОР И ЭНЦИКЛОПЕДИЯ =================
 const BUILD_LORE = {
@@ -317,7 +327,6 @@ function collectIncome() {
             game.ai.gold += prov.income + aiGold; game.ai.faith += Math.floor(prov.population / 1000);
         } else if (prov.owner === 'werewolf') { game.werewolf.gold += prov.income + 2; }
     });
-    // Сборщик душ: +50 золота за ход
     if (game.player.hasSoulCollector) {
         game.player.gold += 50;
         log(`💀 Сборщик душ принес 50 золота.`, 'player');
@@ -677,7 +686,7 @@ function drawMap() {
     }
     ctx.shadowBlur = 0;
 
-    // ============ КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ ПОГОДЫ ============
+    // ВЫЗОВ ПОГОДЫ
     drawWeather();
 }
 
