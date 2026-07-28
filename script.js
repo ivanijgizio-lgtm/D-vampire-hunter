@@ -9,30 +9,33 @@ sprites.werewolf.src = './assets/werewolf-character.webp';
 sprites.highVampire.src = './assets/high_vampire.png.png'; 
 sprites.inquisitor.src = './assets/inquisitor.png.png';
 
-// ================= ЛОР-ЭНЦИКЛОПЕДИЯ =================
+// ================= ВОССТАНОВЛЕННЫЙ ДЛИННЫЙ ЛОР =================
 const BUILD_LORE = {
-    'build': "🏗️ СТРОИТЬ: Возводите тёмные сооружения.",
-    'recruit': "🧛 ПРИЗВАТЬ: Найдите слуг для своей армии Тьмы.",
-    'garrison': "🛡️ ГАРНИЗОН: Перемещайте войска между армией и гарнизоном.",
-    'cemetery': "🪦 Кладбище: +5 крови за ход.",
-    'barracks': "⚔️ Казармы Lv1: Без них войска не призываются.",
-    'barracks_lv2': "⚔️⬆️ Казармы Lv2: Открывает Рыцарей Тьмы.",
-    'ritual': "🕯️ Храм Тьмы: +5 поддержки Тьмы, +3 лояльности. Открывает Лордов.",
-    'dungeon': "⛓️ Тюрьма: +10 поддержки Тьмы, -5 лояльности.",
-    'executions': "🪓 Казни: +15 поддержки Тьмы, -10 лояльности, -200 населения.",
-    'ball': "🎭 Бал Вампиров: +20 поддержки Тьмы, +5 лояльности, -200 населения.",
-    'center': "🧛 Центр Обращения: +10 поддержки Тьмы, +5 лояльности, +100 населения.",
-    'citadel': "🏰 Цитадель: Открывает найм Сборщиков душ.",
-    'wall': "🧱 Стены: +1 к укреплениям.",
-    'castle': "🏰 Замок: +2 укрепления, +20 гарнизона.",
-    'market': "🏪 Рынок: Позволяет обменивать ресурсы.",
-    'infantry': "🗡️ Пехота: Основа любой армии.",
-    'archer': "🏹 Лучники: Меткие стрелки.",
-    'cavalry': "🐴 Кавалерия: Быстрые всадники.",
-    'knights': "⚔️ Рыцари Тьмы: Элитные бойцы.",
-    'lord': "👑 Верховный Лорд: Нужен для штурма.",
-    'soul_collector': "💀 Сборщик душ: Приносит 50 золота каждый ход."
+    'build': "🏗️ СТРОИТЬ: Возводите тёмные сооружения, усиливающие вашу мощь и влияние на население. Каждая постройка меняет облик провинции.",
+    'recruit': "🧛 ПРИЗВАТЬ: Найдите подходящих солдат и слуг для своей армии Тьмы. Разные типы войск требуют развития военной инфраструктуры.",
+    'garrison': "🛡️ ГАРНИЗОН: Перемещайте войска между активной армией и гарнизоном провинции для её защиты.",
+    
+    'cemetery': "🪦 Кладбище: Некрополь, куда стекаются неупокоенные души. Дарует +5 крови за ход.",
+    'barracks': "⚔️ Казармы Lv1: Сердце военной машины. Без них обычные войска не могут быть призваны.",
+    'barracks_lv2': "⚔️⬆️ Казармы Lv2: Тренировочный полигон для элиты. Открывает призыв Рыцарей Тьмы.",
+    'ritual': "🕯️ Храм Тьмы: Святилище, притягивающее тёмные силы. Укрепляет веру населения во мрак (+5 поддержки Тьмы, +3 лояльности). Открывает найм Лордов.",
+    'dungeon': "⛓️ Тюрьма: Темницы, где стонут враги Тьмы. Страх заставляет население подчиняться, но ожесточает сердца (+10 поддержки Тьмы, -5 лояльности).",
+    'executions': "🪓 Казни: Эшафоты и дыбы на главной площади. Ужас и повиновение — вот плоды этих зрелищ (+15 поддержки Тьмы, -10 лояльности, -200 населения).",
+    'ball': "🎭 Бал Вампиров: Роскошный пир для знати Тьмы. Жители мечтают попасть в высшее общество, но угощение для гостей стоит крови (+20 поддержки Тьмы, +5 лояльности, -200 населения).",
+    'center': "🧛 Центр Обращения: Центр, где жители превращаются в покорных слуг тьмы (+10 поддержки Тьмы, +5 лояльности, +100 населения, +5 крови/ход).",
+    'citadel': "🏰 Цитадель: Оплот налоговой системы и тёмной бюрократии. Дарует право нанимать Сборщиков душ.",
+    'wall': "🧱 Стены: Защита от вторжений. +1 к укреплениям провинции.",
+    'castle': "🏰 Замок: Оплот власти. +2 укрепления, +20 гарнизона и повышает поддержку Тьмы.",
+    'market': "🏪 Рынок: Торговая площадь. Позволяет обменивать ресурсы 1 раз в ход.",
+    
+    'infantry': "🗡️ Пехота: Основа любой армии. Надёжные щиты и копья, готовые стоять насмерть.",
+    'archer': "🏹 Лучники: Меткие стрелки, сеющие хаос на расстоянии.",
+    'cavalry': "🐴 Кавалерия: Быстрые и маневренные всадники, идеально подходят для фланговых атак.",
+    'knights': "⚔️ Рыцари Тьмы: Элитные бойцы в тяжёлой броне. Молот Тьмы, сокрушающий вражеские строй.",
+    'lord': "👑 Верховный Лорд: Бессмертный генерал. Без него армия не может штурмовать провинции.",
+    'soul_collector': "💀 Сборщик душ: Таинственный посредник, выбивающий долги и души. Приносит 50 золота каждый ход."
 };
+
 const LORD_NAMES = ["Граф Дракулос", "Леди Сильвана", "Барон Ноктюрн", "Графиня Морвен", "Владыка Варгос", "Лорд Мортис", "Принц Теней", "Леди Вэйн", "Генерал Кровавый Клык", "Некромант Зерет"];
 
 // ================= ДАННЫЕ ИГРЫ =================
@@ -480,35 +483,29 @@ function drawMap() {
             return; 
         }
 
-        // Базовый цвет + синева для дождя
         let baseColor = p.owner === 'player' ? (isNight ? '#101728' : '#1a2440') : (p.owner === 'ai' ? (isNight ? '#0f0f12' : '#1a1a20') : (p.owner === 'werewolf' ? (isNight ? '#0a1a10' : '#0f2015') : '#08080a'));
         if (isRaining) baseColor = blendColor(baseColor, '#4a5b9a', 0.1);
 
-        // Градиент (Выпуклый ландшафт)
         let gradient = ctx.createRadialGradient(p.x, p.y, 5, p.x, p.y, s);
         gradient.addColorStop(0, lightenColor(baseColor, 15)); 
         gradient.addColorStop(1, baseColor);
         ctx.fillStyle = gradient;
-        
-        // Обводка (Толстая черная рамка)
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
         ctx.lineWidth = 2;
         ctx.fill(); ctx.stroke();
 
-        // Текст
-        ctx.fillStyle = '#b8c0d0'; ctx.font = 'bold 11px Cinzel'; ctx.textAlign = 'center'; ctx.fillText(p.name, p.x, p.y-20);
-        ctx.fillStyle = '#808ca0'; ctx.font = '9px Cinzel'; ctx.fillText(`🧛${Math.round(p.support.player)}% ⛪${Math.round(p.support.ai)}%`, p.x, p.y-5); ctx.fillText(`🐺${Math.round(p.support.werewolf)}%`, p.x, p.y+7);
-        let g = p.owner === 'player' ? p.playerGarrison : p.aiGarrison; let gCount = getTotalTroops(g || {}); if (gCount > 0) ctx.fillText(`🛡️Гарн:${gCount}`, p.x, p.y+20);
-        if (p.fortification > 0) { ctx.fillStyle = '#4a5b9a'; ctx.font = '8px monospace'; ctx.fillText("▓".repeat(Math.min(p.fortification, 5)), p.x - 15, p.y+30); }
+        /* УВЕЛИЧЕН ШРИФТ НА ГЕКСАХ ДЛЯ ЧИТАЕМОСТИ */
+        ctx.fillStyle = '#b8c0d0'; ctx.font = 'bold 13px Cinzel'; ctx.textAlign = 'center'; ctx.fillText(p.name, p.x, p.y-22);
+        ctx.fillStyle = '#808ca0'; ctx.font = '10px Cinzel'; ctx.fillText(`🧛${Math.round(p.support.player)}% ⛪${Math.round(p.support.ai)}%`, p.x, p.y-6); ctx.fillText(`🐺${Math.round(p.support.werewolf)}%`, p.x, p.y+7);
+        let g = p.owner === 'player' ? p.playerGarrison : p.aiGarrison; let gCount = getTotalTroops(g || {}); if (gCount > 0) ctx.fillText(`🛡️Гарн:${gCount}`, p.x, p.y+22);
+        if (p.fortification > 0) { ctx.fillStyle = '#4a5b9a'; ctx.font = '9px monospace'; ctx.fillText("▓".repeat(Math.min(p.fortification, 5)), p.x - 15, p.y+34); }
         
-        // Золотая рамка выбора и осады
         if (p.id === game.selectedProvinceId && p.owner === 'player') { ctx.strokeStyle = '#4a5b9a'; ctx.lineWidth = 4; ctx.setLineDash([3, 3]); ctx.strokeRect(p.x - 45, p.y - 45, 90, 90); ctx.setLineDash([]); ctx.lineWidth = 1; }
         if (p.siegeBy === 'player') { ctx.strokeStyle='#4a5b9a'; ctx.lineWidth=3; ctx.setLineDash([5,5]); ctx.strokeRect(p.x-40,p.y-40,80,80); ctx.setLineDash([]); ctx.lineWidth=1; }
         else if (p.siegeBy === 'ai') { ctx.strokeStyle='#808ca0'; ctx.lineWidth=3; ctx.setLineDash([5,5]); ctx.strokeRect(p.x-40,p.y-40,80,80); ctx.setLineDash([]); ctx.lineWidth=1; }
         else if (p.siegeBy === 'werewolf') { ctx.strokeStyle='#3d4d3d'; ctx.lineWidth=3; ctx.setLineDash([5,5]); ctx.strokeRect(p.x-40,p.y-40,80,80); ctx.setLineDash([]); ctx.lineWidth=1; }
     });
 
-    // Отрисовка Юнитов (Армий)
     const pProv = game.provinces.find(p => p.id === game.player.mobileArmy.location);
     const aProv = game.provinces.find(p => p.id === game.ai.mobileArmy.location);
     const wProv = game.provinces.find(p => p.id === game.werewolf.mobileArmy.location);
@@ -521,28 +518,38 @@ function drawMap() {
         if (!prov || getTotalTroops(armyObj) === 0) return;
         let x = prov.x + offset, y = prov.y - 15;
 
-        // Тень и свечение
         ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
         ctx.shadowBlur = 10;
 
-        // Свечение, если есть Лорды
         if (isPlayer && game.player.lords.length > 0) {
             ctx.shadowColor = 'rgba(74, 91, 154, 0.6)';
             ctx.shadowBlur = 20;
         }
 
-        // Обрезка спрайта
         ctx.save();
         ctx.beginPath();
         ctx.arc(x, y, 20, 0, Math.PI * 2);
         ctx.clip();
         if (sprite.complete && sprite.naturalWidth > 0) {
             ctx.drawImage(sprite, x - 20, y - 45, 40, 60);
-        } else { ctx.fillStyle='#1a2440'; ctx.beginPath(); ctx.arc(x, y, 15, 0, Math.PI*2); ctx.fill(); }
+        } else {
+            // ИСПРАВЛЕНА ЗАГЛУШКА: Яркие контрастные круги
+            let color = '#5c0000'; // Player by default
+            if (!isPlayer) color = '#808ca0'; // AI by default
+            if (label === '🐺') color = '#3d4d3d'; // Werewolf if label matches
+            
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#4a5b9a';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
         ctx.restore();
 
         ctx.shadowBlur = 0;
-        ctx.fillStyle='#b8c0d0'; ctx.font='bold 10px Cinzel'; 
+        ctx.fillStyle='#b8c0d0'; ctx.font='bold 11px Cinzel'; 
         ctx.fillText(`${label} ${getTotalTroops(armyObj)}`, x, y-48);
     }
 
@@ -552,11 +559,8 @@ function drawMap() {
 
     ctx.shadowBlur = 0;
 
-    // Молнии (Вспышка)
-    if (isLightning) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
+    /* ИСПРАВЛЕНИЕ: Удалён старый белый прямоугольник, добавлен вызов красивой погоды */
+    drawWeather(); 
 }
 
 // ================= ЦВЕТОВЫЕ ФУНКЦИИ =================
