@@ -2,21 +2,14 @@
 const sprites = {
     player: new Image(), ai: new Image(), werewolf: new Image(),
     highVampire: new Image(), inquisitor: new Image(),
-    aiGeneral: new Image(), wolfGeneral: new Image() // Добавили генералов для будущего использования
+    aiGeneral: new Image(), wolfGeneral: new Image()
 };
-// Основная армия Игрока (Вампиры)
 sprites.player.src = './assets/Vampire Army.png';
-// Основная армия Ватикана
 sprites.ai.src = './assets/Knight Vatican.jpg';
-// Генерал Ватикана (учтена ваша опечатка в названии файла)
 sprites.aiGeneral.src = './assets/Knigt Vatican General.gif'; 
-// Инквизиторы Ватикана
 sprites.inquisitor.src = './assets/Vatican Inquisitor.png';
-// Верховный Лорд Вампир
 sprites.highVampire.src = './assets/Lord Vampire.jpg';
-// Основная армия Оборотней
 sprites.werewolf.src = './assets/Werewolf Army.webp';
-// Генерал Оборотней
 sprites.wolfGeneral.src = './assets/Werewolf general.jpg';
 
 // ================= ЛОР И ЭНЦИКЛОПЕДИЯ =================
