@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- СТАРТОВОЕ МЕНЮ -->
     <div id="start-menu" class="start-overlay">
         <div class="start-content">
             <h1 class="gothic-title">
@@ -24,7 +23,6 @@
         </div>
     </div>
 
-    <!-- ОСНОВНОЙ ИНТЕРФЕЙС -->
     <div id="game-container">
         <div id="bg-layer"></div>
         
@@ -45,9 +43,10 @@
                 <button id="btn-music-toggle" class="action-btn" style="flex:0.3; font-size:10px;">🎵 ВКЛ</button>
             </div>
 
-            <!-- Слой для тумана войны (сзади) -->
+            <!-- ДОБАВЛЕН ЭЛЕМЕНТ ДЛЯ ЗАКАТА -->
+            <div id="sunset-overlay" style="position: absolute; top: 25px; left: 0; width: 730px; height: 550px; background: radial-gradient(circle, rgba(200,150,50,0.1), rgba(20,0,40,0.7)); pointer-events: none; display: none; z-index: 2; transition: opacity 2s;"></div>
+
             <canvas id="fog-canvas" width="680" height="550"></canvas>
-            <!-- Игровой слой (спереди) -->
             <canvas id="game-canvas" width="680" height="550"></canvas>
             
             <div id="ui-panel">
@@ -108,11 +107,10 @@
         </div>
     </div>
 
-    <!-- ТУЛТИПЫ -->
     <div id="tooltip"></div>
     <div id="lore-tooltip"></div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <!-- Модальные окна -->
     <div id="action-modal" class="modal">
         <div class="modal-content">
             <h2>🏰 ВАРВАРЫ У ВОРОТ!</h2>
